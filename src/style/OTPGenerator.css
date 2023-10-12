@@ -1,0 +1,96 @@
+/* OTPGenerator.css */
+.otp-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 4px;
+  position: relative;
+  top: 3px;
+  right: 11em;
+
+
+}
+
+.otp-inputs {
+
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  column-gap: 26px;
+
+}
+
+.otp-input {
+  width: 43px !important;
+  height: 40px !important;
+  text-align: center;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 14px;
+  outline: none;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-left: 14px;
+}
+
+
+.otp-input:focus {
+  border-color: #007bff;
+}
+
+/* For screens with width up to 960px */
+@media screen and (max-width: 960px) {
+  .otp-container {
+    max-width: 90%;
+    left: 5%;
+  }
+}
+
+/* For screens with width up to 760px */
+@media screen and (max-width: 760px) {
+  .otp-container {
+    max-width: 90%;
+    left: 5%;
+    padding: 10px;
+  }
+}
+
+/* For screens with width up to 680px */
+@media screen and (max-width: 680px) {
+  .otp-container {
+    max-width: 90%;
+    left: 5%;
+    padding: 5px;
+  }
+}
+
+/* For screens with width up to 460px */
+@media screen and (max-width: 460px) {
+  .otp-container {
+    max-width: 90%;
+    left: 5%;
+    padding: 5px;
+  }
+}
+
+/* For screens with width up to 460px */
+@media screen and (max-width: 460px) {
+  .otp-container {
+    max-width: 90%;
+    left: 4%;
+    padding: 5px;
+  }
+ 
+  .otp-input {
+  
+    font-size: 8px;
+    margin-top: 5px;
+    margin-left: 10px;
+  }
+
+
+  .otp-not-recevied{
+    left: 119px;
+  }
+}

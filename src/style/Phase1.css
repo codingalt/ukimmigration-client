@@ -1,0 +1,311 @@
+.phase-1-text-left-side{
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-top: 15px;
+    padding: 6px;
+    
+}
+
+.Container-forgetpassword-phase1{
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Forgetpassword-sub-2{
+  background-color: #FFFFFE;
+  width: 81.5rem;
+  max-width: 118%;
+  height: 49rem;
+  /* padding: 1rem; */
+  scroll-behavior: smooth;
+  display: flex;
+  justify-content: space-between;
+  /* margin-right: 135rem; */
+  position: absolute;
+  margin-bottom: -7rem;
+  border: 1px solid #FFFFFE;
+  border-radius: 10px;
+  /* overflow-y: hidden; */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.Header-topbar{
+  background-color: #ffffff;
+  scroll-behavior: smooth;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  /* shape-outside: margin-box; */
+  margin-bottom: 52rem;
+  border: 1px solid #FFFFFE ;
+  border-radius: 5px;
+  width: 81.5rem;
+  max-width: 118%;
+}
+
+.left-side-header{
+
+
+  margin-left: 4rem;
+}
+
+.right-side-header{
+  
+  margin-left: 53rem;
+    display: flex;
+    margin-top: 0.5rem;
+}
+
+.left-side-forget-password-2{
+  margin-left: 3.2rem;
+
+  margin-top: 3.5rem;
+}
+
+
+.right-side-forget-password-2{
+  margin-left: 9rem;
+  margin-top: 9.5rem;
+}
+
+
+.submit-email-btn-2{
+  width: 31rem;
+  height: 2.5rem;
+  border: 1px solid #5d982e;
+  background-color: #5d982e;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  /* margin-left: 0rem; */
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bell-icon-notification{
+  width: 57px;
+  height: 38px;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.profile-img{
+  width: 57px;
+  height: 38px;
+  margin-top: 1rem;
+}
+
+.dropdown{
+  width: 53px;
+  height: 11px;
+  margin-top: 1.2rem;
+  position: relative;
+  right: 4rem;
+  cursor: pointer;
+}
+
+.Jhon-profile-text{
+  width: 5rem;
+  margin-top: 1rem;
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0em;
+  text-align: left;
+
+}
+
+.Admin-text{
+  margin-top: 2rem;
+  position: relative;
+  right: 5rem;
+  font-family: Poppins;
+  font-size: 11px;
+
+font-weight: 300;
+line-height: 10px;
+letter-spacing: 0em;
+text-align: left;
+
+}
+
+
+.Required-data-text{
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  position: relative;
+  top: 3rem;
+
+}
+
+
+.phase-1-input-left-side{
+    width: 29rem;
+    height: 39px;
+    border: 1px solid #E2E2E4;
+    border-radius: 10px;
+    background-color: #F7F7F7;
+    padding-left: 16px;
+    margin-right: 5rem;
+}
+
+.phase-1-input-left-side-selector{
+  width: 30rem;
+
+  height: 39px;
+  border: 1px solid #E2E2E4;
+  border-radius: 10px;
+  background-color: #F7F7F7;
+  margin-right: 5rem;
+  padding-left: 16px;
+}
+.phase-1-input-right-side-selector{
+  width: 30rem;
+
+  height: 39px;
+  border: 1px solid #E2E2E4;
+  border-radius: 10px;
+  background-color: #F7F7F7;
+  margin-right: 5rem;
+  padding-left: 16px;
+}
+
+.phase-1-text-right-side{
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-top: 15px;
+    padding: 6px;
+}
+
+.phase-1-input-right-side{
+    width: 29rem;
+    height: 39px;
+    border: 1px solid #E2E2E4;
+    border-radius: 10px;
+    background-color: #F7F7F7;
+    padding-left: 16px;
+    margin-right: 6rem;
+}
+
+.yes-check-text-2 {
+    position: relative;
+    left: 23px;
+    top: 16px;
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  
+  .yes-check-2 {
+    position: relative;
+    left: 1px;
+    bottom: 8px;
+  }
+  
+  .no-check-text-2 {
+    position: relative;
+    left: 80px;
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    bottom: 34px;
+  }
+  
+  .no-check-2 {
+    position: relative;
+    left: 57px;
+    bottom: 58px;
+  }
+  
+  
+  
+  
+  .date-text {
+    position: relative;
+    bottom: 52px;
+    left: 86%;
+  
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  
+.checks{
+    margin-top: 12px;
+  }
+
+  .checkbox {
+    position: relative;
+    bottom: 171px;
+    right: 28px;
+  }
+
+  .phase-1-name,
+.phase-1-email,
+.phase-1-contact,
+.phase-1-calender,
+.phase-1-nationalty {
+  position: relative;
+  left: 29px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 6px;
+  margin-left: -5px;
+}
+
+.country-cnfrm-text {
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0em;
+  text-align: left;
+  padding: 6px;
+  margin-left: -1px;
+  margin-top: 15px;
+}
+
+.checkbox-phase1{
+    display: flex;
+    column-gap: 12px;
+    font-size: 12px;
+    margin-left: 5px;
+  }
+  
+  .phase-1-all-checkboxes{
+    display: flex;
+    column-gap: 12px;
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: -11px;
+  }
+  

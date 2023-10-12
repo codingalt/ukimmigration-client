@@ -1,0 +1,482 @@
+.container {
+    width: 1120px;
+    height: 784px;
+    flex-shrink: 0;
+    /* background: #f7f7f7; */
+  }
+  
+  .min {
+    width: 975px;
+height: 624px;
+flex-shrink: 0;
+background: #fff;
+margin-left: 25%;
+margin-top: 5%;
+  }
+
+  .Logo-img-signin{
+    margin-bottom: 5rem;
+    position: relative;
+    top: 6rem;
+    left: 13.2rem;
+  }
+
+  .left-side-signin{
+    margin-top: -2rem;
+    flex: 1 1;
+    margin-left: 4rem;
+  }
+  
+
+  .Verfication-text-signin{
+    color: #6a6c6f;
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    text-align: left;
+    margin-left: 12.6rem;
+}
+  
+
+  
+  .login-form {
+    max-width: 300px;
+  
+    background-color: #ffffff;
+    border-radius: 5px;
+  }
+  .login-form input[type="text"],
+  .login-form input[type="password"],
+  .login-form input[type="email"] {
+    padding: 10px;
+    margin: 5px 0;
+    margin-left: 0px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-left: 52px;
+    width: 410px;
+    height: 35px;
+    position: relative;
+    top: 28px;
+  }
+  
+  .login-form input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .login-form button {
+    padding: 10px;
+    border: 1px solid #5d982e;
+    background-color: #5d982e;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 54px;
+    margin-top: 56px;
+    width: 425px;
+    height: 40px;
+  }
+  
+  .login-form button:hover {
+    background-color: #5d982e;
+  }
+  
+  label {
+    position: relative;
+    top: 37px;
+    left: 52px;
+    border: 1px solid #e2e2e4;
+    padding: 12px;
+    border-radius: 12px;
+    color: #6a6c6f;
+ 
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  
+  .i-am-not-robert {
+    width: 176px;
+    height: 40px;
+    flex-shrink: 0;
+    fill: #fcfcfc;
+    stroke-width: 0.5px;
+    stroke: #e2e2e4;
+  }
+  
+  .recaptcha-img {
+    position: relative;
+    top: 6px;
+    left: 7px;
+  }
+  
+  .forget-password {
+    color: #6a6c6f;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: relative;
+    left: 123%;
+    top: 12px;
+    font-family: 'Poppins';
+  }
+  
+  .question-1 {
+    color: #2a2a2a;
+
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+position: relative;
+left: 65%;
+margin-top: 46px;
+font-family: 'Poppins';
+  }
+  
+  .sgn-up-heading {
+    color: #5d982e;
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    position: relative;
+    left: 79%;
+    top: 26px;
+    font-family: 'Poppins';
+  }
+  
+  .sign-in-with-goolge-text {
+    color: #000;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: relative;
+    left: 29px;
+    font-family: 'Poppins';
+  }
+  
+  .sign-in-with-google {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    background-color: #e2e2e4;
+    width: 195px;
+    height: 40px;
+    flex-shrink: 0;
+    border: 1px solid #e2e2e4;
+    border-radius: 12px;
+    margin-top: 105px;
+    position: relative;
+    left: 57%;
+  }
+  
+  .Or-gap {
+    color: #5d982e;
+   
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: relative;
+    top: 65px;
+    left: 85%;
+  }
+  
+  
+  .sub-container {
+    display: flex;
+  }
+  
+  .side-img-2 {
+    width: 511px;
+    height: 378px;
+    flex-shrink: 0;
+    position: relative;
+    left: 325px;
+    top: 60px;
+  }
+  
+  @media (max-width: 960px) {
+      .min {
+        width: 60%;
+        height: 68vh;
+        margin-left: 138px;
+        margin-top: 98px;
+      }
+    
+      .welcome-text {
+        margin-left: 142px;
+      }
+    
+      .login-form button {
+        width: 108%;
+      }
+    
+      .question-1 {
+        left: 150px;
+      }
+    
+      .sgn-up-heading {
+        left: 160px;
+      }
+    
+      .Or-gap {
+        left: 67%;
+      }
+    }
+    
+  
+  /* Media Queries for Tablet View */
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+    }
+  
+    .min {
+      width: 57%;
+      height: 71vh;
+      margin-left: 159px;
+      margin-top: 119px;
+    }
+  
+    .logo {
+      margin-left: 145px;
+      margin-top: 15px;
+    }
+  
+    .welcome-text {
+      margin-left: 152px;
+    }
+  
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+      width: 100%;
+    }
+  
+    .login-form button {
+      width: 107%;
+    }
+  
+    .question-1 {
+      left: 163px;
+      margin-top: 36px;
+    }
+  
+    .sgn-up-heading {
+      left: 188px;
+      top: 25px;
+    }
+  
+    .side-img-2 {
+      display: none;
+    }
+  
+    .forget-password {
+      position: relative;
+      left: 96%;
+      top: 12px;
+    }
+    .Or-gap {
+      position: relative;
+      top: 65px;
+      left: 70%;
+    }
+  
+    .sign-in-with-google {
+      position: relative;
+      left: 41%;
+    }
+  }
+  
+  
+  
+    /* Media Queries for 860px View */
+    @media (max-width: 860px) {
+      .min {
+        width: 63%;
+        height: 65vh;
+        margin-left: 119px;
+        margin-top: 89px;
+      }
+    
+      .welcome-text {
+        margin-left: 127px;
+      }
+    
+      .login-form button {
+        width: 110%;
+      }
+    
+      .question-1 {
+        left: 140px;
+      }
+    
+      .sgn-up-heading {
+        left: 150px;
+      }
+    
+      .Or-gap {
+        left: 64%;
+      }
+    }
+    
+    /* Media Queries for 680px View */
+    @media (max-width: 680px) {
+      .min {
+          width: 68%;
+          height: 70vh;
+        margin-left: 80px;
+        margin-top: 67px;
+      }
+    
+      .welcome-text {
+          margin-left: 147px;
+      }
+    
+      .login-form input[type="text"],
+      .login-form input[type="password"] {
+        width: 100%;
+      }
+    
+      .login-form button {
+          width: 107%;
+      }
+    
+      .question-1 {
+          left: 159px;
+      }
+    
+      .sgn-up-heading {
+          left: 183px;
+      }
+    
+      .sign-in-with-google {
+          left: 39%;
+      }
+    
+      .Or-gap {
+          left: 67%;
+      }
+    }
+    
+   
+  /* Media Queries for Mobile View */
+  @media (max-width: 480px) {
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+      width: 100%;
+      margin-left: 20px;
+    }
+    
+  
+    .login-form button {
+      width: 107%;
+      margin-left: 21px;
+      margin-top: 51px;
+    }
+  
+    .min {
+      width: 88%;
+      height: 90vh;
+      margin-left: 26px;
+      margin-top: 67px;
+    }
+  
+    .logo {
+      margin-left: 125px;
+        margin-top: 15px;
+      
+    }
+  
+    .welcome-text {
+        margin-left: 79px;
+        position: relative;
+        left: 47px;
+    }
+  
+    label {
+      left: 20px;
+        top: 36px;
+    }
+  
+    .sign-in-with-google {
+      left: 79px;
+        margin-top: 87px;
+    }
+  
+    .forget-password {
+      left: 255px;
+        top: 13px;
+    }
+  
+    .question-1 {
+      left: 128px;
+    }
+  
+    .sgn-up-heading {
+      left: 150px;
+    }
+  
+    .Or-gap {
+      left: 56%;
+    }
+  }
+  
+   /* Media Queries for 360px View */
+   @media (max-width: 360px) {
+      .min {
+          width: 73%;
+          height: 80vh;
+        margin-left: 50px;
+        margin-top: 55px;
+      }
+    
+      .welcome-text {
+        margin-left: 35px;
+      }
+    
+      .login-form input[type="text"],
+      .login-form input[type="password"] {
+          width: 79%;
+      }
+    
+      .login-form button {
+          width: 87%;
+      }
+    
+      .question-1 {
+          left: 80px;
+      }
+    
+      .logo {
+          margin-left: 79px;
+          margin-top: 15px;
+        }
+  
+        .forget-password {
+          left: 156px;
+          top: 13px;
+        }
+  
+      .sgn-up-heading {
+          left: 107px;
+      }
+    
+      .sign-in-with-google {
+          left: 13%;
+      }
+    
+      .Or-gap {
+          left: 47%;
+      }
+    }
+  

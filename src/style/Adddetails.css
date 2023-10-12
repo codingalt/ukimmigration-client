@@ -1,0 +1,13 @@
+.submit-details{
+    width: 30rem;
+    height: 3rem;
+    color: white;
+    background-color: #5d982e;
+    border: 1px solid #5d982e;
+    border-radius: 11px;
+    position: absolute;
+    /* left: 64.5rem; */
+    /* top: 43rem; */
+    cursor: pointer;
+    margin-top: 2rem;
+}

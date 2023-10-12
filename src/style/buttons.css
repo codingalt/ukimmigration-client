@@ -1,0 +1,59 @@
+.back-button-new{
+    width: 15rem;
+    height: 3rem;
+    background-color: #5D982E;
+    border: 1px solid #5D982E;
+    border-radius: 7px;
+    color: white;
+    cursor: pointer;
+}
+
+.Next-button{
+    width: 15rem;
+    height: 3rem;
+    background-color: #5D982E;
+    border: 1px solid #5D982E;
+    border-radius: 7px;
+    margin-left: 1rem;
+    margin-top: 2rem;
+    color: white;
+    cursor: pointer;
+}
+
+.Next-button-genral{
+    width: 31rem;
+    height: 3rem;
+    background-color: #5D982E;
+    border: 1px solid #5D982E;
+    border-radius: 7px;
+    margin-top: 3rem;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 3rem;
+}
+
+.back-button-accomodation{
+    width: 15rem;
+    height: 3rem;
+    background-color: #5D982E;
+    border: 1px solid #5D982E;
+    border-radius: 7px;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    /* right: 31rem; */
+    top: 3rem;
+}
+
+.Next-button-acomodation{
+    width: 15rem;
+    height: 3rem;
+    background-color: #5D982E;
+    border: 1px solid #5D982E;
+    border-radius: 7px;
+    margin-left: 16rem;
+
+    color: white;
+    cursor: pointer;
+}
+

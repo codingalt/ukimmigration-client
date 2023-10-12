@@ -1,0 +1,141 @@
+.Profile-img{
+    
+    /* margin-left: 10.5rem; */
+    margin-top: 0.5rem;
+
+}
+
+.uploading-text{
+    /* margin-left: 9.2rem; */
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+    
+}
+
+.maximum-size-text{
+    /* margin-left: 8.5rem; */
+font-size: 12px;
+font-weight: 400;
+line-height: 22px;
+letter-spacing: 0em;
+text-align: left;
+
+}
+
+
+.profile-picture-section{
+    width: 27rem;
+    height: 10rem;
+
+    border-radius: 10px;
+    border: 1px solid #E2E2E4;
+    background-color: #F7F7F7;
+    margin-top: 3rem;
+
+}
+
+.right-side-chnagepassowrd{
+    margin-top: 2.1rem;
+    margin-left: 3.1rem;
+}
+
+
+.Addcompany-Topnavbar-client-profile-2{
+    position: absolute;
+    left: 244px;
+  }
+
+
+
+
+.left-chnagepassowrd-side{
+    margin-left: 36px;
+}
+
+
+
+
+
+
+
+
+
+.changepassword-profile-heading{
+    position: relative;
+    margin-top: 71px;
+    left: 197px;
+    color: black;
+    width: 15%;
+    color: #5d982e;
+    /* border-bottom: 3px #5d982e solid; */
+    text-decoration: underline;
+}
+
+
+
+.Change-passowrd-cp{
+    width: 28rem;
+    height: 40px;
+    background-color: #5D982E;
+    color: white;
+    margin-top: 20px;
+
+    border: 1px solid #5D982E ;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.sumbit-change-password{
+    width: 28rem;
+    height: 40px;
+    background-color: #5D982E;
+    color: white;
+    margin-top: 20px;
+
+    border: 1px solid #5D982E ;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.basic-inputs-add-case-2{
+    border-radius: 10px;
+    width: 27rem;
+    height: 34px;
+    background-color: #e2e2e4;
+    border: 1px solid #e2e2e4;
+    padding-left: 12px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.add-case-lable{
+    font-size: 12px;
+   margin-top: 7px;
+   border: 1px solid #FFFFFE;
+   border-radius: 10px;
+   font-family: Poppins;
+   font-size: 13px;
+   font-weight: 500;
+   line-height: 24px;
+   letter-spacing: 0em;
+   text-align: left;
+}
+.basic-inputs-add-case{
+   
+    border-radius: 10px;
+    width: 27rem;
+    height: 34px;
+    background-color: #e2e2e4;
+    border: 1px solid #e2e2e4;
+    padding-left: 12px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.right-side-setting-2{
+    margin-left: 17rem;
+    margin-top: 10rem;
+}

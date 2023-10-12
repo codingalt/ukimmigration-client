@@ -1,0 +1,38 @@
+.left-side-otpmail{
+    margin-top: 2rem;
+    flex: 1 1;
+    margin-left: 11.2rem;
+}
+
+.left-sub-side{
+    position: relative;
+    right: 6rem;
+}
+
+.otp-left-sub{
+    position: relative;
+    bottom: 6rem;
+}
+
+.submit-email-btn-3{
+    width: 28rem;
+    height: 2.5rem;
+    border: 1px solid #5d982e;
+    background-color: #5d982e;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 2rem;
+}
+
+.ottp-button-2{
+    width: 28rem;
+    height: 2.5rem;
+    border: 1px solid #5d982e;
+    background-color: #5d982e;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: -4rem;
+    margin-top: 2rem;
+}
