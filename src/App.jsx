@@ -6,7 +6,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* <div id="recaptcha-container"></div> */}
       <wc-toast theme="light"></wc-toast>
       <Allroutes />
     </div>

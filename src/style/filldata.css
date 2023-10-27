@@ -43,6 +43,7 @@
 
 .phase-1{
     margin-left: 2rem;
+    width: 100vw;
 
 }
 
@@ -102,6 +103,41 @@
 }
 
 
+.k-pdf-export .fill .Name-title{
+  width: max-content !important;
+}
+
+/* .k-pdf-export .phase-1{
+    height: 1200px !important;
+} */
+
+.k-pdf-export .Phase-2 .border-y {
+    /* margin-left: 30px !important; */
+    display: none !important;
+}
+
+.k-pdf-export .Phase-2 .Name-text {
+    margin-left: 60px !important;
+}
+
+.k-pdf-export .phase-3 .border-y {
+    /* margin-left: 20px !important; */
+    display: none;
+}
+
+.k-pdf-export .phase-3 .Name-text {
+    margin-left: 44px !important;
+}
+
+/* .k-pdf-export .Phase-2 .Name-text a{
+    margin-left: 30px !important;
+} */
+
+/* .k-pdf-export .Phase-3{
+    height: 500px !important;
+} */
+
+
 
 
 
@@ -114,8 +150,7 @@ font-size: 12px;
 font-weight: 400;
 line-height: 18px;
 letter-spacing: 0em;
-
-
+width: max-content;
 }
 
 .download-btn{
@@ -140,20 +175,25 @@ letter-spacing: 0em;
 
 .border-y{
     height: 20px;
-    border: 1px solid #E2E2E4;
-    width: 0;
+    /* border: 1px solid #E2E2E4; */
+
+    width: 1.7px;
+    background-color: #E2E2E4;
+    z-index: 10;
   
 }
 
-.Name-text{
-
+.Name-text {
     font-family: Poppins;
-font-size: 12px;
-font-weight: 400;
-line-height: 18px;
-letter-spacing: 0em;
-text-align: left;
-
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+    display: flex;
+    /* column-gap: 16px; */
+    /* width: 100%; */
+    width: max-content;
 }
 
 
@@ -162,6 +202,7 @@ text-align: left;
     margin-top: 0rem;
     display: flex;
     width: 79%;
+    width: 95vw;
     min-height: 4ram;
     min-height: 3rem;
     align-items: center;

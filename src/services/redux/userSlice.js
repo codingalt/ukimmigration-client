@@ -3,7 +3,12 @@ import {createSlice} from "@reduxjs/toolkit"
 const initialState = {
   user: null,
   isAuthenticated: false,
-  applicationType: ""
+  applicationType: "",
+  captcha: null
+};
+
+const payment = {
+  
 };
 
 export const userSlice = createSlice({
@@ -23,8 +28,14 @@ export const userSlice = createSlice({
     setApplicationTypeToSlice: (state, action) => {
       state.applicationType = action.payload;
     },
+
+    setCaptchaToSlice: (state, action) => {
+      state.captcha = action.payload;
+    },
+
   },
 });
 
-export const { setUserData, logout, setApplicationTypeToSlice } = userSlice.actions;
+export const { setUserData, logout, setApplicationTypeToSlice, setCaptchaToSlice } =
+  userSlice.actions;
 export default userSlice.reducer;

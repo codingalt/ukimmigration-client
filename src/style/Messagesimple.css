@@ -16,7 +16,10 @@
     width: 60rem;
     top: 3rem;
     border-radius: 11px;
+    /* overflow: hidden; */
   }
+
+  
 
 
   .back-button-chat{
@@ -75,11 +78,12 @@
     font-family: Poppins;
     font-size: 10px;
     font-weight: 400;
-    line-height: 15px;
+    line-height: 20px;
     letter-spacing: 0em;
     text-align: left;
     color: #777;
     bottom: 46px;
+    max-width: 75%;
   }
   
   .Admin-name-text {
@@ -106,7 +110,7 @@
   }
   .photo-2 {
     position: relative;
-    top: 82px;
+    top: 40px;
   }
   
   .Date-time-text-2 {
@@ -194,7 +198,7 @@
      width: 50rem;
   }
   .Gmail-text-2 {
-    position: relative;
+    position: absolute;
     top: 10px;
     /* right: 107px; */
     font-family: Poppins;
@@ -202,8 +206,8 @@
     font-weight: 500;
     line-height: 15px;
     letter-spacing: 0em;
-    text-align: left;
-    right: 13.2rem;
+    left: 4.25rem;
+    top: 58%;
   }
   
   .Message-svg-img {
@@ -356,7 +360,65 @@
     background-size: cover;
     background-repeat: no-repeat;
   }
+
+  .pdf-file-send{
+    background-color: #FFFFFF;
+    border: 1px solid #E2E2E4;
+    width: 9.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    display: flex;
+    /* margin-left:2rem; */
+    margin-top: 12px;
+  }
   
+  .file-attach-pdf-icon{
+    height: 26px;
+    margin-top: 5px;
+    margin-left: 7px;
+  }
+
+.pdf-file-downloadicon{
+  height: 25px;
+  margin-top: 5px;
+  margin-left: 8px;
+}
+
+
+.file-sze-mb{
+  font-family: Poppins;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 4px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.Attach-file-text{
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 25px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+
+
+  .pdf-file-send{
+    background-color: #FFFFFF;
+    border: 1px solid #E2E2E4;
+    width: 9rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    display: flex;
+    margin-bottom: 31px;
+  }
+
+  .one-pdf-file{
+    display: flex;
+    gap: 14px;
+  }
 
   
   .email-edit-pencile{
@@ -460,19 +522,27 @@
   
   .chat-2 .messages-chat-2 {
     margin-top: 27px;
-    overflow-y: auto;
     overflow-x: hidden;
+    overflow-y: hidden;
     width: 60rem;
-    scrollbar-color: #5d982e white;
+    /* scrollbar-color: #5d982e white;
     scrollbar-width: thin;
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; */
     /* height: 81%; */
-    height: 25rem;
+    height: 31rem;
+    padding-bottom: 5rem;
+    overflow-y: auto;
+  }
+
+  .styles_scrollable-div__prSCv{
+    height: 100% !important;
+    overflow-x: hidden;
   }
   
   .chat-2 .messages-chat-2 .message {
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
+    padding-left: 5px;
   }
   
   .chat-2 .messages-chat-2 .message .photo {
@@ -542,16 +612,24 @@
   }
   
   .footer-chat-2 {
-    width: calc(97% - 28px);
+    width: 95%;
     height: 80px;
     display: flex;
     align-items: center;
     background-color: transparent;
+    background-color: #fff;
     border-top: 2px solid #eee;
-    margin-left: 28px;
+    margin-left: 0px;
     position: relative;
     /* top: 13px; */
-    margin-top: 8rem;
+    margin-top: 0rem;
+    display: flex;
+    gap: 15px;
+    position: absolute;
+    left: 0;
+    bottom: 0.5%;
+    padding: 0 1rem;
+    padding-right: 3rem;
   }
   
   

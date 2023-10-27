@@ -107,6 +107,37 @@ export const userApi = createApi({
       invalidatesTags: ["Users"],
     }),
 
+    paymentIntent: builder.mutation({
+      query: (data) => ({
+        url: "api/payment-intent",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    verifyCaptcha: builder.mutation({
+      query: (data) => ({
+        url: "api/verify-captcha",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Users"],
+    }),
+
+    getClientNotification: builder.query({
+      query: () => ({
+        url: "api/notification",
+        method: "GET",
+      }),
+    }),
+
+    getPhaseNotification: builder.query({
+      query: () => ({
+        url: "api/phases/notification",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -122,5 +153,8 @@ export const {
   useCreateNewPasswordMutation,
   useUpdateUserDataMutation,
   useChangePasswordMutation,
-  useLogoutMutation
+  useLogoutMutation,
+  usePaymentIntentMutation,
+  useVerifyCaptchaMutation,
+  useGetClientNotificationQuery
 } = userApi;

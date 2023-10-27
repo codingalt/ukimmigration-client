@@ -11,8 +11,10 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../firebase";
-import { formatTime, onCaptchaVerify2 } from "../utils";
+import { formatTime } from "../utils";
 import OTPInput, { ResendOTP } from "otp-input-react";
+import Loader from "./Loader";
+import { useSelector } from "react-redux";
 
 const Otpemail = () => {
 
@@ -24,6 +26,7 @@ const Otpemail = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoading2, setIsLoading2] = useState(false);
     const [isOtpError, setIsOtpError] = useState(false);
+    const { user } = useSelector((state) => state.user);
 
     const onVerifyOtp = async () => {
       try {
@@ -36,11 +39,11 @@ const Otpemail = () => {
 
         const result = await window.confirmationResult.confirm(otp);
         console.log(result);
-        toastSuccess("OTP Sent Successfully");
         setIsLoading2(false);
         setTimeout(() => {
           if (result.user) {
-            navigate("/home");
+            window.recaptchaVerifier = null;
+            navigate("/companyscreen");
           }
         }, 1700);
       } catch (error) {
@@ -49,23 +52,24 @@ const Otpemail = () => {
       }
     };
 
-    const onCaptchaVerify = async () => {
+    const onCaptchaVerify = ()=>{
+      window.recaptchaVerifier = null;
       if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new RecaptchaVerifier(
           auth,
-          "recaptcha-container",
+          "recaptcha-container-verifyotp",
           {
             size: "invisible",
-            callback: (response) => {
+            callback: async (response) => {
               handleSendOtp();
             },
             "expired-callback": () => {
-              toastError("Captcha Expired");
+              console.log("Caprcha expired");
             },
           }
         );
       }
-    };
+    }
 
     const handleSendOtp = async () => {
       if (contact === "") {
@@ -74,26 +78,10 @@ const Otpemail = () => {
       }
 
       console.log(contact);
-
+      onCaptchaVerify();
+      setOtp("");
       try {
-        // await onCaptchaVerify();
-        if (!window.recaptchaVerifier) {
-          window.recaptchaVerifier = new RecaptchaVerifier(
-            auth,
-            "recaptcha-container2",
-            {
-              size: "invisible",
-              callback: async(response) => {
-                console.log(response);
-                handleSendOtp();
-      
-              },
-              "expired-callback": () => {
-                toastError("Captcha Expired");
-              },
-            }
-          );
-        }
+     
         setIsLoading(true);
         const appVerifier = window.recaptchaVerifier;
         const formatPhone = "+" + contact;
@@ -113,17 +101,9 @@ const Otpemail = () => {
       } catch (error) {
         setIsOtpError(true);
         setIsLoading(false);
-        window.recaptchaVerifier.recaptcha.reset();
-        window.recaptchaVerifier.clear();
         console.log(error);
       }
     };
-
-    useMemo(() => {
-      if (isOtpError) {
-        toastError("Error sending Otp, try again in few seconds");
-      }
-    }, [isOtpError]);
 
     useEffect(() => {
       let timer;
@@ -137,6 +117,7 @@ const Otpemail = () => {
 
       return () => clearInterval(timer);
     }, [remainingTime]);
+
  
     return (
       <div className="Container-forgetpassword">
@@ -170,11 +151,16 @@ const Otpemail = () => {
               </div>
               <div className="button-container">
                 <button
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                   disabled={remainingTime > 0}
                   onClick={handleSendOtp}
                   className="submit-email-btn-3"
                 >
-                  Request OTP {isLoading && "..."}
+                  {isLoading ? <Loader /> : "Send OTP"}
                 </button>
               </div>
             </div>
@@ -184,15 +170,12 @@ const Otpemail = () => {
                 digit OTP
               </p>
 
-              <div id="recaptcha-container"></div>
-
               {/* <OTPGenerator /> */}
               <div className="otp-container">
                 <div className="otp-inputs">
                   <OTPInput
                     value={otp}
                     onChange={setOtp}
-                    autoFocus
                     inputClassName="otp-input"
                     OTPLength={6}
                     otpType="number"
@@ -226,18 +209,25 @@ const Otpemail = () => {
                 </span>
               </p>
 
-              <div id="recaptcha-container2"></div>
+              {/* <div id="recaptcha-container"></div> */}
 
               <button
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
                 type="submit"
                 className="ottp-button-2"
                 onClick={onVerifyOtp}
               >
-                Submit {isLoading2 && "..."}
+                {isLoading2 ? <Loader /> : "Submit"}
               </button>
             </div>
           </div>
 
+          <div id="recaptcha-container-verifyotp"></div>
+          <div id="recaptcha-container"></div>
           <div className="right-side-otp">
             <img src={Sideimg} alt="" className="side-img-forget" />
           </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useChangePasswordMutation,
   useUpdateUserDataMutation,
@@ -19,14 +19,15 @@ import SettingBox from "./Settingbox";
 import settingprofileimg from "../Assets/setting-profile.svg";
 import "../style/setting.css";
 import Loader from "./Loader";
+import Navbar from "./Navbar";
+import { setUserData } from "../services/redux/userSlice";
 
 const Settings = () => {
-  const [isNotificationBoxVisible, setIsNotificationBoxVisible] =
-    useState(false);
-  const [isSettingsBoxVisible, setIsSettingsBoxVisible] = useState(false);
+
   const notificationRef = useRef(null);
   const settingsRef = useRef(null);
   const [imageName, setImageName] = useState();
+  const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.user);
   const { name, email, contact, profilePic,googleId } = user && user;
@@ -87,7 +88,10 @@ const Settings = () => {
       formData.append("profilePic", values.profilePic);
     }
     try {
-      const response = await updateUserData(formData);
+      const {data} = await updateUserData(formData);
+      console.log(data);
+      dispatch(setUserData(data));
+
     } catch (error) {
       console.error(error);
     }
@@ -142,49 +146,15 @@ const Settings = () => {
     };
   }, []);
 
-  const toggleNotificationBox = () => {
-    setIsNotificationBoxVisible(!isNotificationBoxVisible);
-  };
-
-  const toggleSettingsBox = () => {
-    setIsSettingsBoxVisible(!isSettingsBoxVisible);
-  };
+ 
 
   return (
     <div className="Container-forgetpassword-phase1">
-      <div className="Header-topbar">
-        <div className="left-side-header">
-          <img src={Logo2} alt="" />
-        </div>
-        <div className="right-side-header">
-          <img
-            src={bellicon2}
-            alt=""
-            className="bell-icon-notification"
-            onClick={toggleNotificationBox}
-          />
-          <img src={profileimg} alt="" className="profile-img" />
-          <p className="Jhon-profile-text">John Leo</p>
-          <p className="Admin-text">Admin</p>
-          <div ref={settingsRef}>
-            <img
-              src={dropdownicon}
-              alt=""
-              className="dropdown"
-              onClick={toggleSettingsBox}
-            />
-          </div>
-        </div>
-
-        {/* Render NotificationBox conditionally */}
-        {isNotificationBoxVisible && (
-          <div ref={notificationRef}>
-            <NotificationBox />
-          </div>
-        )}
-        {isSettingsBoxVisible && <SettingBox />}
-      </div>
-      <div className="Forgetpassword-sub-2" style={{justifyContent:"flex-start"}}>
+      <Navbar />
+      <div
+        className="Forgetpassword-sub-2"
+        style={{ justifyContent: "flex-start" }}
+      >
         <div className="left-side-forget-password-2">
           <p className="Required-data-text">Setting*</p>
           <NavLink to="/filldata">
@@ -219,10 +189,10 @@ const Settings = () => {
                   />
                   <img
                     src={
-                       image
-                        ? image.image 
+                      image
+                        ? image.image
                         : profilePic
-                        ? `${import.meta.env.VITE_IMG_URI+profilePic}`
+                        ? `${import.meta.env.VITE_IMG_URI + profilePic}`
                         : settingprofileimg
                     }
                     alt=""
@@ -338,7 +308,7 @@ const Settings = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  textAlign:"center"
+                  textAlign: "center",
                 }}
               >
                 {passLoading ? <Loader /> : "Change Password"}

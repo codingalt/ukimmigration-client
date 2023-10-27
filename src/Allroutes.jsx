@@ -44,63 +44,65 @@ import Congratsphase4 from './components/Congratsphase4';
 import Submissionpopup from './components/Submissionpopup';
 import Protected from './components/Protected';
 import EmailVerify from './components/EmailVerify';
+import Payment from './components/Payment';
+import Phase4Page from './pages/Phase4Page';
+import Phase4FilledDataPage from './pages/Phase4FilledDataPage';
+import PdfView from './components/Documents/PdfView';
 
 
 
 
 const Allroutes = () => {
   return (
-
-      <Routes>
-
-
-        <Route path="/filldata" element={<Protected Component={Filldata} />} />
-        <Route exact path="/" element={< Signin />} />
-        <Route path="/signup" element={<Singup />} />
-        <Route path="/otp" element={< Otp />} />
-        <Route path="/forgetpassword" element={<Protected Component={Forgetpassword} />} />
-        <Route path="/restpassword/:userId/:token" element={<Protected Component={Resetpassword} />} />
-        <Route path="/:userId/verify/:token" element={<Protected Component={EmailVerify} />} />
-        <Route path="/companyscreen" element={<Protected Component={Companyscreen} />} />
-        <Route path="/phase1" element={<Protected Component={Phase1} />} />
-        <Route path="/phase2" element={<Protected Component={Phase2} />} />
-        <Route path="/otpmail" element={<Otpemail />} />
-        <Route path="/agreement" element={<Protected Component={Agreement} />} />
-        <Route path="/phase3" element={<Protected Component={Phase3} />} />
-        <Route path="/adddetails" element={<Adddetails />} />
-        <Route path="/phase4" element={<Phase4 />} />
-        <Route path="/setting" element={<Protected Component={Settings} />} />
-        <Route path="/Acomodation" element={<Acomodation />} />
-        <Route path="/family" element={<Family />} />
-        <Route path="/languageprofeciency" element={<LanguageProfeciency />} />
-        <Route path="/education" element={<Education />} />
-        <Route path="/employement" element={<Employement />} />
-        <Route path="/Mainteance" element={<Mainteance />} />
-        <Route path="/travel" element={<Travel />} />
-        <Route path="/character" element={<Charcater />} />
-        <Route path="/message" element={<Message />} />
-        <Route path="/Rejectpopup" element={<Rejectpopup />} />
-        <Route path="/finaldata2" element={<Filldata2 />} />
-        <Route path="/finaldataphase4" element={<Filldataphase4 />} />
-        <Route path="/Acomodationdata" element={<Acomodationdata />} />
-        <Route path="/familydata" element={<FamilyData />} />
-        <Route path="/congrats" element={<Congratspopup />} />
-        <Route path="/Languageprofiecneydata" element={<Languageprofeciencydata />} />
-        <Route path="/educationdata" element={<Educationdata />} />
-        <Route path="/employmentdata" element={<Employementdatafill />} />
-        <Route path="/mainteincedata" element={<Mainteincedata />} />
-        <Route path="/traveldata" element={<Traveldata />} />
-        <Route path="/characterdata" element={<CharacterData />} />
-        <Route path="/rejectbyauthority" element={<Rejectedbyauthority />} />
-        <Route path="/Approvedbyauthority" element={<Approvedbyauthority />} />
-        <Route path="/filldataallphase" element={<FilldataAllphase />} />
-        <Route path="/filldataallphase2" element={<FilldataAllphases2 />} />
-        <Route path="/congratsphase4" element={<Congratsphase4 />} /> 
-        <Route path="/submissionpopup" element={<Submissionpopup />} /> 
-        
-        
-      </Routes>
-  )
+    <Routes>
+      <Route
+        path="/adddetails/:applicationId"
+        element={<Protected Component={Payment} />}
+      />
+      <Route path="/filldata" element={<Protected Component={Filldata} />} />
+      <Route exact path="/" element={<Signin />} />
+      <Route path="/signup" element={<Singup />} />
+      <Route path="/otp" element={<Otp />} />
+      <Route
+        path="/forgetpassword"
+        element={<Protected Component={Forgetpassword} />}
+      />
+      <Route
+        path="/restpassword/:userId/:token"
+        element={<Protected Component={Resetpassword} />}
+      />
+      <Route
+        path="/:userId/verify/:token"
+        element={<Protected Component={EmailVerify} />}
+      />
+      <Route
+        path="/companyscreen"
+        element={<Protected Component={Companyscreen} />}
+      />
+      <Route path="/phase1" element={<Protected Component={Phase1} />} />
+      <Route path="/phase2" element={<Protected Component={Phase2} />} />
+      <Route path="/otpmail" element={<Otpemail />} />
+      <Route path="/agreement" element={<Protected Component={Agreement} />} />
+      <Route path="/phase3" element={<Protected Component={Phase3} />} />
+      <Route path="/phase4" element={<Protected Component={Phase4Page} />} />
+      <Route path="/setting" element={<Protected Component={Settings} />} />
+      <Route path="/message" element={<Protected Component={Message} />} />
+      <Route path="/Rejectpopup" element={<Rejectpopup />} />
+      <Route path="/finaldata2" element={<Filldata2 />} />
+      <Route path="/finaldataphase4" element={<Filldataphase4 />} />
+      <Route
+        path="/phase4/data"
+        element={<Protected Component={Phase4FilledDataPage} />}
+      />
+      <Route path="/congrats" element={<Congratspopup />} />
+      <Route path="/rejectbyauthority" element={<Rejectedbyauthority />} />
+      <Route path="/Approvedbyauthority" element={<Approvedbyauthority />} />
+      <Route path="/filldataallphase" element={<FilldataAllphase />} />
+      <Route path="/filldataallphase2" element={<FilldataAllphases2 />} />
+      <Route path="/congratsphase4" element={<Congratsphase4 />} />
+      <Route path="/submissionpopup" element={<Submissionpopup />} />
+    </Routes>
+  );
 }
 
 export default Allroutes

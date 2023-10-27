@@ -1,26 +1,22 @@
 import React, { useEffect, useState, useRef,useMemo } from 'react';
 import "../style/forgetpassword.css"
 import "../style/Phase1.css"
-import Logo2 from '../Assets/Ukimmigration-logo.png';
-import bellicon2 from "../Assets/bell-icon-svg.svg"
-import profileimg from "../Assets/profile-img-svg.svg"
-import dropdownicon from "../Assets/dropdown-icon-svg.svg"
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
-import NotificationBox from './Notification';
-import SettingBox from "./Settingbox"
 import { usePostPhase1Mutation } from "../services/api/applicationApi";
 import { toastError, toastSuccess } from "./Toast";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { phase1Schema } from "../utils/ValidationSchema";
 import { useSelector } from "react-redux";
 import Loader from './Loader';
+import SelectCountry from './SelectCountry';
+import LanguageList from './LanguageList';
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import Navbar from './Navbar';
+import Congratspopup from './Congratspopup';
 
 const Phase1 = () => {
 
-    const [isNotificationBoxVisible, setIsNotificationBoxVisible] = useState(false);
-    const [isSettingsBoxVisible, setIsSettingsBoxVisible] = useState(false);
-    const notificationRef = useRef(null);
-    const settingsRef = useRef(null);
     const { user,applicationType } = useSelector((state) => state.user);
     const [permissionInCountryErr, setPermissionInCountryErr] = useState(true);
     const [speakEnglishErr, setSpeakEnglishErr] = useState(true);
@@ -64,7 +60,7 @@ const Phase1 = () => {
 
     useMemo(() => {
       if (isSuccess) {
-        toastSuccess("Application Submitted.");
+       
       }
     }, [isSuccess]);
 
@@ -76,80 +72,27 @@ const Phase1 = () => {
       });
       setTimeout(() => {
         navigate("/filldata")
-      }, 1000);
+      }, 3000);
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                notificationRef.current &&
-                !notificationRef.current.contains(event.target) &&
-                settingsRef.current &&
-                !settingsRef.current.contains(event.target)
-            ) {
-                setIsNotificationBoxVisible(false);
-                setIsSettingsBoxVisible(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const toggleNotificationBox = () => {
-        setIsNotificationBoxVisible(!isNotificationBoxVisible);
-    };
-
-    const toggleSettingsBox = () => {
-        setIsSettingsBoxVisible(!isSettingsBoxVisible);
-    };
-
-    const handleOtherLanguages = (e,setFieldValue)=>{
-        if(!languagesArr.includes(e.target.value)){
-            setLanguagesArr([...languagesArr, e.target.value]);
-            setFieldValue("phase1.otherLanguagesSpeak", [
-              ...languagesArr,
-              e.target.value,
-            ]);
-        }
+    const handleRemove = (value)=>{
+      if(languagesArr.includes(value)){
+        const tempArr = [...languagesArr];
+        const filteredArray = tempArr.filter(
+          (item) => item !== value
+        );
+        setLanguagesArr(filteredArray);
+      }
     }
+
+    console.log(languagesArr);
 
 
     return (
       <div className="Container-forgetpassword-phase1">
-        <div className="Header-topbar">
-          <div className="left-side-header">
-            <img src={Logo2} alt="" />
-          </div>
-          <div className="right-side-header">
-            <img
-              src={bellicon2}
-              alt=""
-              className="bell-icon-notification"
-              onClick={toggleNotificationBox}
-            />
-            <img src={profileimg} alt="" className="profile-img" />
-            <p className="Jhon-profile-text">John Leo</p>
-            <p className="Admin-text">Admin</p>
-            <div ref={settingsRef}>
-              <img
-                src={dropdownicon}
-                alt=""
-                className="dropdown"
-                onClick={toggleSettingsBox}
-              />
-            </div>
-          </div>
+        <Navbar />
 
-          {/* Render NotificationBox conditionally */}
-          {isNotificationBoxVisible && (
-            <div ref={notificationRef}>
-              <NotificationBox />
-            </div>
-          )}
-          {isSettingsBoxVisible && <SettingBox />}
-        </div>
+        {isSuccess && <Congratspopup />}
 
         <div className="Forgetpassword-sub-2">
           <Formik
@@ -206,13 +149,27 @@ const Phase1 = () => {
                     </div>
                     <div className="Phone-number">
                       <p className="phase-1-text-left-side">Contact</p>
-                      <Field
-                        type="number"
-                        id="phase1.contact"
-                        name="phase1.contact"
-                        placeholder="(485)-845-8542658"
-                        className="phase-1-input-left-side"
-                      />
+                      <div className="mobileNumber">
+                        <PhoneInput
+                          country={"us"}
+                          inputClass="mobileInput"
+                          placeholder="(485)-845-8542658"
+                          containerClass={"inputContainer"}
+                          containerStyle={{
+                            height: "2.7rem",
+                            marginLeft: "0rem",
+                          }}
+                          inputStyle={{
+                            height: "2.7rem",
+                            width: "30rem",
+                            background: "#f7f7f7",
+                          }}
+                          onChange={(contact) =>
+                            setFieldValue("phase1.contact", contact)
+                          }
+                        />
+                      </div>
+
                       <ErrorMessage
                         name="phase1.contact"
                         component="div"
@@ -243,26 +200,11 @@ const Phase1 = () => {
                     </div>
                     <div className="nationalty-input">
                       <p className="phase-1-text-left-side">Country</p>
-                      <Field
-                        as="select"
+                      <SelectCountry
+                        name="phase1.country"
                         id="phase1.country"
-                        name="phase1.country"
                         className="phase-1-input-left-side-selector"
-                      >
-                        <option value="">Select Country</option>
-                        <option value="pakistan">Pakistan</option>
-                        <option value="usa">USA</option>
-                        <option value="uk">UK</option>
-                      </Field>
-                      <ErrorMessage
-                        name="phase1.country"
-                        component="div"
-                        style={{
-                          color: "red",
-                          fontSize: ".8rem",
-                          marginLeft: "7px",
-                        }}
-                      />
+                      ></SelectCountry>
 
                       <p className="country-cnfrm-text">
                         Do you have residence in this country
@@ -415,31 +357,13 @@ const Phase1 = () => {
                     What other languages do you speak?*
                   </p>
 
-                  <Field
-                    as="select"
-                    id="phase1.otherLanguagesSpeak"
+                  <LanguageList
                     name="phase1.otherLanguagesSpeak"
                     className="phase-1-input-right-side-selector"
-                    value={languagesArr[-1]}
-                    ref={languageRef}
-                    onChange={(e) => handleOtherLanguages(e, setFieldValue)}
-                    required
-                  >
-                    <option value="">Select Other Languages</option>
-                    <option value="english">English</option>
-                    <option value="spanish">Spanish</option>
-                    <option value="french">French</option>
-                    <option value="german">German</option>
-                  </Field>
-                  <ErrorMessage
-                    name="phase1.otherLanguagesSpeak"
-                    component="div"
-                    style={{
-                      color: "red",
-                      fontSize: ".8rem",
-                      marginLeft: "7px",
-                    }}
-                  />
+                    onChange={setLanguagesArr}
+                    prevValue={languagesArr}
+                    setFieldValue={setFieldValue}
+                  ></LanguageList>
 
                   <div
                     className="languages-display"
@@ -458,14 +382,28 @@ const Phase1 = () => {
                         key={item}
                         style={{
                           background: "#F7F7F7",
-                          padding: "0px 10px",
+                          padding: "2px 10px",
                           borderRadius: "3px",
                           fontSize: ".82rem",
                           border: "1px solid #E2E2E4",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "15px",
                         }}
                         className="language-item"
                       >
                         {item}
+                        <span
+                          onClick={() => handleRemove(item)}
+                          style={{
+                            cursor: "pointer",
+                            color: "red",
+                            fontSize: "1.04rem",
+                          }}
+                        >
+                          x
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -576,9 +514,11 @@ const Phase1 = () => {
                     type="submit"
                     className="submit-email-btn-2"
                   >
-                    {isLoading
-                      ? <Loader width={25} color={"#fff"} />
-                      : "Submit"}
+                    {isLoading ? (
+                      <Loader width={25} color={"#fff"} />
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </Form>

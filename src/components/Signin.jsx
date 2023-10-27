@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import "../style/signin.css"
 import googlepic from "../Assets/google-pic.svg"
 import robort from "../Assets/recaptcha-img.svg"
-import { useLoginpUserMutation } from "../services/api/userApi";
+import { useLoginpUserMutation, useVerifyCaptchaMutation } from "../services/api/userApi";
 import { toastError } from "./Toast";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate,NavLink } from 'react-router-dom'; 
@@ -18,6 +18,8 @@ import { useDispatch } from 'react-redux';
 import { setUserData } from '../services/redux/userSlice';
 import Loader from './Loader';
 
+import ReCAPTCHA from "react-google-recaptcha";
+
 const Signin = () => {
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
@@ -25,6 +27,9 @@ const [loginUser, result] = useLoginpUserMutation();
 const { isLoading, isSuccess, error } = result;
 const navigate = useNavigate();
 const [captchaValue, setCaptchaValue] = useState();
+const [recaptchaToken, setRecaptchaToken] = useState("");
+const [verifyCaptcha, res] = useVerifyCaptchaMutation();
+  const { isLoading: isLoadingCaptcha } = res;
 const dispatch = useDispatch();
 
 useMemo(() => {
@@ -50,15 +55,25 @@ const handleSend = async () => {
     return;
   }
 
-  // console.log(captchaValue);
-  if (!captchaValue) {
-    toastError("Please Fill out ReCaptcha.");
+  if (!recaptchaToken) {
+    toastError("Please Fill out Captcha.");
+    return;
+  }
+
+  const { data: captchaResult } = await verifyCaptcha({
+    recaptchaToken: recaptchaToken,
+  });
+  console.log(captchaResult);
+
+  if (!captchaResult.success) {
+    toastError("Invalid Captcha");
     return;
   }
 
   const {data} = await loginUser({ email: email, password: password });
   console.log(data);
   dispatch(setUserData(data?.user));
+  navigate(data.redirect);
 
 };
 
@@ -77,32 +92,37 @@ const handleSigninWithGoogle = useGoogleLogin({
   onError: (error) => toastError("Login Failed", error),
 });
 
-const handleCaptchaRes = async()=>{
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "normal",
-        callback: async (response) => {
-          const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId);
-          setCaptchaValue(recaptchaResponse);
-        },
-        "expired-callback": () => {
-          console.log("Caprcha expired");
-          toastError("Captcha Expired.");
-          grecaptcha.reset(window.recaptchaWidgetId);
-        },
-      }
-    );
-    recaptchaVerifier.render().then(async (widgetId) => {
-      window.recaptchaWidgetId = widgetId;
-    });
-  
+function onChange(value) {
+  console.log("Captcha value:", value);
+  setRecaptchaToken(value);
 }
 
-useEffect(() => {
-  handleCaptchaRes();
-}, []);
+// const handleCaptchaRes = async()=>{
+//     window.recaptchaVerifier = new RecaptchaVerifier(
+//       auth,
+//       "recaptcha-container",
+//       {
+//         size: "normal",
+//         callback: async (response) => {
+//           const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId);
+//           setCaptchaValue(recaptchaResponse);
+//         },
+//         "expired-callback": () => {
+//           console.log("Caprcha expired");
+//           toastError("Captcha Expired.");
+//           grecaptcha.reset(window.recaptchaWidgetId);
+//         },
+//       }
+//     );
+//     recaptchaVerifier.render().then(async (widgetId) => {
+//       window.recaptchaWidgetId = widgetId;
+//     });
+  
+// }
+
+// useEffect(() => {
+//   handleCaptchaRes();
+// }, []);
 
 
   return (
@@ -130,17 +150,30 @@ useEffect(() => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-             
-              <div
-                id="recaptcha-container"
+
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_SITE_KEY}
+                onChange={onChange}
+                style={{ marginTop: "2.5rem", marginLeft: "3.5rem" }}
+              />
+
+              <button
+                disabled={isLoading}
+                type="button"
+                onClick={handleSend}
                 style={{
-                  marginLeft: "3.3rem",
-                  marginTop: "2.4rem",
-                  borderRadius: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-              ></div>
-              <button type="button" onClick={handleSend} style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-                {isLoading ? <Loader /> : "Sign In"}
+              >
+                {isLoading ? (
+                  <Loader width={25} color={"#fff"} />
+                ) : isLoadingCaptcha ? (
+                  <Loader />
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </form>
             <NavLink className="forget-password" to={"/forgetpassword"}>

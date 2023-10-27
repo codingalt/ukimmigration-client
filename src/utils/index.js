@@ -15,7 +15,7 @@ export const onCaptchaVerify = async() => {
        },
        "expired-callback": () => {
          console.log("Caprcha expired");
-         grecaptcha.reset(window.recaptchaWidgetId);
+        //  grecaptcha.reset(window.recaptchaWidgetId);
        },
      }
    );
@@ -38,37 +38,35 @@ export const onCaptchaVerify2 = async (contact) => {
       },
       "expired-callback": () => {
         console.log("Caprcha expired");
-        grecaptcha.reset(window.recaptchaWidgetId);
+        // grecaptcha.reset(window.recaptchaWidgetId);
       },
     }
   );
  
 };
 
-export const onSendOTP = async(contact) => {
+export const onSendOTP = async (contact) => {
   const appVerifier = window.recaptchaVerifier;
   console.log("App Verifier", appVerifier);
   const formatPhone = "+" + contact;
   try {
-
     const data = await signInWithPhoneNumber(auth, formatPhone, appVerifier);
     window.confirmationResult = data;
     return data;
-    
   } catch (error) {
     console.log(error);
-    grecaptcha.reset(window.recaptchaWidgetId);
+    // grecaptcha.reset(window.recaptchaWidgetId);
     return error;
   }
-  
-    // .then((confirmationResult) => {
-    //   console.log(confirmationResult);
-    //   return true;
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    //   return false;
-    // });
+
+  // .then((confirmationResult) => {
+  //   console.log(confirmationResult);
+  //   return true;
+  // })
+  // .catch((error) => {
+  //   console.error(error);
+  //   return false;
+  // });
 };
 
 export const getNotificationPermission = async () => {

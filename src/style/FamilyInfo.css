@@ -1,0 +1,117 @@
+.famlyinfo-save{
+    position: relative;
+    top: 3rem;
+    right: 31rem;
+    width: 5rem;
+    height: 2rem;
+    background-color: gold;
+}
+
+
+/* CSS for the modal */
+.modal {
+    display: none; /* Hide the modal by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: linear-gradient(to bottom, #000, #0000ff); Blue to black gradient */
+    z-index: 999;
+    overflow: hidden;
+  }
+  
+  .modal-content {
+    background: #fff;
+    margin: 20% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 60%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    bottom: 15rem;
+    height: 41.5rem;
+    overflow-y: auto;
+    z-index: 999;
+  }
+  
+  /* Show the modal when it's active */
+  .modal.active {
+    display: block;
+  }
+
+  .Add-chlid-btn{
+
+    width: 6rem;
+    height: 2rem;
+    background-color: #5D982E;
+    border: #5D982E 1px solid;
+    border-radius: 6px;
+    color: white;
+    margin-top: 1rem;
+    cursor: pointer;
+  }
+  
+  .Close-btn-modal{
+    width: 6rem;
+    height: 2rem;
+    background-color: #5D982E;
+    border: #5D982E 1px solid;
+    border-radius: 6px;
+    color: white;
+    margin-top: 1rem;
+    cursor: pointer;
+  }
+
+  .Save-btn-modal{
+    width: 6rem;
+    height: 2rem;
+    background-color: #5D982E;
+    border: #5D982E 1px solid;
+    border-radius: 6px;
+    color: white;
+    margin-top: 1rem;
+    cursor: pointer;
+    margin-left: 2rem;
+  }
+
+
+  /* Add this CSS to your existing CSS file or create a new one for this component */
+
+/* Child Tabs Styling */
+.child-tabs {
+  display: flex;
+  gap: 10px; /* Adjust the gap as needed */
+}
+
+.child-tab {
+  background-color: #f2f2f2;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.child-tab.active {
+  background-color: green; /* Active tab color */
+  color: white; /* Text color for active tab */
+}
+
+.child-details input{
+  width: 88%;
+}
+
+/* .child-details .genral-input-left-side{
+  width: 91%;
+} */
+
+.child-details select{
+  width: 92%;
+}
+
+.child-details .genral-text-left-side {
+  width: 100%;
+}
+
+.child-details .checkbox-child{
+  width: auto;
+}
