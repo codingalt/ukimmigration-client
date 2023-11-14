@@ -532,6 +532,7 @@
     height: 31rem;
     padding-bottom: 5rem;
     overflow-y: auto;
+    scroll-behavior: smooth;
   }
 
   .styles_scrollable-div__prSCv{

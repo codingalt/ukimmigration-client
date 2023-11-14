@@ -18,7 +18,7 @@ const Navbar = () => {
     const notificationRef = useRef(null);
     const settingsRef = useRef(null);
     const { user } = useSelector((state) => state.user);
-    const { name, profilePic } = user && user;
+    const { name, profilePic } = user? user : "";
         useEffect(() => {
           const handleClickOutside = (event) => {
             if (
@@ -56,10 +56,29 @@ const Navbar = () => {
           className="bell-icon-notification"
           onClick={toggleNotificationBox}
         />
-        <img style={{width:"2.6rem",height:"2.6rem",borderRadius:"50%"}} src={profilePic? import.meta.env.VITE_IMG_URI+profilePic : userDefault} alt="" className="profile-img" />
-        <p className="Jhon-profile-text">{name}</p>
+        <img
+          style={{
+            width: "2.6rem",
+            height: "2.6rem",
+            borderRadius: "50%",
+            cursor: "pointer",
+          }}
+          src={
+            profilePic ? import.meta.env.VITE_IMG_URI + profilePic : userDefault
+          }
+          onClick={toggleSettingsBox}
+          alt=""
+          className="profile-img"
+        />
+        <p
+          style={{ cursor: "pointer" }}
+          className="Jhon-profile-text"
+          onClick={toggleSettingsBox}
+        >
+          {name}
+        </p>
         {/* <p className="Admin-text">Admin</p> */}
-        <div ref={settingsRef}>
+        <div ref={settingsRef} onClick={toggleSettingsBox}>
           <img
             src={dropdownicon}
             alt=""
@@ -71,7 +90,11 @@ const Navbar = () => {
 
       {/* Render NotificationBox conditionally */}
       {isNotificationBoxVisible && (
-        <div ref={notificationRef}>
+        <div
+          className="notification-wrapper"
+          ref={notificationRef}
+          style={{ position: "absolute", left: "101%", top: "-5.5%" }}
+        >
           <NotificationBox />
         </div>
       )}

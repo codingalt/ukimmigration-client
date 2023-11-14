@@ -8,7 +8,7 @@ import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
 
-const EducationFilled = ({data}) => {
+const EducationFilled = ({data,application}) => {
     const app = data?.education;
     console.log("Education filled", app);
 
@@ -35,7 +35,7 @@ const EducationFilled = ({data}) => {
         paperSize="A4"
         margin="2cm"
         ref={pdfRef}
-        fileName="UkImmigration-Phase4-Education"
+        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-Education`}
       >
         <div className="phase-1">
           <p className="Form-data-heading">Education</p>

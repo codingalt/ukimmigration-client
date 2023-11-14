@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import "../style/forgetpassword.css"
 import "../style/Phase1.css"
 import Logo2 from '../Assets/Ukimmigration-logo.png';
@@ -16,6 +16,8 @@ import { useGetApplicationByUserIdQuery, usePostPhase2Mutation } from '../servic
 import { toastError, toastSuccess } from './Toast';
 import Loader from './Loader';
 import Navbar from './Navbar';
+import Congratspopup from './Congratspopup';
+import MainContext from './Context/MainContext';
 
 const Phase2 = () => {
 
@@ -25,6 +27,7 @@ const Phase2 = () => {
     const settingsRef = useRef(null);
     const [isAllowed,setIsAllowed] = useState(false)
     const navigate = useNavigate();
+    const { socket } = useContext(MainContext);
 
     const {data,isLoading} = useGetApplicationByUserIdQuery();
     const application = data?.application;
@@ -41,10 +44,7 @@ const Phase2 = () => {
 
     useMemo(() => {
       if (isSuccess) {
-        toastSuccess("Application's Phase 2 Submitted.");
-        setTimeout(() => {
-          navigate("/filldata")
-        }, 1000);
+
       }
     }, [isSuccess]);
 
@@ -136,6 +136,14 @@ const Phase2 = () => {
           resetForm({
             values: initialValues,
           });
+          socket.emit("send phase data", {
+            userId: application?.userId,
+            applicationId: application?._id,
+            phase: 2,
+          });
+          setTimeout(() => {
+            navigate("/filldata");
+          }, 3500);
         } catch (error) {
           console.error(error);
         }
@@ -148,7 +156,6 @@ const Phase2 = () => {
           setFieldValue(e.target.name, pdf);
         }
     }
-
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -170,35 +177,30 @@ const Phase2 = () => {
         };
     }, []);
 
-    const toggleNotificationBox = () => {
-        setIsNotificationBoxVisible(!isNotificationBoxVisible);
-    };
-
-    const toggleSettingsBox = () => {
-        setIsSettingsBoxVisible(!isSettingsBoxVisible);
-    };
-
-    const handleSubmitClick = () => {
-        // Handle form submission
-    };
 
     useEffect(()=>{
       if(application){
         if(application.requestedPhase === 2 && application.phaseSubmittedByClient === 1){
           setIsAllowed(true)
-        }else{
+        } else if (
+          application.phase === 4 &&
+          application.phaseStatus === "approved"
+        ) {
+          navigate("/phase4/data");
+        } else {
           setIsAllowed(false);
           navigate("/filldata");
         }
       }
     },[application]);
 
-
     return (
       <>
         {isAllowed && (
           <div className="Container-forgetpassword-phase1">
             <Navbar />
+
+            {isSuccess && <Congratspopup />}
             <div className="Forgetpassword-sub-2">
               <Formik
                 initialValues={initialValues}

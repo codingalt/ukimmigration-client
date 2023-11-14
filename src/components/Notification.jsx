@@ -1,23 +1,34 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import "../style/notifictaionbox.css"
 import approved from "../Assets/approved-noti.svg"
 import reject from "../Assets/reject-noti.svg"
 import { Link, useNavigate } from 'react-router-dom';
 import { useGetClientNotificationQuery } from '../services/api/userApi';
 import { toastError } from './Toast';
+import MainContext from './Context/MainContext';
 
 const NotificationBox = () => {
  
-  const {data, isLoading, error, isSuccess} = useGetClientNotificationQuery();
+  const {data,refetch,isLoading,isFetching} = useGetClientNotificationQuery();
   const navigate = useNavigate();
-
+  const {socket} = useContext(MainContext);
+  const [received, setReceived] = useState(null);
   console.log(data);
 
-  useMemo(()=>{
-    if(error){
-      toastError("Error getting notification")
+  useEffect(() => {
+    socket.on("phase notification received", (phaseNoti) => {
+      setReceived(phaseNoti);
+      console.log(phaseNoti);
+      console.log("phase notification received", phaseNoti);
+    });
+  }, [received]);
+
+  useEffect(() => {
+    if (received) {
+      refetch();
     }
-  },[error])
+  }, [received]);
+
 
   if(data?.notifications?.length === 0){
     return (
@@ -57,7 +68,21 @@ const NotificationBox = () => {
               className="notification-item"
               key={item._id}
               style={{ cursor: "pointer" }}
-              onClick={() => navigate(item.redirect)}
+              onClick={() =>
+                navigate(
+                  item.phaseStatus === "rejected"
+                    ? `/reject`
+                    : item.phase === 1
+                    ? "/phase2"
+                    : item.phase === 2
+                    ? "/agreement"
+                    : item.phase === 3
+                    ? "/phase4"
+                    : item.phase === 4
+                    ? "/congrats/phase4"
+                    : "/filldata"
+                )
+              }
             >
               <div className="Notifiction-img">
                 <img

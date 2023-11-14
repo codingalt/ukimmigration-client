@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   useGetCountriesQuery,
+  usePostEmploymentMutation,
   usePostPhase4Mutation,
 } from "../../services/api/applicationApi";
 import { toastError } from "../Toast";
@@ -10,43 +11,53 @@ import SelectCountry from "../SelectCountry";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-const EmploymentForm = ({ data, setActiveTab, initialValues }) => {
-    const application = data?.application;
-    console.log("Employment Phase 4", initialValues);
+const EmploymentForm = ({ data, setActiveTab, initialValues, refetch }) => {
+  const application = data?.application;
+  console.log("Employment Phase 4", initialValues);
 
-    const [postPhase4, res] = usePostPhase4Mutation();
-    const { isLoading, isSuccess, error } = res;
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postEmployment, res] = usePostEmploymentMutation();
+  const { isLoading, isSuccess, error } = res;
 
-    const [isEmployed, setIsEmployed] = useState(initialValues?.phase4?.employment?.isEmployed)
-    const [employerTelephone, setEmployerTelephone] = useState(
-      initialValues?.phase4?.employment?.employerTelephone
-    );
+  const [isEmployed, setIsEmployed] = useState(
+    initialValues?.phase4?.employment?.isEmployed
+  );
+  const [employerTelephone, setEmployerTelephone] = useState(
+    initialValues?.phase4?.employment?.employerTelephone
+  );
 
-    useMemo(() => {
-      if (isSuccess) {
-        setActiveTab("/maintenance");
-      }
-    }, [isSuccess]);
+  useMemo(() => {
+    if (isSuccess) {
+      refetch();
+      setActiveTab("/maintenance");
+    }
+  }, [isSuccess]);
 
-    useMemo(() => {
-      if (error) {
-        toastError("Something went wrong");
-      }
-    }, [error]);
+  useMemo(() => {
+    if (error) {
+      toastError("Something went wrong");
+    }
+  }, [error]);
 
-    const handleSubmitData = async (values) => {
-      console.log(values);
-      if (values?.phase4?.employment?.employerTelephone.length < 5){
-        toastError("Please Enter a Valid Employer Telephone Number");
-        return;
-      }
-        await postPhase4({ data: values, applicationId: application?._id });
-      console.log("submitted", values.phase4.employment);
-    };
+  const handleSubmitData = async (values) => {
+    console.log(values);
+    if (
+      isEmployed &&
+      values?.phase4?.employment?.employerTelephone.length < 5
+    ) {
+      toastError("Please Enter a Valid Employer Telephone Number");
+      return;
+    }
+    await postEmployment({
+      data: values.phase4.employment,
+      applicationId: application?._id,
+    });
+    console.log("submitted", values.phase4.employment);
+  };
 
-    const handleBackClick = () => {
-      setActiveTab("/education");
-    };
+  const handleBackClick = () => {
+    setActiveTab("/education");
+  };
 
   return (
     <>
@@ -416,6 +427,7 @@ const EmploymentForm = ({ data, setActiveTab, initialValues }) => {
                 }}
               >
                 <button
+                  disabled={isLoading}
                   type="button"
                   className="back-button-new"
                   onClick={handleBackClick}
@@ -423,6 +435,7 @@ const EmploymentForm = ({ data, setActiveTab, initialValues }) => {
                   Back
                 </button>
                 <button
+                  disabled={isLoading}
                   type="submit"
                   className="Next-button"
                   style={{

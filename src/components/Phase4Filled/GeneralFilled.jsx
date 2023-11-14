@@ -7,7 +7,7 @@ import star from "../../Assets/Star-svg.svg";
 import moment from 'moment';
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
-const GeneralFilled = ({data}) => {
+const GeneralFilled = ({data,application}) => {
     const app = data?.general;
     console.log("General filled", app);
     
@@ -35,7 +35,7 @@ const GeneralFilled = ({data}) => {
         paperSize="A2"
         margin="2cm"
         ref={pdfRef}
-        fileName="UkImmigration-Phase4-General"
+        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-General`}
       >
         <div className="phase-1 phase1-general">
           <p className="Form-data-heading">Genral</p>
@@ -352,9 +352,36 @@ const GeneralFilled = ({data}) => {
       </PDFExport>
 
       <div className="button-container-2">
-        <button type="button" className="case-approved-option">
-          case is under final Review{" "}
+        <button
+          type="button"
+          className="case-approved-option"
+          style={
+            application?.applicationStatus === "rejected"
+              ? {
+                  backgroundColor: "#DD2025",
+                  width: "auto",
+                  paddingLeft: "15px",
+                  paddingRight: "13px",
+                  border: "none",
+                }
+              : {
+                  width: "auto",
+                  paddingLeft: "15px",
+                  paddingRight: "13px",
+                }
+          }
+        >
+          {application?.applicationStatus != "rejected" &&
+            application?.phase === 4 &&
+            application?.phaseStatus === "approved" &&
+            "Case is been prepared for submission to authorities."}
+          {application?.phase < 4 &&
+            application?.applicationStatus != "rejected" &&
+            "Case is under Final Review"}
+          {application?.applicationStatus === "rejected" &&
+            "Case Rejected by case worker"}
         </button>
+
         <NavLink to="/message">
           <img src={chatbox} alt="" className="chat-icon-box" />
         </NavLink>

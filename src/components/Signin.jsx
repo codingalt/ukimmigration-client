@@ -1,4 +1,4 @@
-import React, { useState,useMemo } from 'react';
+import React, { useState,useMemo, useRef } from 'react';
 import '../style/forgetpassword.css';
 import Logo from '../Assets/Ukimmigration-logo.png';
 import Sideimg from '../Assets/side-img-forget.png';
@@ -31,6 +31,7 @@ const [recaptchaToken, setRecaptchaToken] = useState("");
 const [verifyCaptcha, res] = useVerifyCaptchaMutation();
   const { isLoading: isLoadingCaptcha } = res;
 const dispatch = useDispatch();
+const recaptchaRef = useRef();
 
 useMemo(() => {
   if (isSuccess) {
@@ -41,6 +42,10 @@ useMemo(() => {
 useMemo(() => {
   if (error) {
     toastError(error?.data?.message);
+    setEmail("");
+    setPassword("");
+    setRecaptchaToken("")
+    recaptchaRef.current.reset();
   }
 }, [error]);
 
@@ -70,8 +75,9 @@ const handleSend = async () => {
     return;
   }
 
-  const {data} = await loginUser({ email: email, password: password });
+  const {data, error} = await loginUser({ email: email, password: password });
   console.log(data);
+  console.log(error);
   dispatch(setUserData(data?.user));
   navigate(data.redirect);
 
@@ -85,7 +91,7 @@ const handleSigninWithGoogle = useGoogleLogin({
     console.log(data);
     if (data.success) {
       setTimeout(() => {
-        navigate("/companyscreen");
+        navigate(data.redirect);
       }, 900);
     }
   },
@@ -126,80 +132,94 @@ function onChange(value) {
 
 
   return (
-    <div className="Container-forgetpassword">
-      <div className="Forgetpassword-sub">
-        <div className="left-side-signin">
-          <img src={Logo} alt="" className="Logo-img-signin" />
-          <p className="Verfication-text-signin">Welcome Back</p>
-          <div className="login-form">
-            <form>
-              <input
-                type="email"
-                placeholder="Email"
-                id="email"
-                name="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                id="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+    <div className="sinin-container">
+      <div className="Container-forgetpassword">
+        <div className="Forgetpassword-sub">
+          <div className="left-side-signin">
+            <img src={Logo} alt="" className="Logo-img-signin" />
+            <p className="Verfication-text-signin">Welcome Back</p>
+            <div className="login-form">
+              <form>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  id="email"
+                  name="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  id="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
 
-              <ReCAPTCHA
-                sitekey={import.meta.env.VITE_SITE_KEY}
-                onChange={onChange}
-                style={{ marginTop: "2.5rem", marginLeft: "3.5rem" }}
-              />
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_SITE_KEY}
+                  onChange={onChange}
+                  style={{ marginTop: "2.5rem", marginLeft: "3.5rem" }}
+                />
 
-              <button
-                disabled={isLoading}
-                type="button"
-                onClick={handleSend}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+                <button
+                  disabled={isLoading}
+                  type="button"
+                  onClick={handleSend}
+                  style={
+                    isLoading || isLoadingCaptcha
+                      ? {
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          opacity: 0.55,
+                          pointerEvents: "none",
+                          userSelect: "none",
+                        }
+                      : {
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }
+                  }
+                >
+                  {isLoading ? (
+                    <Loader width={25} color={"#fff"} />
+                  ) : isLoadingCaptcha ? (
+                    <Loader />
+                  ) : (
+                    "Sign In"
+                  )}
+                </button>
+              </form>
+              <NavLink className="forget-password" to={"/forgetpassword"}>
+                Forgot Password?{" "}
+              </NavLink>
+              <p className="question-1">Don’t have an account?</p>
+              <NavLink className="sgn-up-heading" to="/Signup">
+                SIGN UP
+              </NavLink>
+              <p className="Or-gap">Or</p>
+              <div
+                className="sign-in-with-google"
+                onClick={handleSigninWithGoogle}
+                style={{ cursor: "pointer" }}
               >
-                {isLoading ? (
-                  <Loader width={25} color={"#fff"} />
-                ) : isLoadingCaptcha ? (
-                  <Loader />
-                ) : (
-                  "Sign In"
-                )}
-              </button>
-            </form>
-            <NavLink className="forget-password" to={"/forgetpassword"}>
-              Forgot Password?{" "}
-            </NavLink>
-            <p className="question-1">Don’t have an account?</p>
-            <NavLink className="sgn-up-heading" to="/Signup">
-              SIGN UP
-            </NavLink>
-            <p className="Or-gap">Or</p>
-            <div
-              className="sign-in-with-google"
-              onClick={handleSigninWithGoogle}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src={googlepic}
-                style={{ position: "relative", left: "26px" }}
-              />
-              <p className="sign-in-with-goolge-text">SIGN IN WITH GOOGLE</p>
+                <img
+                  src={googlepic}
+                  style={{ position: "relative", left: "26px" }}
+                />
+                <p className="sign-in-with-goolge-text">SIGN IN WITH GOOGLE</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="right-side-forget-password">
-          <img src={Sideimg} alt="" className="side-img-forget" />
+          <div className="right-side-forget-password">
+            <img src={Sideimg} alt="" className="side-img-forget" />
+          </div>
         </div>
       </div>
     </div>

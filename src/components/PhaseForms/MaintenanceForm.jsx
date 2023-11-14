@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   useGetCountriesQuery,
+  usePostMaintenanceMutation,
   usePostPhase4Mutation,
 } from "../../services/api/applicationApi";
 import { maintenanceSchema } from "../../utils/ValidationSchema";
@@ -9,33 +10,38 @@ import { toastError } from "../Toast";
 import Loader from "../Loader";
 import SelectCountry from "../SelectCountry";
 
-const MaintenanceForm = ({ data, setActiveTab, initialValues }) => {
-    const application = data?.application;
-    console.log("Maintenance Phase 4", initialValues);
+const MaintenanceForm = ({ data, setActiveTab, initialValues, refetch }) => {
+  const application = data?.application;
+  console.log("Maintenance Phase 4", initialValues);
 
-    const [postPhase4, res] = usePostPhase4Mutation();
-    const { isLoading, isSuccess, error } = res;
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postMaintenance, res] = usePostMaintenanceMutation();
+  const { isLoading, isSuccess, error } = res;
 
-    useMemo(() => {
-      if (isSuccess) {
-        setActiveTab("/travel");
-      }
-    }, [isSuccess]);
+  useMemo(() => {
+    if (isSuccess) {
+      refetch();
+      setActiveTab("/travel");
+    }
+  }, [isSuccess]);
 
-    useMemo(() => {
-      if (error) {
-        toastError("Something went wrong");
-      }
-    }, [error]);
+  useMemo(() => {
+    if (error) {
+      toastError("Something went wrong");
+    }
+  }, [error]);
 
-    const handleSubmitData = async (values) => {
-      await postPhase4({ data: values, applicationId: application?._id });
-      console.log("submitted", values.phase4?.maintenance);
-    };
+  const handleSubmitData = async (values) => {
+    await postMaintenance({
+      data: values.phase4.maintenance,
+      applicationId: application?._id,
+    });
+    console.log("submitted", values.phase4?.maintenance);
+  };
 
-    const handleBackClick = () => {
-      setActiveTab("/employement");
-    };
+  const handleBackClick = () => {
+    setActiveTab("/employement");
+  };
   return (
     <>
       <Formik
@@ -141,6 +147,7 @@ const MaintenanceForm = ({ data, setActiveTab, initialValues }) => {
                 }}
               >
                 <button
+                  disabled={isLoading}
                   type="button"
                   className="back-button-new"
                   onClick={handleBackClick}
@@ -148,6 +155,7 @@ const MaintenanceForm = ({ data, setActiveTab, initialValues }) => {
                   Back
                 </button>
                 <button
+                  disabled={isLoading}
                   type="submit"
                   className="Next-button"
                   style={{

@@ -138,34 +138,49 @@ const Phase4FilledDataPage = () => {
 
               <div className="Main-form">
                 {activeTab === "/general" && data && (
-                  <GeneralFilled data={app} />
+                  <GeneralFilled data={app} application={data?.application} />
                 )}
 
                 {activeTab === "/Accomodation" && data && (
-                  <AccomodationFilled data={app} />
+                  <AccomodationFilled
+                    data={app}
+                    application={data?.application}
+                  />
                 )}
 
-                {activeTab === "/family" && data && <FamilyFilled data={app} />}
+                {activeTab === "/family" && data && (
+                  <FamilyFilled data={app} application={data?.application} />
+                )}
 
                 {activeTab === "/languageprofeciency" && data && (
-                  <LanguageFilled data={app} />
+                  <LanguageFilled data={app} application={data?.application} />
                 )}
 
                 {activeTab === "/education" && data && (
-                  <EducationFilled data={app} />
+                  <EducationFilled data={app} application={data?.application} />
                 )}
 
                 {activeTab === "/employement" && data && (
-                  <EmploymentFilled data={app} />
+                  <EmploymentFilled
+                    data={app}
+                    application={data?.application}
+                  />
                 )}
 
                 {activeTab === "/maintenance" && data && (
-                  <MaintenanceFilled data={app} />
+                  <MaintenanceFilled
+                    data={app}
+                    application={data?.application}
+                  />
                 )}
 
-                {activeTab === "/travel" && data && <TravelFilled data={app} />}
+                {activeTab === "/travel" && data && (
+                  <TravelFilled data={app} application={data?.application} />
+                )}
 
-                {activeTab === "/character" && data && <CharacterFilled data={app} />}
+                {activeTab === "/character" && data && (
+                  <CharacterFilled data={app} application={data?.application} />
+                )}
               </div>
             </div>
           </div>

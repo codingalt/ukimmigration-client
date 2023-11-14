@@ -1,29 +1,35 @@
 import React, { useMemo, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import SelectCountry from "../SelectCountry";
-import { usePostPhase4Mutation } from "../../services/api/applicationApi";
+import { usePostAccomodationMutation, usePostPhase4Mutation } from "../../services/api/applicationApi";
 import { toastError } from "../Toast";
 import Loader from "../Loader";
 import { accommodationSchema } from "../../utils/ValidationSchema";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-const AccomodationForm = ({ data, setActiveTab, initialValues }) => {
+const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
   const application = data?.application;
   console.log("Accomodation Phase 4", initialValues);
-  const homeType = initialValues?.phase4?.accommodation?.homeType
+  const homeType = initialValues?.phase4?.accommodation?.homeType;
   console.log(homeType);
-  const [isRented, setIsRented] = useState(homeType && homeType === "Rented" ? true : false);
+  const [isRented, setIsRented] = useState(
+    homeType && homeType === "Rented" ? true : false
+  );
   const [isOther, setIsOther] = useState(
     homeType && homeType === "Other" ? true : false
   );
-  const [landLordTelephone, setLandLordTelephone] = useState(initialValues?.phase4?.accommodation?.landLordTelephone)
+  const [landLordTelephone, setLandLordTelephone] = useState(
+    initialValues?.phase4?.accommodation?.landLordTelephone
+  );
 
-  const [postPhase4, res] = usePostPhase4Mutation();
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postAccomodation, res] = usePostAccomodationMutation();
   const { isLoading, isSuccess, error } = res;
 
   useMemo(() => {
     if (isSuccess) {
+      refetch();
       setActiveTab("/family");
     }
   }, [isSuccess]);
@@ -43,12 +49,15 @@ const AccomodationForm = ({ data, setActiveTab, initialValues }) => {
       toastError("Please specify Other rooms of your home");
       return;
     }
-    if (values.phase4.accommodation.landLordTelephone.length < 5){
+    if (isRented && values.phase4.accommodation.landLordTelephone.length < 5) {
       toastError("Please Enter a Valid Telephone Number");
       return;
     }
-      console.log("submitted accomodation", values?.phase4?.accommodation);
-    await postPhase4({ data: values, applicationId: application?._id });
+    console.log("submitted accomodation", values?.phase4?.accommodation);
+    await postAccomodation({
+      data: values.phase4.accommodation,
+      applicationId: application?._id,
+    });
   };
 
   const handleBackClick = () => {
@@ -778,6 +787,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues }) => {
 
               {/* Back and Next buttons */}
               <button
+                disabled={isLoading}
                 type="button"
                 className="back-button-accomodation"
                 onClick={handleBackClick}
@@ -785,6 +795,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues }) => {
                 Back
               </button>
               <button
+                disabled={isLoading}
                 type="submit"
                 className="Next-button-acomodation"
                 style={{

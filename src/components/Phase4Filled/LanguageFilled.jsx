@@ -8,7 +8,7 @@ import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
 
-const LanguageFilled = ({data}) => {
+const LanguageFilled = ({data,application}) => {
      const app = data?.languageProficiency;
      console.log("Language Proficiency filled", app);
 
@@ -35,7 +35,7 @@ const LanguageFilled = ({data}) => {
         paperSize="A4"
         margin="2cm"
         ref={pdfRef}
-        fileName="UkImmigration-Phase4-LanguageProficiency"
+        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-LanguageProficiency`}
       >
         <div className="phase-1">
           <p className="Form-data-heading">Language Proficiency</p>

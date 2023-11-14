@@ -15,7 +15,7 @@ export const store = configureStore({
     user: userSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([
+    getDefaultMiddleware({serializableCheck: false}).concat([
       userApi.middleware,
       applicationApi.middleware,
       chatApi.middleware,

@@ -1,35 +1,41 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useGetCountriesQuery, usePostPhase4Mutation } from "../../services/api/applicationApi";
+import { useGetCountriesQuery, usePostGeneralMutation, usePostPhase4Mutation } from "../../services/api/applicationApi";
 import SelectCountry from "../SelectCountry";
 import { generalSchema } from "../../utils/ValidationSchema";
 import { toastError } from "../Toast";
 import Loader from "../Loader";
 
-const GeneralForm = ({ data, setActiveTab, initialValues }) => {
+const GeneralForm = ({ data, setActiveTab, initialValues, refetch }) => {
   const application = data?.application;
-  console.log("General Phase 4",initialValues);
+  console.log("General Phase 4", initialValues);
 
-  const [postPhase4, res] = usePostPhase4Mutation();
-  const {isLoading, isSuccess, error} = res;
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postGeneral, res] = usePostGeneralMutation();
+  const { isLoading, isSuccess, error } = res;
 
-  useMemo(()=>{
-    if(isSuccess){
+  useMemo(() => {
+    if (isSuccess) {
+      refetch();
       setActiveTab("/Accomodation");
     }
-  },[isSuccess])
+  }, [isSuccess]);
 
   useMemo(() => {
     if (error) {
-      toastError("Something went wrong")
+      toastError("Something went wrong");
     }
   }, [error]);
 
   const handleSubmitData = async (values) => {
     console.log(values);
-    await postPhase4({ data: values, applicationId: application?._id });
-    console.log("submitted",values);
+        await postGeneral({
+          data: values.phase4.general,
+          applicationId: application?._id,
+        });
+
+    console.log("submitted", values);
   };
 
   const [isKnownByOtherName, setIsKnownByOtherName] = useState(
@@ -48,7 +54,7 @@ const GeneralForm = ({ data, setActiveTab, initialValues }) => {
   const [isUKDrivingLicense, setIsUKDrivingLicense] = useState(
     initialValues?.phase4?.general?.isUKDrivingLicense
   );
-  
+
   return (
     <>
       <Formik
@@ -605,6 +611,7 @@ const GeneralForm = ({ data, setActiveTab, initialValues }) => {
               <div className="checkbox-phase1">
                 <p className="yes-check-text">Yes</p>
                 <input
+                  required
                   defaultChecked={isUKNINumber}
                   name="phase4.general.isUKNINumber"
                   id="phase4.general.isUKNINumber"
@@ -617,6 +624,7 @@ const GeneralForm = ({ data, setActiveTab, initialValues }) => {
                 />
                 <p className="no-check-text">No</p>
                 <input
+                  required
                   defaultChecked={!isUKNINumber}
                   name="phase4.general.isUKNINumber"
                   id="phase4.general.isUKNINumber"
@@ -635,7 +643,7 @@ const GeneralForm = ({ data, setActiveTab, initialValues }) => {
                 <>
                   <p className="genral-text-right-side">i. UK NI Number*</p>
                   <Field
-                    require={isUKNINumber}
+                    required={isUKNINumber}
                     type="text"
                     className="genral-input-right-side"
                     placeholder="Type Number"
@@ -649,7 +657,7 @@ const GeneralForm = ({ data, setActiveTab, initialValues }) => {
 
                   <p className="genral-text-right-side">ii. Date of issue*</p>
                   <Field
-                    require={isUKNINumber}
+                    required={isUKNINumber}
                     type="date"
                     className="genral-input-right-side"
                     name="phase4.general.niNumberIssueDate"

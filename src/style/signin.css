@@ -15,14 +15,13 @@ margin-top: 5%;
   }
 
   .Logo-img-signin{
-    margin-bottom: 5rem;
+    height: 6rem;
     position: relative;
-    top: 6rem;
-    left: 13.2rem;
+    left: 12rem;
   }
 
   .left-side-signin{
-    margin-top: -2rem;
+    margin-top: 2rem;
     flex: 1 1;
     margin-left: 4rem;
   }
@@ -47,8 +46,8 @@ margin-top: 5%;
     border-radius: 5px;
   }
   .login-form input[type="text"],
-  .login-form input[type="password"],
-  .login-form input[type="email"] {
+  .login-form input[type="email"],
+  .login-form input[type="password"] {
     padding: 10px;
     margin: 5px 0;
     margin-left: 0px;
@@ -75,7 +74,7 @@ margin-top: 5%;
     cursor: pointer;
     margin-left: 54px;
     margin-top: 56px;
-    width: 425px;
+    width: 25.5rem;
     height: 40px;
   }
   
@@ -120,7 +119,7 @@ margin-top: 5%;
     font-weight: 400;
     line-height: normal;
     position: relative;
-    left: 123%;
+    left: 118%;
     top: 12px;
     font-family: 'Poppins';
   }

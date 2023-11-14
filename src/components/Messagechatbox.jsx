@@ -22,6 +22,7 @@ import userDefault from "../Assets/user-default.png"
 import pdfimg from "../Assets/pdf-img.png"
 import downloadicon from "../Assets/downloadicon.svg";
 import Navbar from './Navbar';
+import InputEmoji from "react-input-emoji";
 
 var socket;
 
@@ -37,6 +38,7 @@ const Message = () => {
   const [messages, setMessages] = useState([]);
   const [files, setFiles] = useState([]);
   const fileRef = useRef();
+  const [receiveMessage, setReceiveMessage] = useState(null);
 
   useEffect(() => {
     socket = io(import.meta.env.VITE_URI);
@@ -44,38 +46,11 @@ const Message = () => {
     socket.on("connected", () => setSocketConnected(true));
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        notificationRef.current &&
-        !notificationRef.current.contains(event.target) &&
-        settingsRef.current &&
-        !settingsRef.current.contains(event.target)
-      ) {
-        setIsNotificationBoxVisible(false);
-        setIsSettingsBoxVisible(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const toggleNotificationBox = () => {
-    setIsNotificationBoxVisible(!isNotificationBoxVisible);
-  };
-
-  const toggleSettingsBox = () => {
-    setIsSettingsBoxVisible(!isSettingsBoxVisible);
-  };
-
   const navigate = useNavigate();
   const {data, isLoading} = useGetUserChatsQuery();
-  console.log("chat", data);
+  console.log(data);
   const chatId = data?.chats[0]?._id;
+  const applicationId = data?.chats[0]?.applicationId;
 
   // get messages 
   const {
@@ -83,9 +58,9 @@ const Message = () => {
     isLoading: loading,
     refetch,
   } =  useGetUserMessagesQuery(chatId);
-  // console.log("messages",messages);
 
   const [sendMessage, sendMsgRes] = useSendMessageMutation();
+  const {isLoading: isLoadingSend} = sendMsgRes;
 
   useEffect(() => {
     setMessages(messageData?.result);
@@ -97,6 +72,7 @@ const Message = () => {
       let formData = new FormData();
       formData.append("chatId", chatId);
       formData.append("content", newMessage);
+      formData.append("applicationId", applicationId);
       console.log("selected files",files);
       for(let i=0; i<files.length; i++) {
         formData.append("chatFile", files[i]);
@@ -104,7 +80,7 @@ const Message = () => {
       const { data } = await sendMessage(formData);
       console.log(data?.result);
       socket.emit("new message", data?.result);
-      setMessages([...messages, data]);
+      // setMessages([...messages, data]);
       setFiles([]);
     }
   };
@@ -130,9 +106,57 @@ const Message = () => {
     }
   };
 
+  // console.log(messages);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleChange = (newMessage) => {
+    setNewMessage(newMessage);
+  };
+
+// useEffect(() => {
+//   socket.on("message received", async (newMessageReceived) => {
+//     if (newMessageReceived) {
+//       setMessages((prevMessages) => [
+//         ...prevMessages,
+//         newMessageReceived?.result,
+//       ]);
+//     }
+//   });
+// }, []);
+
+// useEffect(() => {
+//   socket.on("message received", async (newMessageReceived) => {
+//     if (newMessageReceived) {
+//       const newMessage = newMessageReceived.result;
+//       console.log("message received client side");
+//       if (!messages.some((message) => message === newMessage)) {
+//         setMessages((prevMessages) => [...prevMessages, newMessage]);
+//         setReceiveMessage(newMessageReceived);
+//       }
+//     }
+//   });
+// }, [receiveMessage]);
+
+useEffect(() => {
+  socket.on("message received", async (newMessageReceived) => {
+    // Give Notification
+    if (newMessageReceived) {
+     !loading && refetch();
+      // await sendNotification({ receiverIds: [selectedChat?._id], title: userName, content: 'You have a new message', data: {test: 'test'}})
+    }
+  });
+
+});
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
 
   return (
     <div className="Container-forgetpassword-phase1">
@@ -171,114 +195,63 @@ const Message = () => {
                     <p className="Date-time-text-2"></p>
                   </div>
                   <div className="messages-chat-2" ref={chatContainerRef}>
-                    {messages?.map((item) =>
-                      item?.sender?.toString() === user?._id ? (
-                        <div className="message" key={item._id}>
-                          <div className="photo-2">
-                            <img
-                              style={{
-                                borderRadius: "50%",
-                                width: "2rem",
-                                height: "2rem",
-                              }}
-                              src={
-                                user?.profilePic
-                                  ? `${import.meta.env.VITE_IMG_URI}${
-                                      user?.profilePic
-                                    }`
-                                  : userDefault
-                              }
-                              alt=""
-                              className="Second-profile-img-2"
-                            />
-                            <p className="Second-profile-name">{user.name}</p>
-                            <p className="Message-date-time-second">
-                              {moment(item?.createdAt).format(
-                                "dddd, MMMM Do hh:mm a"
-                              )}
-                            </p>
-                            <p
-                              className="Second-profile-message"
-                              style={
-                                item?.isPhaseMessage && {
-                                  color: "#5cb85c",
-                                }
-                              }
-                            >
-                              {item?.content}
-                              {item?.files && item?.files?.length > 0 && (
-                                <div className="one-pdf-file">
-                                  {item?.files?.map((file) => (
-                                    <div className="pdf-file-send" key={file}>
-                                      <img
-                                        src={pdfimg}
-                                        alt=""
-                                        className="file-attach-pdf-icon"
-                                      />
-                                      <div>
-                                        <p className="Attach-file-text">
-                                          Attached File
-                                        </p>
-                                        {/* <p className="file-sze-mb">24MB</p> */}
-                                      </div>
-                                      <a
-                                        href={`${
-                                          import.meta.env.VITE_IMG_URI
-                                        }${file}`}
-                                        download
-                                      >
-                                        <img
-                                          src={downloadicon}
-                                          alt=""
-                                          className="pdf-file-downloadicon"
-                                        />
-                                      </a>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* {item?.files &&
-                                } */}
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          {/* Admin Message  */}
-                          <NavLink
+                    {messages?.map((item) => {
+                      const isUserMessage = item?.sender === user?._id;
+                      return (
+                        !loading && (
+                          <div
+                            className={
+                              isUserMessage ? `admin-msg message` : `message`
+                            }
                             key={item._id}
-                            to={item?.isPhaseApprovedMessage && item?.redirect}
                           >
-                            <div className="message admin-msg">
-                              <div className="photo-2">
-                                <img
-                                  src={adminprofile}
-                                  alt=""
-                                  className="Second-profile-img-2"
-                                />
-                                <p className="Second-profile-name">Admin</p>
-                                <p className="Message-date-time-second">
-                                  {moment(item?.createdAt).format(
-                                    "dddd, MMMM Do hh:mm a"
-                                  )}
-                                </p>
-                                <p
-                                  className="Second-profile-message"
-                                  style={
-                                    item?.isPhaseApprovedMessage && {
-                                      color: "#5cb85c",
-                                    }
-                                  }
-                                >
-                                  {item?.content}
-                                </p>
-
-                                {item?.files &&
-                                  item?.files?.length > 0 &&
-                                  item?.files?.map((file) => (
-                                    <div className="pdf-file-send" key={file}>
-                                      <div className="one-pdf-file">
+                            <div className="photo-2">
+                              <img
+                                style={{
+                                  borderRadius: "50%",
+                                  width: "2rem",
+                                  height: "2rem",
+                                }}
+                                src={
+                                  isUserMessage && user?.profilePic
+                                    ? `${import.meta.env.VITE_IMG_URI}${
+                                        user?.profilePic
+                                      }`
+                                    : adminprofile
+                                }
+                                alt=""
+                                className="Second-profile-img-2"
+                              />
+                              <p className="Second-profile-name">
+                                {isUserMessage ? user.name : "Admin"}
+                              </p>
+                              <p
+                                className="Message-date-time-second"
+                                style={
+                                  isUserMessage ? { marginLeft: "25px" } : {}
+                                }
+                              >
+                                {moment(item?.createdAt).format(
+                                  "dddd, MMMM Do hh:mm a"
+                                )}
+                              </p>
+                              <p
+                                className="Second-profile-message"
+                                style={
+                                  item?.content?.includes("Apologies")
+                                    ? { color: "red" }
+                                    : item?.isPhaseApprovedMessage
+                                    ? {
+                                        color: "#5cb85c",
+                                      }
+                                    : {}
+                                }
+                              >
+                                {item?.content}
+                                {item?.files && item?.files?.length > 0 && (
+                                  <div className="one-pdf-file">
+                                    {item?.files?.map((file) => (
+                                      <div className="pdf-file-send" key={file}>
                                         <img
                                           src={pdfimg}
                                           alt=""
@@ -288,7 +261,6 @@ const Message = () => {
                                           <p className="Attach-file-text">
                                             Attached File
                                           </p>
-                                          {/* <p className="file-sze-mb">24MB</p> */}
                                         </div>
                                         <a
                                           href={`${
@@ -296,7 +268,6 @@ const Message = () => {
                                           }${file}`}
                                           download
                                         >
-                                          download
                                           <img
                                             src={downloadicon}
                                             alt=""
@@ -304,14 +275,171 @@ const Message = () => {
                                           />
                                         </a>
                                       </div>
-                                    </div>
-                                  ))}
+                                    ))}
+                                  </div>
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      );
+                    })}
+                    {/* {messages?.map((item) =>
+                      item?.sender?.toString() === user?._id
+                        ? !isLoadingSend &&
+                          !loading && (
+                            <div className="message" key={item._id}>
+                              <div className="photo-2">
+                                <img
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "2rem",
+                                    height: "2rem",
+                                  }}
+                                  src={
+                                    item?.sender?.toString() === user?._id &&
+                                    user?.profilePic
+                                      ? `${import.meta.env.VITE_IMG_URI}${
+                                          user?.profilePic
+                                        }`
+                                      : userDefault
+                                  }
+                                  alt=""
+                                  className="Second-profile-img-2"
+                                />
+                                <p className="Second-profile-name">
+                                  {item?.sender?.toString() === user?._id
+                                    ? user.name
+                                    : "Admin"}
+                                </p>
+                                <p className="Message-date-time-second">
+                                  {item?.sender?.toString() === user?._id &&
+                                    moment(item?.createdAt).format(
+                                      "dddd, MMMM Do hh:mm a"
+                                    )}
+                                </p>
+                                <p
+                                  className="Second-profile-message"
+                                  style={
+                                    item?.isPhaseMessage && {
+                                      color: "#5cb85c",
+                                    }
+                                  }
+                                >
+                                  {item?.sender?.toString() === user?._id &&
+                                    item?.content}
+                                  {item?.sender?.toString() === user?._id &&
+                                    item?.files &&
+                                    item?.files?.length > 0 && (
+                                      <div className="one-pdf-file">
+                                        {item?.files?.map((file) => (
+                                          <div
+                                            className="pdf-file-send"
+                                            key={file}
+                                          >
+                                            <img
+                                              src={pdfimg}
+                                              alt=""
+                                              className="file-attach-pdf-icon"
+                                            />
+                                            <div>
+                                              <p className="Attach-file-text">
+                                                Attached File
+                                              </p>
+                                            </div>
+                                            <a
+                                              href={`${
+                                                import.meta.env.VITE_IMG_URI
+                                              }${file}`}
+                                              download
+                                            >
+                                              <img
+                                                src={downloadicon}
+                                                alt=""
+                                                className="pdf-file-downloadicon"
+                                              />
+                                            </a>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                </p>
                               </div>
                             </div>
-                          </NavLink>
-                        </>
-                      )
-                    )}
+                          )
+                        : !isLoadingSend &&
+                          !loading && (
+                            <>
+                              <NavLink
+                                key={item._id}
+                                to={
+                                  item?.isPhaseApprovedMessage && item?.redirect
+                                }
+                              >
+                                <div className="message admin-msg">
+                                  <div className="photo-2">
+                                    <img
+                                      src={adminprofile}
+                                      alt=""
+                                      className="Second-profile-img-2"
+                                    />
+                                    <p className="Second-profile-name">Admin</p>
+                                    <p className="Message-date-time-second">
+                                      {moment(item?.createdAt).format(
+                                        "dddd, MMMM Do hh:mm a"
+                                      )}
+                                    </p>
+                                    <p
+                                      className="Second-profile-message"
+                                      style={
+                                        item?.isPhaseApprovedMessage && {
+                                          color: "#5cb85c",
+                                        }
+                                      }
+                                    >
+                                      {item?.content}
+                                    </p>
+
+                                    {item?.files &&
+                                      item?.files?.length > 0 &&
+                                      item?.files?.map((file) => (
+                                        <div
+                                          className="pdf-file-send"
+                                          key={file}
+                                        >
+                                          <div className="one-pdf-file">
+                                            <img
+                                              src={pdfimg}
+                                              alt=""
+                                              className="file-attach-pdf-icon"
+                                            />
+                                            <div>
+                                              <p className="Attach-file-text">
+                                                Attached File
+                                              </p>
+                                            </div>
+                                            <a
+                                              href={`${
+                                                import.meta.env.VITE_IMG_URI
+                                              }${file}`}
+                                              download
+                                            >
+                                              download
+                                              <img
+                                                src={downloadicon}
+                                                alt=""
+                                                className="pdf-file-downloadicon"
+                                              />
+                                            </a>
+                                          </div>
+                                        </div>
+                                      ))}
+                                  </div>
+                                </div>
+                              </NavLink>
+                            </>
+                          )
+                    )} */}
 
                     <p className="response-time time"> </p>
 
@@ -329,18 +457,29 @@ const Message = () => {
                     style={{ display: "none" }}
                   />
                   <div className="footer-chat-2">
-                    <i
+                    {/* <i
                       className="icon fa fa-smile-o clickable"
                       style={{ fontSize: "25pt" }}
                       aria-hidden="true"
-                    />
+                    /> */}
                     <i
                       onClick={() => fileRef.current.click()}
                       className="icon fa fa-paperclip clickable"
                       style={{ fontSize: "25pt" }}
                       aria-hidden="true"
                     />
-                    <input
+                    <InputEmoji
+                      className="write-message-2"
+                      value={newMessage}
+                      onKeyDown={handleKeyDown}
+                      onChange={handleChange}
+                      placeholder={
+                        files.length > 0
+                          ? "Your Files are selected. Click send to send this files"
+                          : "Type your message here"
+                      }
+                    />
+                    {/* <input
                       type="text"
                       className="write-message-2"
                       placeholder={
@@ -352,8 +491,13 @@ const Message = () => {
                       onChange={(e) => {
                         setNewMessage(e.target.value);
                       }}
-                    />
+                    /> */}
                     <i
+                      // style={
+                      //   newMessage === "" || files === ""
+                      //     ? { cursor: "default", pointerEvents: "none" }
+                      //     : { cursor: "pointer" }
+                      // }
                       onClick={handleSendMessage}
                       className="icon send fa fa-paper-plane-o clickable"
                       aria-hidden="true"

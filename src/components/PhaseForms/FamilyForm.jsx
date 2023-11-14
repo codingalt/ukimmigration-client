@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useGetCountriesQuery, usePostPhase4Mutation } from '../../services/api/applicationApi';
+import { useGetCountriesQuery, usePostFamilyMutation, usePostPhase4Mutation } from '../../services/api/applicationApi';
 import { toastError } from '../Toast';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import SelectCountry from '../SelectCountry';
@@ -13,12 +13,14 @@ const FamilyForm = ({
   setActiveTab,
   initialValues,
   setChildDetailsArr,
+  refetch,
 }) => {
   const application = data?.application;
   console.log("initialValues", initialValues.phase4.family);
   // console.log("Family Phase 4", initialValues?.phase4);
 
-  const [postPhase4, res] = usePostPhase4Mutation();
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postFamily, res] = usePostFamilyMutation();
   const { isLoading, isSuccess, error } = res;
 
   const [marriedStatus, setMarriedStatus] = useState("");
@@ -26,7 +28,9 @@ const FamilyForm = ({
   const [showAddChildCount, setShowAddChildCount] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [numChildren, setNumChildren] = useState(
-    initialValues?.phase4?.family?.numberOfChildren > 0 ? initialValues?.phase4?.family?.numberOfChildren : 0
+    initialValues?.phase4?.family?.numberOfChildren > 0
+      ? initialValues?.phase4?.family?.numberOfChildren
+      : 0
   );
   const [childOptions, setChildOptions] = useState([]);
   const [isChildPassport, setIsChildPassport] = useState();
@@ -84,6 +88,7 @@ const FamilyForm = ({
 
   useMemo(() => {
     if (isSuccess) {
+      refetch();
       setActiveTab("/languageprofeciency");
     }
   }, [isSuccess]);
@@ -95,15 +100,18 @@ const FamilyForm = ({
   }, [error]);
 
   const handleSubmitData = async (values) => {
-    if (numChildren <= 0) {
+    if (marriedStatus != "single" && numChildren <= 0) {
       toastError("Number of children must be greater than 0");
       return;
     }
 
-     if (values.phase4.family.childDetails.length == 0) {
-       toastError("Please fill out Child Details.");
-       return;
-     }
+    if (
+      marriedStatus != "single" &&
+      values.phase4.family.childDetails.length == 0
+    ) {
+      toastError("Please fill out Child Details.");
+      return;
+    }
 
     // Check if any child detail object has empty properties
     const hasEmptyChildDetails = values.phase4.family.childDetails.some(
@@ -146,112 +154,116 @@ const FamilyForm = ({
       }
     );
 
-    if (hasEmptyChildDetails) {
+    if (marriedStatus != "single" && hasEmptyChildDetails) {
       toastError("Please fill in all child details");
       return;
     }
 
     console.log("submitted family", values?.phase4?.family);
-    await postPhase4({ data: values, applicationId: application?._id });
+        await postFamily({
+          data: values.phase4.family,
+          applicationId: application?._id,
+        });
+
   };
 
   const handleBackClick = () => {
     setActiveTab("/Accomodation");
   };
 
-    const [selectedChild, setSelectedChild] = useState(1);
-    const arrLength = childOptions?.length;
-    const [childDetails, setChildDetails] = useState();
-    const isReq = true;
+  const [selectedChild, setSelectedChild] = useState(1);
+  const arrLength = childOptions?.length;
+  const [childDetails, setChildDetails] = useState();
+  const isReq = true;
 
-    const [countries, setCountries] = useState([]);
-    const { data: country } = useGetCountriesQuery();
-    const topDivRef = useRef();
+  const [countries, setCountries] = useState([]);
+  const { data: country } = useGetCountriesQuery();
+  const topDivRef = useRef();
 
-    useEffect(() => {
-      const countryNames = country?.map((country) => country.name.common);
-      const sortedCountries = countryNames?.sort();
-      setCountries(sortedCountries);
-    }, [country]);
+  useEffect(() => {
+    const countryNames = country?.map((country) => country.name.common);
+    const sortedCountries = countryNames?.sort();
+    setCountries(sortedCountries);
+  }, [country]);
 
-    const changeChild = (index)=>{
-      console.log(index);
-      if (selectedChild < arrLength){
-        setSelectedChild(index + 1);
-      } 
+  const changeChild = (index) => {
+    console.log(index);
+    if (selectedChild < arrLength) {
+      setSelectedChild(index + 1);
     }
+  };
 
-    useEffect(() => {
-      if (topDivRef.current) {
-        topDivRef.current.scrollTop = 0;
-      }
-    }, [selectedChild]);
+  useEffect(() => {
+    if (topDivRef.current) {
+      topDivRef.current.scrollTop = 0;
+    }
+  }, [selectedChild]);
 
-    const handleClose = (values)=>{
-      console.log(values);
-      // const hasEmptyChildDetails = values.phase4.family.childDetails.some(
-      //   (child) => {
-      //     return (
-      //       !child.childName.trim() ||
-      //       !child.childGender.trim() ||
-      //       !child.childDob.trim() ||
-      //       !child.childNationality.trim() ||
-      //       !child.childPassportNumber.trim() ||
-      //       !child.childPassportIssueDate.trim() ||
-      //       !child.childPassportExpiryDate.trim() ||
-      //       !child.childVisaType.trim() ||
-      //       !child.childVisaIssueDate.trim() ||
-      //       !child.childVisaExpiryDate.trim()
-      //     );
-      //   }
-      // );
+  const handleClose = (values) => {
+    console.log(values);
+    // const hasEmptyChildDetails = values.phase4.family.childDetails.some(
+    //   (child) => {
+    //     return (
+    //       !child.childName.trim() ||
+    //       !child.childGender.trim() ||
+    //       !child.childDob.trim() ||
+    //       !child.childNationality.trim() ||
+    //       !child.childPassportNumber.trim() ||
+    //       !child.childPassportIssueDate.trim() ||
+    //       !child.childPassportExpiryDate.trim() ||
+    //       !child.childVisaType.trim() ||
+    //       !child.childVisaIssueDate.trim() ||
+    //       !child.childVisaExpiryDate.trim()
+    //     );
+    //   }
+    // );
 
-      const hasEmptyChildDetails = values.phase4.family.childDetails.some(
-        (child) => {
-          if (child.isChildPassport) {
-            // Check these properties only if isChildPassport is true
-            return (
-              !child.childName.trim() ||
-              !child.childGender.trim() ||
-              !child.childDob.trim() ||
-              !child.childNationality.trim() ||
-              !child.childPassportNumber.trim() ||
-              !child.childPassportIssueDate.trim() ||
-              !child.childPassportExpiryDate.trim() ||
-              !child.childVisaType.trim() ||
+    const hasEmptyChildDetails = values.phase4.family.childDetails.some(
+      (child) => {
+        if (child.isChildPassport) {
+          // Check these properties only if isChildPassport is true
+          return (
+            !child.childName.trim() ||
+            !child.childGender.trim() ||
+            !child.childDob.trim() ||
+            !child.childNationality.trim() ||
+            !child.childPassportNumber.trim() ||
+            !child.childPassportIssueDate.trim() ||
+            !child.childPassportExpiryDate.trim() ||
+            !child.childVisaType.trim() ||
             !child.childVisaIssueDate.trim() ||
             !child.childVisaExpiryDate.trim()
-            );
-          } else if (child.isChildVisa) {
-            return (
-              !child.childName.trim() ||
-              !child.childGender.trim() ||
-              !child.childDob.trim() ||
-              !child.childNationality.trim() ||
-              !child.childPassportNumber.trim() ||
-              !child.childPassportIssueDate.trim() ||
-              !child.childPassportExpiryDate.trim() ||
-              !child.childVisaType.trim() ||
-              !child.childVisaIssueDate.trim() ||
-              !child.childVisaExpiryDate.trim()
-            );
-          } else {
-            return (
-              !child.childName.trim() ||
-              !child.childGender.trim() ||
-              !child.childDob.trim() ||
-              !child.childNationality.trim()
-            );
-          }
+          );
+        } else if (child.isChildVisa) {
+          return (
+            !child.childName.trim() ||
+            !child.childGender.trim() ||
+            !child.childDob.trim() ||
+            !child.childNationality.trim() ||
+            !child.childPassportNumber.trim() ||
+            !child.childPassportIssueDate.trim() ||
+            !child.childPassportExpiryDate.trim() ||
+            !child.childVisaType.trim() ||
+            !child.childVisaIssueDate.trim() ||
+            !child.childVisaExpiryDate.trim()
+          );
+        } else {
+          return (
+            !child.childName.trim() ||
+            !child.childGender.trim() ||
+            !child.childDob.trim() ||
+            !child.childNationality.trim()
+          );
         }
-      );
+      }
+    );
 
-      // if (hasEmptyChildDetails) {
-      //   toastError("Please fill in all child details");
-      //   return;
-      // }
-      setShowModal(false);
-    }
+    // if (hasEmptyChildDetails) {
+    //   toastError("Please fill in all child details");
+    //   return;
+    // }
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -463,7 +475,7 @@ const FamilyForm = ({
                       name="phase4.family.isLiveTogether"
                       id="phase4.family.isLiveTogetherYes"
                       onChange={(e) => {
-                        setFieldValue("phase4.general.isLiveTogether", true);
+                        setFieldValue("phase4.family.isLiveTogether", true);
                         setIsLiveTogether(true);
                       }}
                     />
@@ -475,7 +487,7 @@ const FamilyForm = ({
                       name="phase4.family.isLiveTogether"
                       id="phase4.family.isLiveTogetherNo"
                       onChange={(e) => {
-                        setFieldValue("phase4.general.isLiveTogether", false);
+                        setFieldValue("phase4.family.isLiveTogether", false);
                         setIsLiveTogether(false);
                       }}
                     />
@@ -518,7 +530,7 @@ const FamilyForm = ({
                       name="phase4.family.isChildren"
                       id="phase4.family.isChildrenYes"
                       onChange={(e) => {
-                        setFieldValue("phase4.general.isChildren", true);
+                        setFieldValue("phase4.family.isChildren", true);
                         setIsChildren(true);
                       }}
                     />
@@ -531,7 +543,7 @@ const FamilyForm = ({
                       name="phase4.family.isChildren"
                       id="phase4.family.isChildrenNo"
                       onChange={(e) => {
-                        setFieldValue("phase4.general.isChildren", false);
+                        setFieldValue("phase4.family.isChildren", false);
                         setIsChildren(false);
                       }}
                     />
@@ -604,7 +616,7 @@ const FamilyForm = ({
                             </button>
                           ))}
                         </div>
-                      
+
                         <p className="genral-text-left-side">{`Child ${selectedChild}'s Details`}</p>
                         <div
                           className="child-details"
@@ -1083,12 +1095,12 @@ const FamilyForm = ({
                                     >
                                       Close
                                     </button>
-                                    <button
+                                    {/* <button
                                       type="submit"
                                       className="Save-btn-modal"
                                     >
                                       Save
-                                    </button>
+                                    </button> */}
                                     {selectedChild < childOptions.length && (
                                       <button
                                         type="button"
@@ -1136,7 +1148,7 @@ const FamilyForm = ({
                       name="phase4.family.isMarriedBefore"
                       id="phase4.family.isMarriedBeforeYes"
                       onChange={(e) => {
-                        setFieldValue("phase4.general.isMarriedBefore", true);
+                        setFieldValue("phase4.family.isMarriedBefore", true);
                         setIsMarriedBefore(true);
                       }}
                     />
@@ -1149,8 +1161,14 @@ const FamilyForm = ({
                       name="phase4.family.isMarriedBefore"
                       id="phase4.family.isMarriedBeforeNo"
                       onChange={(e) => {
-                        setFieldValue("phase4.general.isMarriedBefore", false);
+                        setFieldValue("phase4.family.isMarriedBefore", false);
                         setIsMarriedBefore(false);
+                        setFieldValue("phase4.family.exName", "");
+                        setFieldValue("phase4.family.exDob", "");
+                        setFieldValue("phase4.family.exNationality", "");
+                        setFieldValue("phase4.family.marriageDateWithEx", "");
+                        setFieldValue("phase4.family.divorceDateWithEx", "");
+                        setFieldValue("phase4.family.divorceDateWithEx", "");
                       }}
                     />
                   </div>
@@ -1256,7 +1274,7 @@ const FamilyForm = ({
                       id="phase4.family.isCurrentPartnerMarriedBeforeYes"
                       onChange={(e) => {
                         setFieldValue(
-                          "phase4.general.isCurrentPartnerMarriedBefore",
+                          "phase4.family.isCurrentPartnerMarriedBefore",
                           true
                         );
                         setIsCurrentPartnerMarriedBefore(true);
@@ -1271,9 +1289,10 @@ const FamilyForm = ({
                       id="phase4.family.isCurrentPartnerMarriedBeforeNo"
                       onChange={(e) => {
                         setFieldValue(
-                          "phase4.general.isCurrentPartnerMarriedBefore",
+                          "phase4.family.isCurrentPartnerMarriedBefore",
                           false
                         );
+
                         setIsCurrentPartnerMarriedBefore(false);
                       }}
                     />
@@ -1388,7 +1407,7 @@ const FamilyForm = ({
                   id="phase4.family.isFamilyFriendsInHomeCountry"
                   onChange={(e) => {
                     setFieldValue(
-                      "phase4.general.isFamilyFriendsInHomeCountry",
+                      "phase4.family.isFamilyFriendsInHomeCountry",
                       true
                     );
                     setIsFamilyInHome(true);
@@ -1403,7 +1422,7 @@ const FamilyForm = ({
                   id="phase4.family.isFamilyFriendsInHomeCountryNo"
                   onChange={(e) => {
                     setFieldValue(
-                      "phase4.general.isFamilyFriendsInHomeCountry",
+                      "phase4.family.isFamilyFriendsInHomeCountry",
                       false
                     );
                     setIsFamilyInHome(false);
@@ -1456,6 +1475,7 @@ const FamilyForm = ({
                 }}
               >
                 <button
+                  disabled={isLoading}
                   type="button"
                   className="back-button-new"
                   onClick={handleBackClick}
@@ -1463,6 +1483,7 @@ const FamilyForm = ({
                   Back
                 </button>
                 <button
+                  disabled={isLoading}
                   type="submit"
                   className="Next-button"
                   style={{

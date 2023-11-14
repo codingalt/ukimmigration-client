@@ -7,7 +7,7 @@ import star from "../../Assets/Star-svg.svg";
 import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
-const CharacterFilled = ({data}) => {
+const CharacterFilled = ({data,application}) => {
      const app = data?.character;
      console.log("Character filled", app);
 
@@ -34,7 +34,7 @@ const CharacterFilled = ({data}) => {
         paperSize="A4"
         margin="2cm"
         ref={pdfRef}
-        fileName="UkImmigration-Phase4-Character"
+        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-Character`}
       >
         <div className="phase-1">
           <p className="Form-data-heading">Character</p>

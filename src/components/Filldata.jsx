@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import Logo2 from '../Assets/Ukimmigration-logo.png';
 import bellicon2 from "../Assets/bell-icon-svg.svg"
 import profileimg from "../Assets/profile-img-svg.svg"
@@ -21,10 +21,13 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { renderToString } from "react-dom/server";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import MainContext from './Context/MainContext';
 
 
 const Filldata = () => {
    const { toPDF, targetRef } = usePDF({ filename: "ukimmigration.pdf" });
+  const { socket } = useContext(MainContext);
+  const [received, setReceived] = useState(null)
 
      const pdfRef = useRef(null);
      const pdfExportComponent = useRef(null);
@@ -49,17 +52,29 @@ const Filldata = () => {
      documentTitle: "UK Immigration"
    });
 
-   const {data,isLoading} = useGetApplicationByUserIdQuery();
+   const {data,isLoading, refetch,isFetching} = useGetApplicationByUserIdQuery(null, {refetchOnMountOrArgChange: true});
    const application = data?.application;
    console.log(application);
 
+   useEffect(() => {
+       socket.on("phase notification received", (phaseNoti) => {
+        setReceived(phaseNoti);
+         console.log("phase notification received application", phaseNoti);
+       });
+     
+   });
+
+   useEffect(()=>{
+    if(received){
+      refetch();
+    }
+   },[received]);
 
   return (
     <div className="Container-forgetpassword-phase1">
       <Navbar />
       <div className="Forgetpassword-sub-2" ref={targetRef}>
         <div className="fill-data-border">
-
           <button
             onClick={() => {
               if (pdfRef.current) {
@@ -73,12 +88,11 @@ const Filldata = () => {
 
           {/* Phase 1 */}
           <PDFExport
-            // forcePageBreak=".page-break"
             scale={0.8}
             paperSize="A3"
             margin="2cm"
-            ref={pdfRef}   
-            fileName='UkImmigration'
+            ref={pdfRef}
+            fileName={`${application?.phase1?.name}-${application?.caseId}`}
           >
             <div>
               <div
@@ -127,7 +141,7 @@ const Filldata = () => {
                   }}
                 >
                   <img src={star} alt="" className="star" />
-                  <p className="Name-title">Contact</p>
+                  <p className="Name-title">Telephone</p>
                   <div className="border-y"></div>
                   <p className="Name-text">{application?.phase1?.contact}</p>
                 </div>
@@ -296,9 +310,7 @@ const Filldata = () => {
                       }}
                     >
                       <img src={star} alt="" className="star" />
-                      <p className="Name-title">
-                        if yes, please provide type of visa refused
-                      </p>
+                      <p className="Name-title">if yes, please...</p>
                       <div className="border-y"></div>
                       <p className="Name-text">
                         {application?.phase1?.refusedVisaType}
@@ -743,7 +755,7 @@ const Filldata = () => {
                       <p className="Name-text">
                         {application?.phase2?.other?.map((item) => (
                           <a
-                          key={item}
+                            key={item}
                             style={{
                               textDecoration: "underline",
                               cursor: "pointer",
@@ -838,9 +850,34 @@ const Filldata = () => {
           </PDFExport>
 
           <div className="button-container-2">
-            <NavLink to="">
-              <button className="case-approved-option">
-                case is under final Review{" "}
+            <NavLink to="#">
+              <button
+                className="case-approved-option"
+                style={
+                  application?.applicationStatus === "rejected"
+                    ? {
+                        backgroundColor: "#DD2025",
+                        width: "auto",
+                        paddingLeft: "15px",
+                        paddingRight: "13px",
+                        border: "none",
+                      }
+                    : {
+                        width: "auto",
+                        paddingLeft: "15px",
+                        paddingRight: "13px",
+                      }
+                }
+              >
+                {application?.applicationStatus != "rejected" &&
+                  application?.phase === 4 &&
+                  application?.phaseStatus === "approved" &&
+                  "Case is been Prepared for Submission to Authorities."}
+                {application?.phase < 4 &&
+                  application?.applicationStatus != "rejected" &&
+                  "Case is under Final Review"}
+                {application?.applicationStatus === "rejected" &&
+                  "Case Rejected by case worker"}
               </button>
             </NavLink>
             <NavLink to="/message">

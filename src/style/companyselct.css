@@ -8,6 +8,36 @@
     position: relative;
 }
 
+.button-company-screen{
+    position: absolute;
+    right: 23rem;
+    bottom: 2%;
+}
+
+.Next-btn-company-screen{
+    width: 7rem;
+    height: 2.5rem;
+    border: 1px solid #5d982e;
+    background-color: #5d982e;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+.title-space-option{
+    width: 12.5rem;
+    height: 29.97px;
+    position: relative;
+    top: 12rem;
+    left: 17px;
+    border: 1px solid #E2E2E4;
+    background-color: #FCFCFC;
+    border-bottom-left-radius: 110px;
+    border-bottom-right-radius: 110px;
+    text-align: center;
+}
+
 .confirmation-text{
     font-family: 'Poppins';
     font-size: 24px;
@@ -30,6 +60,7 @@
     background-color: #FCFCFC;
     position: relative;
     top: 12rem;
+    cursor: pointer;
 
 }
 

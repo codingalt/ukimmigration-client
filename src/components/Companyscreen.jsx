@@ -1,39 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import '../style/forgetpassword.css';
-import { Link, useNavigate } from 'react-router-dom';
-import "../style/companyselct.css"
-import uni from "../Assets/universty-placement.svg"
-import imigrationmatter from '../Assets/imigartion-matters.svg';
-import others from '../Assets/others-img.svg';
-import { useGetApplicationByUserIdQuery } from '../services/api/applicationApi';
-import { useDispatch } from 'react-redux';
-import { setApplicationTypeToSlice } from '../services/redux/userSlice';
+import React, { useEffect, useRef, useState } from "react";
+import "../style/forgetpassword.css";
+import { Link, useNavigate } from "react-router-dom";
+import "../style/companyselct.css";
+import uni from "../Assets/universty-placement.svg";
+import imigrationmatter from "../Assets/imigartion-matters.svg";
+import others from "../Assets/others-img.svg";
+import { useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
+import { useDispatch } from "react-redux";
+import { setApplicationTypeToSlice } from "../services/redux/userSlice";
+import { toastError } from "./Toast";
 const CompanyScreen = () => {
-  const {data, isLoading, error,isSuccess} = useGetApplicationByUserIdQuery();
+  const { data, isLoading, error, isSuccess } =
+    useGetApplicationByUserIdQuery();
   const [show, setShow] = useState(null);
   const [applicationType, setApplicationType] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log("application",data);
+  console.log("application", data);
   useEffect(() => {
     if (data && !data.application) {
       setShow(true);
+    } else if (
+      data?.application?.phase === 4 &&
+      data?.application?.phaseStatus === "approved"
+    ) {
+      !isLoading && navigate("/phase4/data");
     } else if (data?.application?.phaseSubmittedByClient >= 1) {
       setShow(false);
       !isLoading && navigate("/filldata");
-    }else if (data?.application?.phaseSubmittedByClient === 0) {
+    } else if (data?.application?.phaseSubmittedByClient === 0) {
       setShow(false);
       !isLoading && navigate("/phase1");
     }
   }, [data, isLoading, isSuccess]);
 
-  const handleClick = (value)=>{
+  const handleClick = (value) => {
+    setApplicationType(value);
     dispatch(setApplicationTypeToSlice(value));
-    localStorage.setItem("phase1-applicationType",value);
-    setTimeout(() => {
-      navigate(`/phase1`)
-    }, 500);
+    localStorage.setItem("phase1-applicationType", value);
+  };
+
+  const handleNext = ()=>{
+    if(applicationType === ""){
+      toastError("Please Select Service Type");
+      return;
+    }
+    navigate("/phase1");
   }
+
+  const selectRef = useRef();
+
+  const openSelectDropdown = () => {
+    selectRef.current.click();
+  };
 
   return (
     <>
@@ -51,7 +70,14 @@ const CompanyScreen = () => {
                 className="profile-box-1"
                 onClick={() => handleClick("University Placement")}
               >
-                <div className="sponser-li">
+                <div
+                  className="sponser-li"
+                  style={
+                    applicationType === "University Placement"
+                      ? { border: "1.5px solid #5d982e" }
+                      : {}
+                  }
+                >
                   <img src={uni} alt="" className="company-imgss-1" />
                 </div>
 
@@ -64,7 +90,14 @@ const CompanyScreen = () => {
                 className="profile-box-1"
                 onClick={() => handleClick("Immigration Matter")}
               >
-                <div className="sponser-li">
+                <div
+                  className="sponser-li"
+                  style={
+                    applicationType === "Immigration Matter"
+                      ? { border: "1.5px solid #5d982e" }
+                      : {}
+                  }
+                >
                   <img
                     src={imigrationmatter}
                     alt=""
@@ -77,18 +110,68 @@ const CompanyScreen = () => {
                 </div>
               </div>
 
-              <div
-                className="profile-box-1"
-                onClick={() => handleClick("Others")}
-              >
-                <div className="sponser-li">
+              <div className="profile-box-1">
+                <div className="sponser-li" onClick={()=> toastError("Select other from dropdown below")}>
                   <img src={others} alt="" className="company-imgss-1" />
                 </div>
 
-                <div className="title-space">
-                  <p className="company-titles-1">Others</p>
-                </div>
+                <select
+                 ref={selectRef}
+                  className="title-space-option"
+                  onChange={(e) => handleClick(e.target.value)}
+                >
+                  <option value="">Others</option>
+                  <option value="AN1 – Naturalisation">
+                    AN1 – Naturalisation{" "}
+                  </option>
+                  <option value="MN1 – Registration">
+                    MN1 – Registration{" "}
+                  </option>
+                  <option value="ILR – Indefinite Leave to Remain">
+                    ILR – Indefinite Leave to Remain
+                  </option>
+                  <option value="FLR – Further Leave to Remain">
+                    FLR – Further Leave to Remain{" "}
+                  </option>
+                  <option value="FLR(FP)">FLR(FP)</option>
+                  <option value="FLR(M)">FLR(M) </option>
+                  <option value="SW – Skilled Worker">
+                    SW – Skilled Worker{" "}
+                  </option>
+                  <option value="SL- Sponsor Licence">
+                    SL- Sponsor Licence{" "}
+                  </option>
+                  <option value="Student">Student </option>
+                  <option value="Student Child">Student Child</option>
+                  <option value="Graduate Visa">Graduate Visa</option>
+                  <option value="ECS- Entry Clearance Spouse">
+                    ECS- Entry Clearance Spouse{" "}
+                  </option>
+                  <option value="ECV – Entry Clearance Visitor">
+                    ECV – Entry Clearance Visitor{" "}
+                  </option>
+                  <option value="ECD – Entry Clearance Dependant">
+                    ECD – Entry Clearance Dependant{" "}
+                  </option>
+                  <option value="PS – Pre Settled Status">
+                    PS – Pre Settled Status
+                  </option>
+                  <option value="SS – Settled Status">
+                    SS – Settled Status{" "}
+                  </option>
+                  <option value="Others">Others </option>
+                </select>
               </div>
+            </div>
+
+            <div className="button-company-screen">
+              <button
+                type="button"
+                onClick={handleNext}
+                className="Next-btn-company-screen"
+              >
+                Next
+              </button>
             </div>
           </div>
         </div>

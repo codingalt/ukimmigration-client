@@ -24,7 +24,6 @@ function LanguageList({ name, className, onChange, prevValue, setFieldValue }) {
       });
   }, []);
 
-  console.log(name);
 
   return (
     <select

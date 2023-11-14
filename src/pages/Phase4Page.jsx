@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { applicationApi, useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo2 from "../Assets/Ukimmigration-logo.png";
 import bellicon2 from "../Assets/bell-icon-svg.svg";
@@ -21,17 +21,250 @@ import EmploymentForm from "../components/PhaseForms/EmploymentForm";
 import MaintenanceForm from "../components/PhaseForms/MaintenanceForm";
 import TravelForm from "../components/PhaseForms/TravelForm";
 import CharacterForm from "../components/PhaseForms/CharacterForm";
+import MainContext from "../components/Context/MainContext";
 
 const Phase4Page = () => {
-  const { data } = useGetApplicationByUserIdQuery();
+  const { data, refetch } = useGetApplicationByUserIdQuery();
+  // const { data, isFetching, refetch } = useQuery(applicationApi.endpoints.getApplicationByUserId);
     const [isAllowed, setIsAllowed] = useState(false);
     const [childDetailsArr, setChildDetailsArr] = useState([]);
     const [lastVisitsToUk, setLastVisitsToUk] = useState([]);
     const navigate = useNavigate();
+    const { socket } = useContext(MainContext);
+    const [received, setReceived] = useState(null);
 
+    const [initialValues, setInitialValues] = useState({
+      phase4: {
+        general: {
+          fullName: "",
+          isKnownByOtherName: true,
+          previousName: "",
+          prevNameFrom: "",
+          prevNameTo: "",
+          countryOfBirth: "",
+          placeOfBirth: "",
+          currentNationality: "",
+          isOtherNationality: true,
+          otherNationality: "",
+          nationalityFrom: "",
+          nationalityUntill: "",
+          currentPassportNumber: "",
+          passportIssueDate: "",
+          passportExpiryDate: "",
+          issuingAuthority: "",
+          passportPlaceOfIssue: "",
+          isNationalIDCard: true,
+          idCardNumber: "",
+          idCardIssueDate: "",
+          isBrp: true,
+          brpNumber: "",
+          brpIssueDate: "",
+          motherName: "",
+          motherDob: "",
+          motherNationality: "",
+          motherCountry: "",
+          motherPlaceOfBirth: "",
+          fatherName: "",
+          fatherDob: "",
+          fatherNationality: "",
+          fatherCountry: "",
+          fatherPlaceOfBirth: "",
+          isUKNINumber: true,
+          ukNINumber: "",
+          niNumberIssueDate: "",
+          isUKDrivingLicense: true,
+          ukDrivingLicenseNumber: "",
+          ukLicenseIssueDate: "",
+          email: "",
+          mobileNumber: "",
+        },
+        accommodation: {
+          address1: "",
+          address2: "",
+          locationName: "",
+          locationCode: "",
+          town: "",
+          county: "",
+          postCode: "",
+          countryPrefix: "",
+          country: "",
+          fax: "",
+          vatRate: "",
+          moveInDate: null,
+          timeLivedAtCurrentAddress: "",
+          homeType: "",
+          otherHomeDetails: "",
+          landLordName: "",
+          landLordEmail: "",
+          landLordTelephone: "",
+          landLordAddress1: "",
+          landLordAddress2: "",
+          landLordLocationName: "",
+          landLordLocationCode: "",
+          landLordCounty: "",
+          landLordTown: "",
+          landLordPostCode: "",
+          landLordCountryPrefix: "",
+          landLordCountry: "",
+          landLordFax: null,
+          landLordVatRate: null,
+          bedrooms: 0,
+          otherRooms: 0,
+          otherWhoLives: "",
+          previousHomeDetails: {
+            address1: "",
+            address2: "",
+            locationName: "",
+            locationCode: "",
+            town: "",
+            county: "",
+            postCode: "",
+            countryPrefix: "",
+            country: "",
+            fax: "",
+            vatRate: "",
+          },
+        },
+        family: {
+          maritalStatus: "",
+          spouseName: "",
+          marriageDate: null,
+          whereGotMarried: "",
+          spouseDob: "",
+          spouseNationality: "",
+          spousePassportNumber: "",
+          whereDidYouMeet: "",
+          whenDidRelationshipBegan: "",
+          whenLastSawEachOther: null,
+          isLiveTogether: true,
+          whichDateStartedLivingTogether: null,
+          isChildren: true,
+          numberOfChildren: 0,
+          childDetails: null,
+          isMarriedBefore: true,
+          exName: null,
+          exNationality: "",
+          marriageDateWithEx: null,
+          divorceDateWithEx: null,
+          isCurrentPartnerMarriedBefore: null,
+          currentPartnerExName: "",
+          currentPartnerExDob: null,
+          currentPartnerExNationality: "",
+          currentPartnerExMarriageDate: null,
+          currentPartnerExDivorceDate: null,
+          isFamilyFriendsInHomeCountry: null,
+          relativeName: "",
+          relationship: "",
+        },
+        languageProficiency: {
+          isDegreeTaughtInEnglish: true,
+          isPassedAnyEnglishTest: true,
+          testType: "",
+        },
+        education: {
+          qualification: "",
+          awardingInstitute: "",
+          grade: "",
+          courseSubject: "",
+          courseLength: "",
+          yearOfAward: "",
+          countryOfAward: "",
+          state: "",
+        },
+        employment: {
+          isEmployed: true,
+          jobStartDate: "",
+          employerName: "",
+          employerTelephone: "",
+          employerEmail: "",
+          annualSalary: "",
+          jobTitle: "",
+          employerAddress1: "",
+          employerAddress2: "",
+          employerLocation: "",
+          employerLocationCode: "",
+          employerTown: "",
+          employerCounty: "",
+          employerPostCode: "",
+          employerCountryPrefix: "",
+          employerCountry: "",
+          employerFax: "",
+          employerVatRate: "",
+          unEmployedReason: "",
+        },
+        maintenance: {
+          bankName: "",
+          isRegisteredFinancialInstitute: "",
+          countryFundsHeldIn: "",
+          currencyFundsHeldIn: "",
+          amountHeld: "",
+          fundsDateHeldFrom: "",
+        },
+        travel: {
+          areYouCurrentlyInUk: true,
+          countryVisited: "",
+          ukLeaveDate: "",
+          returnDate: "",
+          reasonForVisit: "",
+          numberOfVisitsToUk: "",
+          lastUkVisits: null,
+          isVisitedUkIllegally: true,
+          illegalVisitDetail: "",
+          isStayedBeyondExpiryDateInUk: true,
+          reasonForStayingExpiryDateInUk: "",
+          everBeenToUkOrAnyCountry: "",
+          isBreachedLeaveConditions: true,
+          reasonForBreachedLeave: "",
+          isWorkedWithoutPermission: true,
+          reasonForWorkedWithoutPermission: "",
+          isReceivedPublicFunds: true,
+          detailsForPublicFunds: "",
+          everGivenFalseInfoForApplyingVisa: true,
+          reasonForFalseInformation: "",
+          everUsedDeceptionInPrevVisaApplication: true,
+          reasonForDeception: "",
+          everBreachedOtherImmigrationLaws: true,
+          reasonForBreachingImmigrationLaw: "",
+          everRefusedVisaOrBorderEntry: true,
+          reasonForRefusedEntry: "",
+          everRefusedPermissionToStay: true,
+          reasonForRefusedPermissionToStay: "",
+          everRefusedAsylum: true,
+          reasonForRefusedAsylum: "",
+          everDeported: true,
+          reasonForDeported: "",
+          everBannedFromAnyCountry: true,
+          reasonForBanned: "",
+        },
+        character: {
+          everChargedWithCriminalOffence: true,
+          reasonForCharged: "",
+          isPendingProsecutions: true,
+          reasonForPendingProsecutions: "",
+          isTerroristViews: true,
+          reasonForTerroristViews: "",
+          isWorkedForJudiciary: true,
+          reasonForJudiciaryWork: "",
+        },
+      },
+    });
 
   // console.log(data);
   const app = data?.application?.phase4;
+
+  useEffect(() => {
+    socket.on("phase notification received", (phaseNoti) => {
+      setReceived(phaseNoti);
+      console.log("phase notification received", phaseNoti);
+    });
+  }, [received]);
+
+  useEffect(() => {
+    if (received) {
+      refetch();
+    }
+  }, [received]);
+
   const {
     general,
     accommodation,
@@ -294,464 +527,6 @@ const Phase4Page = () => {
   const niNumberIssueDateObj = new Date(niNumberIssueDate);
   const ukLicenseIssueDateObj = new Date(ukLicenseIssueDate);
 
-  const initialValues = {
-    phase4: {
-      general: {
-        fullName: fullName ? fullName : "",
-        isKnownByOtherName:
-          isKnownByOtherName === true
-            ? true
-            : isKnownByOtherName === false
-            ? false
-            : true,
-        previousName: previousName ? previousName : "",
-        prevNameFrom: prevNameFrom
-          ? format(prevNameFromDate, "yyyy-MM-dd")
-          : "",
-        prevNameTo: prevNameTo ? format(prevNameToDate, "yyyy-MM-dd") : "",
-        countryOfBirth: countryOfBirth ? countryOfBirth : "",
-        placeOfBirth: placeOfBirth ? placeOfBirth : "",
-        currentNationality: currentNationality ? currentNationality : "",
-        isOtherNationality:
-          isOtherNationality === true
-            ? true
-            : isOtherNationality === false
-            ? false
-            : true,
-        otherNationality: otherNationality ? otherNationality : "",
-        nationalityFrom: nationalityFrom
-          ? format(nationalityFromDate, "yyyy-MM-dd")
-          : "",
-        nationalityUntill: nationalityUntill
-          ? format(nationalityUntillDate, "yyyy-MM-dd")
-          : "",
-        currentPassportNumber: currentPassportNumber
-          ? currentPassportNumber
-          : "",
-        passportIssueDate: passportIssueDate
-          ? format(passportIssueDateObj, "yyyy-MM-dd")
-          : "",
-        passportExpiryDate: passportExpiryDate
-          ? format(passportExpiryDateObj, "yyyy-MM-dd")
-          : "",
-        issuingAuthority: issuingAuthority ? issuingAuthority : "",
-        passportPlaceOfIssue: passportPlaceOfIssue ? passportPlaceOfIssue : "",
-        isNationalIDCard:
-          isNationalIDCard === true
-            ? true
-            : isNationalIDCard === false
-            ? false
-            : true,
-        idCardNumber: idCardNumber ? idCardNumber : "",
-        idCardIssueDate: idCardIssueDate
-          ? format(idCardIssueDateObj, "yyyy-MM-dd")
-          : "",
-        isBrp: isBrp === true ? true : isBrp === false ? false : true,
-        brpNumber: brpNumber ? brpNumber : "",
-        brpIssueDate: brpIssueDate ? format(brpIssueDateObj, "yyyy-MM-dd") : "",
-        motherName: motherName ? motherName : "",
-        motherDob: motherDob ? format(motherDobObj, "yyyy-MM-dd") : "",
-        motherNationality: motherNationality ? motherNationality : "",
-        motherCountry: motherCountry ? motherCountry : "",
-        motherPlaceOfBirth: motherPlaceOfBirth ? motherPlaceOfBirth : "",
-        fatherName: fatherName ? fatherName : "",
-        fatherDob: fatherDob ? format(fatherDobObj, "yyyy-MM-dd") : "",
-        fatherNationality: fatherNationality ? fatherNationality : "",
-        fatherCountry: fatherCountry ? fatherCountry : "",
-        fatherPlaceOfBirth: fatherPlaceOfBirth ? fatherPlaceOfBirth : "",
-        isUKNINumber:
-          isUKNINumber === true ? true : isUKNINumber === false ? false : true,
-        ukNINumber: ukNINumber ? ukNINumber : "",
-        niNumberIssueDate: niNumberIssueDate
-          ? format(niNumberIssueDateObj, "yyyy-MM-dd")
-          : "",
-        isUKDrivingLicense:
-          isUKDrivingLicense === true ? true : isUKDrivingLicense === false ? false : true,
-        ukDrivingLicenseNumber: ukDrivingLicenseNumber
-          ? ukDrivingLicenseNumber
-          : "",
-        ukLicenseIssueDate: ukLicenseIssueDate
-          ? format(ukLicenseIssueDateObj, "yyyy-MM-dd")
-          : "",
-        email: email ? email : "",
-        mobileNumber: mobileNumber ? mobileNumber : "",
-      },
-      accommodation: {
-        address1: address1 ? address1 : "",
-        address2: address2 ? address2 : "",
-        locationName: locationName ? locationName : "",
-        locationCode: locationCode ? locationCode : "",
-        town: town ? town : "",
-        county: county ? county : "",
-        postCode: postCode ? postCode : "",
-        countryPrefix: countryPrefix ? countryPrefix : "",
-        country: country ? country : "",
-        fax: fax ? fax : "",
-        vatRate: vatRate ? vatRate : "",
-        moveInDate: moveInDate
-          ? format(new Date(moveInDate), "yyyy-MM-dd")
-          : null,
-        timeLivedAtCurrentAddress: timeLivedAtCurrentAddress
-          ? timeLivedAtCurrentAddress
-          : "",
-        homeType: homeType ? homeType : "",
-        otherHomeDetails: otherHomeDetails ? otherHomeDetails : "",
-        landLordName: landLordName ? landLordName : "",
-        landLordEmail: landLordEmail ? landLordEmail : "",
-        landLordTelephone: landLordTelephone ? landLordTelephone : "",
-        landLordAddress1: landLordAddress1 ? landLordAddress1 : "",
-        landLordAddress2: landLordAddress2 ? landLordAddress2 : "",
-        landLordLocationName: landLordLocationName ? landLordLocationName : "",
-        landLordLocationCode: landLordLocationCode ? landLordLocationCode : "",
-        landLordCounty: landLordCounty ? landLordCounty : "",
-        landLordTown: landLordTown ? landLordTown : "",
-        landLordPostCode: landLordPostCode ? landLordPostCode : "",
-        landLordCountryPrefix: landLordCountryPrefix
-          ? landLordCountryPrefix
-          : "",
-        landLordCountry: landLordCountry ? landLordCountry : "",
-        landLordFax: landLordFax ? landLordFax : null,
-        landLordVatRate: landLordVatRate ? landLordVatRate : null,
-        bedrooms: bedrooms ? bedrooms : 0,
-        otherRooms: otherRooms ? otherRooms : 0,
-        otherWhoLives: otherWhoLives ? otherWhoLives : "",
-        previousHomeDetails: {
-          address1:
-            previousHomeDetails && previousHomeDetails.address1
-              ? previousHomeDetails.address1
-              : "",
-          address2:
-            previousHomeDetails && previousHomeDetails.address2
-              ? previousHomeDetails.address2
-              : "",
-          locationName:
-            previousHomeDetails && previousHomeDetails.locationName
-              ? previousHomeDetails.locationName
-              : "",
-          locationCode:
-            previousHomeDetails && previousHomeDetails.locationCode
-              ? previousHomeDetails.locationCode
-              : "",
-          town:
-            previousHomeDetails && previousHomeDetails.town
-              ? previousHomeDetails.town
-              : "",
-          county:
-            previousHomeDetails && previousHomeDetails.county
-              ? previousHomeDetails.county
-              : "",
-          postCode:
-            previousHomeDetails && previousHomeDetails.postCode
-              ? previousHomeDetails.postCode
-              : "",
-          countryPrefix:
-            previousHomeDetails && previousHomeDetails.countryPrefix
-              ? previousHomeDetails.countryPrefix
-              : "",
-          country:
-            previousHomeDetails && previousHomeDetails.country
-              ? previousHomeDetails.country
-              : "",
-          fax:
-            previousHomeDetails && previousHomeDetails.fax
-              ? previousHomeDetails.fax
-              : "",
-          vatRate:
-            previousHomeDetails && previousHomeDetails.vatRate
-              ? previousHomeDetails.vatRate
-              : "",
-        },
-      },
-      family: {
-        maritalStatus: maritalStatus ? maritalStatus : "",
-        spouseName: spouseName ? spouseName : "",
-        marriageDate: marriageDate
-          ? format(new Date(marriageDate), "yyyy-MM-dd")
-          : null,
-        whereGotMarried: whereGotMarried ? whereGotMarried : "",
-        spouseDob: spouseDob ? format(new Date(spouseDob), "yyyy-MM-dd") : "",
-        spouseNationality: spouseNationality ? spouseNationality : "",
-        spousePassportNumber: spousePassportNumber ? spousePassportNumber : "",
-        whereDidYouMeet: whereDidYouMeet ? whereDidYouMeet : "",
-        whenDidRelationshipBegan: whenDidRelationshipBegan
-          ? whenDidRelationshipBegan
-          : "",
-        whenLastSawEachOther: whenLastSawEachOther
-          ? format(new Date(whenLastSawEachOther), "yyyy-MM-dd")
-          : null,
-        isLiveTogether:
-          isLiveTogether === true
-            ? true
-            : isLiveTogether === false
-            ? false
-            : true,
-        whichDateStartedLivingTogether: whichDateStartedLivingTogether
-          ? format(new Date(whichDateStartedLivingTogether), "yyyy-MM-dd")
-          : null,
-        isChildren:
-          isChildren === true ? true : isChildren === false ? false : true,
-        numberOfChildren: numberOfChildren ? numberOfChildren : 0,
-        childDetails:
-          childDetails?.length > 0 ? formattedChildDetails : childDetailsArr,
-        isMarriedBefore:
-          isMarriedBefore === true
-            ? true
-            : isMarriedBefore === false
-            ? false
-            : true,
-        exName: exName ? exName : "",
-        exDob: exDob ? format(new Date(exDob), "yyyy-MM-dd") : null,
-        exNationality: exNationality ? exNationality : "",
-        marriageDateWithEx: marriageDateWithEx
-          ? format(new Date(marriageDateWithEx), "yyyy-MM-dd")
-          : null,
-        divorceDateWithEx: divorceDateWithEx
-          ? format(new Date(divorceDateWithEx), "yyyy-MM-dd")
-          : null,
-        isCurrentPartnerMarriedBefore: isCurrentPartnerMarriedBefore
-          ? isCurrentPartnerMarriedBefore
-          : null,
-        currentPartnerExName: currentPartnerExName ? currentPartnerExName : "",
-        currentPartnerExDob: currentPartnerExDob
-          ? format(new Date(currentPartnerExDob), "yyyy-MM-dd")
-          : null,
-        currentPartnerExNationality: currentPartnerExNationality
-          ? currentPartnerExNationality
-          : "",
-        currentPartnerExMarriageDate: currentPartnerExMarriageDate
-          ? format(new Date(currentPartnerExMarriageDate), "yyyy-MM-dd")
-          : null,
-        currentPartnerExDivorceDate: currentPartnerExDivorceDate
-          ? format(new Date(currentPartnerExDivorceDate), "yyyy-MM-dd")
-          : null,
-        isFamilyFriendsInHomeCountry: isFamilyFriendsInHomeCountry
-          ? isFamilyFriendsInHomeCountry
-          : null,
-        relativeName: relativeName ? relativeName : "",
-        relationship: relationship ? relationship : "",
-      },
-      languageProficiency: {
-        isDegreeTaughtInEnglish: isDegreeTaughtInEnglish
-          ? isDegreeTaughtInEnglish
-          : null,
-        isPassedAnyEnglishTest: isPassedAnyEnglishTest
-          ? isPassedAnyEnglishTest
-          : null,
-        testType: testType ? testType : "",
-      },
-      education: {
-        qualification: qualification ? qualification : "",
-        awardingInstitute: awardingInstitute ? awardingInstitute : "",
-        grade: grade ? grade : "",
-        courseSubject: courseSubject ? courseSubject : "",
-        courseLength: courseLength ? courseLength : "",
-        yearOfAward: yearOfAward ? yearOfAward : null,
-        countryOfAward: countryOfAward ? countryOfAward : "",
-        state: state ? state : "",
-      },
-      employment: {
-        isEmployed: isEmployed ? isEmployed : true,
-        jobStartDate: jobStartDate
-          ? format(new Date(jobStartDate), "yyyy-MM-dd")
-          : "",
-        employerName: employerName ? employerName : "",
-        employerTelephone: employerTelephone ? employerTelephone : "",
-        employerEmail: employerEmail ? employerEmail : "",
-        annualSalary: annualSalary ? annualSalary : "",
-        jobTitle: jobTitle ? jobTitle : "",
-        employerAddress1: employerAddress1 ? employerAddress1 : "",
-        employerAddress2: employerAddress2 ? employerAddress2 : "",
-        employerLocation: employerLocation ? employerLocation : "",
-        employerLocationCode: employerLocationCode ? employerLocationCode : "",
-        employerTown: employerTown ? employerTown : "",
-        employerCounty: employerCounty ? employerCounty : "",
-        employerPostCode: employerPostCode ? employerPostCode : "",
-        employerCountryPrefix: employerCountryPrefix
-          ? employerCountryPrefix
-          : "",
-        employerCountry: employerCountry ? employerCountry : "",
-        employerFax: employerFax ? employerFax : "",
-        employerVatRate: employerVatRate ? employerVatRate : "",
-        unEmployedReason: unEmployedReason ? unEmployedReason : "",
-      },
-      maintenance: {
-        bankName: bankName ? bankName : "",
-        isRegisteredFinancialInstitute: isRegisteredFinancialInstitute
-          ? isRegisteredFinancialInstitute
-          : "",
-        countryFundsHeldIn: countryFundsHeldIn ? countryFundsHeldIn : "",
-        currencyFundsHeldIn: currencyFundsHeldIn ? currencyFundsHeldIn : "",
-        amountHeld: amountHeld ? amountHeld : "",
-        fundsDateHeldFrom: fundsDateHeldFrom
-          ? format(new Date(fundsDateHeldFrom), "yyyy-MM-dd")
-          : "",
-      },
-      travel: {
-        areYouCurrentlyInUk:
-          areYouCurrentlyInUk == true
-            ? true
-            : areYouCurrentlyInUk == false
-            ? false
-            : true,
-        countryVisited: countryVisited ? countryVisited : "",
-        ukLeaveDate: ukLeaveDate
-          ? format(new Date(ukLeaveDate), "yyyy-MM-dd")
-          : "",
-        returnDate: returnDate
-          ? format(new Date(returnDate), "yyyy-MM-dd")
-          : "",
-        reasonForVisit: reasonForVisit ? reasonForVisit : "",
-        numberOfVisitsToUk: numberOfVisitsToUk > 0 ? numberOfVisitsToUk : "",
-        lastUkVisits:
-          lastUkVisits?.length > 0 ? formattedTravelDetails : lastVisitsToUk,
-        isVisitedUkIllegally:
-          isVisitedUkIllegally === true
-            ? true
-            : isVisitedUkIllegally === false
-            ? false
-            : true,
-        illegalVisitDetail: illegalVisitDetail ? illegalVisitDetail : "",
-        isStayedBeyondExpiryDateInUk:
-          isStayedBeyondExpiryDateInUk === true
-            ? true
-            : isStayedBeyondExpiryDateInUk === false
-            ? false
-            : true,
-        reasonForStayingExpiryDateInUk: reasonForStayingExpiryDateInUk
-          ? reasonForStayingExpiryDateInUk
-          : "",
-        everBeenToUkOrAnyCountry: everBeenToUkOrAnyCountry
-          ? everBeenToUkOrAnyCountry
-          : "",
-        isBreachedLeaveConditions:
-          isBreachedLeaveConditions === true
-            ? true
-            : isBreachedLeaveConditions === false
-            ? false
-            : true,
-        reasonForBreachedLeave: reasonForBreachedLeave
-          ? reasonForBreachedLeave
-          : "",
-        isWorkedWithoutPermission:
-          isWorkedWithoutPermission === true
-            ? true
-            : isWorkedWithoutPermission === false
-            ? false
-            : true,
-        reasonForWorkedWithoutPermission: reasonForWorkedWithoutPermission
-          ? reasonForWorkedWithoutPermission
-          : "",
-        isReceivedPublicFunds:
-          isReceivedPublicFunds === true
-            ? true
-            : isReceivedPublicFunds === false
-            ? false
-            : true,
-        detailsForPublicFunds: detailsForPublicFunds
-          ? detailsForPublicFunds
-          : "",
-        everGivenFalseInfoForApplyingVisa:
-          everGivenFalseInfoForApplyingVisa === true
-            ? true
-            : everGivenFalseInfoForApplyingVisa === false
-            ? false
-            : true,
-        reasonForFalseInformation: reasonForFalseInformation
-          ? reasonForFalseInformation
-          : "",
-        everUsedDeceptionInPrevVisaApplication:
-          everUsedDeceptionInPrevVisaApplication === true
-            ? true
-            : everUsedDeceptionInPrevVisaApplication === false
-            ? false
-            : true,
-        reasonForDeception: reasonForDeception ? reasonForDeception : "",
-        everBreachedOtherImmigrationLaws:
-          everBreachedOtherImmigrationLaws === true
-            ? true
-            : everBreachedOtherImmigrationLaws === false
-            ? false
-            : true,
-        reasonForBreachingImmigrationLaw: reasonForBreachingImmigrationLaw
-          ? reasonForBreachingImmigrationLaw
-          : "",
-        everRefusedVisaOrBorderEntry:
-          everRefusedVisaOrBorderEntry === true
-            ? true
-            : everRefusedVisaOrBorderEntry === false
-            ? false
-            : true,
-        reasonForRefusedEntry: reasonForRefusedEntry
-          ? reasonForRefusedEntry
-          : "",
-        everRefusedPermissionToStay:
-          everRefusedPermissionToStay === true
-            ? true
-            : everRefusedPermissionToStay === false
-            ? false
-            : true,
-        reasonForRefusedPermissionToStay: reasonForRefusedPermissionToStay
-          ? reasonForRefusedPermissionToStay
-          : "",
-        everRefusedAsylum:
-          everRefusedAsylum === true
-            ? true
-            : everRefusedAsylum === false
-            ? false
-            : true,
-        reasonForRefusedAsylum: reasonForRefusedAsylum
-          ? reasonForRefusedAsylum
-          : "",
-        everDeported:
-          everDeported === true ? true : everDeported === false ? false : true,
-        reasonForDeported: reasonForDeported ? reasonForDeported : "",
-        everBannedFromAnyCountry:
-          everBannedFromAnyCountry === true
-            ? true
-            : everBannedFromAnyCountry === false
-            ? false
-            : true,
-        reasonForBanned: reasonForBanned ? reasonForBanned : "",
-      },
-      character: {
-        everChargedWithCriminalOffence:
-          everChargedWithCriminalOffence === true
-            ? true
-            : everChargedWithCriminalOffence === false
-            ? false
-            : true,
-        reasonForCharged: reasonForCharged ? reasonForCharged : "",
-        isPendingProsecutions:
-          isPendingProsecutions === true
-            ? true
-            : isPendingProsecutions === false
-            ? false
-            : true,
-        reasonForPendingProsecutions: reasonForPendingProsecutions
-          ? reasonForPendingProsecutions
-          : "",
-        isTerroristViews:
-          isTerroristViews === true
-            ? true
-            : isTerroristViews === false
-            ? false
-            : true,
-        reasonForTerroristViews: reasonForTerroristViews
-          ? reasonForTerroristViews
-          : "",
-        isWorkedForJudiciary:
-          isWorkedForJudiciary === true
-            ? true
-            : isWorkedForJudiciary === false
-            ? false
-            : true,
-        reasonForJudiciaryWork: reasonForJudiciaryWork
-          ? reasonForJudiciaryWork
-          : "",
-      },
-    },
-  };
-
   const topDivRef = useRef();
 
   // const [activeTab, setActiveTab] = useState(
@@ -792,6 +567,512 @@ const Phase4Page = () => {
         setIsAllowed(false);
         navigate("/filldata");
       }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    if (data?.application) {
+      setInitialValues({
+        phase4: {
+          general: {
+            fullName: fullName ? fullName : "",
+            isKnownByOtherName:
+              isKnownByOtherName === true
+                ? true
+                : isKnownByOtherName === false
+                ? false
+                : true,
+            previousName: previousName ? previousName : "",
+            prevNameFrom: prevNameFrom
+              ? format(prevNameFromDate, "yyyy-MM-dd")
+              : "",
+            prevNameTo: prevNameTo ? format(prevNameToDate, "yyyy-MM-dd") : "",
+            countryOfBirth: countryOfBirth ? countryOfBirth : "",
+            placeOfBirth: placeOfBirth ? placeOfBirth : "",
+            currentNationality: currentNationality ? currentNationality : "",
+            isOtherNationality:
+              isOtherNationality === true
+                ? true
+                : isOtherNationality === false
+                ? false
+                : true,
+            otherNationality: otherNationality ? otherNationality : "",
+            nationalityFrom: nationalityFrom
+              ? format(nationalityFromDate, "yyyy-MM-dd")
+              : "",
+            nationalityUntill: nationalityUntill
+              ? format(nationalityUntillDate, "yyyy-MM-dd")
+              : "",
+            currentPassportNumber: currentPassportNumber
+              ? currentPassportNumber
+              : "",
+            passportIssueDate: passportIssueDate
+              ? format(passportIssueDateObj, "yyyy-MM-dd")
+              : "",
+            passportExpiryDate: passportExpiryDate
+              ? format(passportExpiryDateObj, "yyyy-MM-dd")
+              : "",
+            issuingAuthority: issuingAuthority ? issuingAuthority : "",
+            passportPlaceOfIssue: passportPlaceOfIssue
+              ? passportPlaceOfIssue
+              : "",
+            isNationalIDCard:
+              isNationalIDCard === true
+                ? true
+                : isNationalIDCard === false
+                ? false
+                : true,
+            idCardNumber: idCardNumber ? idCardNumber : "",
+            idCardIssueDate: idCardIssueDate
+              ? format(idCardIssueDateObj, "yyyy-MM-dd")
+              : "",
+            isBrp: isBrp === true ? true : isBrp === false ? false : true,
+            brpNumber: brpNumber ? brpNumber : "",
+            brpIssueDate: brpIssueDate
+              ? format(brpIssueDateObj, "yyyy-MM-dd")
+              : "",
+            motherName: motherName ? motherName : "",
+            motherDob: motherDob ? format(motherDobObj, "yyyy-MM-dd") : "",
+            motherNationality: motherNationality ? motherNationality : "",
+            motherCountry: motherCountry ? motherCountry : "",
+            motherPlaceOfBirth: motherPlaceOfBirth ? motherPlaceOfBirth : "",
+            fatherName: fatherName ? fatherName : "",
+            fatherDob: fatherDob ? format(fatherDobObj, "yyyy-MM-dd") : "",
+            fatherNationality: fatherNationality ? fatherNationality : "",
+            fatherCountry: fatherCountry ? fatherCountry : "",
+            fatherPlaceOfBirth: fatherPlaceOfBirth ? fatherPlaceOfBirth : "",
+            isUKNINumber:
+              isUKNINumber === true
+                ? true
+                : isUKNINumber === false
+                ? false
+                : true,
+            ukNINumber: ukNINumber ? ukNINumber : "",
+            niNumberIssueDate: niNumberIssueDate
+              ? format(niNumberIssueDateObj, "yyyy-MM-dd")
+              : "",
+            isUKDrivingLicense:
+              isUKDrivingLicense === true
+                ? true
+                : isUKDrivingLicense === false
+                ? false
+                : true,
+            ukDrivingLicenseNumber: ukDrivingLicenseNumber
+              ? ukDrivingLicenseNumber
+              : "",
+            ukLicenseIssueDate: ukLicenseIssueDate
+              ? format(ukLicenseIssueDateObj, "yyyy-MM-dd")
+              : "",
+            email: email ? email : "",
+            mobileNumber: mobileNumber ? mobileNumber : "",
+          },
+          accommodation: {
+            address1: address1 ? address1 : "",
+            address2: address2 ? address2 : "",
+            locationName: locationName ? locationName : "",
+            locationCode: locationCode ? locationCode : "",
+            town: town ? town : "",
+            county: county ? county : "",
+            postCode: postCode ? postCode : "",
+            countryPrefix: countryPrefix ? countryPrefix : "",
+            country: country ? country : "",
+            fax: fax ? fax : "",
+            vatRate: vatRate ? vatRate : "",
+            moveInDate: moveInDate
+              ? format(new Date(moveInDate), "yyyy-MM-dd")
+              : null,
+            timeLivedAtCurrentAddress: timeLivedAtCurrentAddress
+              ? timeLivedAtCurrentAddress
+              : "",
+            homeType: homeType ? homeType : "",
+            otherHomeDetails: otherHomeDetails ? otherHomeDetails : "",
+            landLordName: landLordName ? landLordName : "",
+            landLordEmail: landLordEmail ? landLordEmail : "",
+            landLordTelephone: landLordTelephone ? landLordTelephone : "",
+            landLordAddress1: landLordAddress1 ? landLordAddress1 : "",
+            landLordAddress2: landLordAddress2 ? landLordAddress2 : "",
+            landLordLocationName: landLordLocationName
+              ? landLordLocationName
+              : "",
+            landLordLocationCode: landLordLocationCode
+              ? landLordLocationCode
+              : "",
+            landLordCounty: landLordCounty ? landLordCounty : "",
+            landLordTown: landLordTown ? landLordTown : "",
+            landLordPostCode: landLordPostCode ? landLordPostCode : "",
+            landLordCountryPrefix: landLordCountryPrefix
+              ? landLordCountryPrefix
+              : "",
+            landLordCountry: landLordCountry ? landLordCountry : "",
+            landLordFax: landLordFax ? landLordFax : null,
+            landLordVatRate: landLordVatRate ? landLordVatRate : null,
+            bedrooms: bedrooms ? bedrooms : 0,
+            otherRooms: otherRooms ? otherRooms : 0,
+            otherWhoLives: otherWhoLives ? otherWhoLives : "",
+            previousHomeDetails: {
+              address1:
+                previousHomeDetails && previousHomeDetails.address1
+                  ? previousHomeDetails.address1
+                  : "",
+              address2:
+                previousHomeDetails && previousHomeDetails.address2
+                  ? previousHomeDetails.address2
+                  : "",
+              locationName:
+                previousHomeDetails && previousHomeDetails.locationName
+                  ? previousHomeDetails.locationName
+                  : "",
+              locationCode:
+                previousHomeDetails && previousHomeDetails.locationCode
+                  ? previousHomeDetails.locationCode
+                  : "",
+              town:
+                previousHomeDetails && previousHomeDetails.town
+                  ? previousHomeDetails.town
+                  : "",
+              county:
+                previousHomeDetails && previousHomeDetails.county
+                  ? previousHomeDetails.county
+                  : "",
+              postCode:
+                previousHomeDetails && previousHomeDetails.postCode
+                  ? previousHomeDetails.postCode
+                  : "",
+              countryPrefix:
+                previousHomeDetails && previousHomeDetails.countryPrefix
+                  ? previousHomeDetails.countryPrefix
+                  : "",
+              country:
+                previousHomeDetails && previousHomeDetails.country
+                  ? previousHomeDetails.country
+                  : "",
+              fax:
+                previousHomeDetails && previousHomeDetails.fax
+                  ? previousHomeDetails.fax
+                  : "",
+              vatRate:
+                previousHomeDetails && previousHomeDetails.vatRate
+                  ? previousHomeDetails.vatRate
+                  : "",
+            },
+          },
+          family: {
+            maritalStatus: maritalStatus ? maritalStatus : "",
+            spouseName: spouseName ? spouseName : "",
+            marriageDate: marriageDate
+              ? format(new Date(marriageDate), "yyyy-MM-dd")
+              : null,
+            whereGotMarried: whereGotMarried ? whereGotMarried : "",
+            spouseDob: spouseDob
+              ? format(new Date(spouseDob), "yyyy-MM-dd")
+              : "",
+            spouseNationality: spouseNationality ? spouseNationality : "",
+            spousePassportNumber: spousePassportNumber
+              ? spousePassportNumber
+              : "",
+            whereDidYouMeet: whereDidYouMeet ? whereDidYouMeet : "",
+            whenDidRelationshipBegan: whenDidRelationshipBegan
+              ? whenDidRelationshipBegan
+              : "",
+            whenLastSawEachOther: whenLastSawEachOther
+              ? format(new Date(whenLastSawEachOther), "yyyy-MM-dd")
+              : null,
+            isLiveTogether:
+              isLiveTogether === true
+                ? true
+                : isLiveTogether === false
+                ? false
+                : true,
+            whichDateStartedLivingTogether: whichDateStartedLivingTogether
+              ? format(new Date(whichDateStartedLivingTogether), "yyyy-MM-dd")
+              : null,
+            isChildren:
+              isChildren === true ? true : isChildren === false ? false : true,
+            numberOfChildren: numberOfChildren ? numberOfChildren : 0,
+            childDetails:
+              childDetails?.length > 0
+                ? formattedChildDetails
+                : childDetailsArr,
+            isMarriedBefore:
+              isMarriedBefore === true
+                ? true
+                : isMarriedBefore === false
+                ? false
+                : true,
+            exName: exName ? exName : "",
+            exDob: exDob ? format(new Date(exDob), "yyyy-MM-dd") : null,
+            exNationality: exNationality ? exNationality : "",
+            marriageDateWithEx: marriageDateWithEx
+              ? format(new Date(marriageDateWithEx), "yyyy-MM-dd")
+              : null,
+            divorceDateWithEx: divorceDateWithEx
+              ? format(new Date(divorceDateWithEx), "yyyy-MM-dd")
+              : null,
+            isCurrentPartnerMarriedBefore: isCurrentPartnerMarriedBefore
+              ? isCurrentPartnerMarriedBefore
+              : null,
+            currentPartnerExName: currentPartnerExName
+              ? currentPartnerExName
+              : "",
+            currentPartnerExDob: currentPartnerExDob
+              ? format(new Date(currentPartnerExDob), "yyyy-MM-dd")
+              : null,
+            currentPartnerExNationality: currentPartnerExNationality
+              ? currentPartnerExNationality
+              : "",
+            currentPartnerExMarriageDate: currentPartnerExMarriageDate
+              ? format(new Date(currentPartnerExMarriageDate), "yyyy-MM-dd")
+              : null,
+            currentPartnerExDivorceDate: currentPartnerExDivorceDate
+              ? format(new Date(currentPartnerExDivorceDate), "yyyy-MM-dd")
+              : null,
+            isFamilyFriendsInHomeCountry: isFamilyFriendsInHomeCountry
+              ? isFamilyFriendsInHomeCountry
+              : null,
+            relativeName: relativeName ? relativeName : "",
+            relationship: relationship ? relationship : "",
+          },
+          languageProficiency: {
+            isDegreeTaughtInEnglish:
+              isDegreeTaughtInEnglish === true
+                ? true
+                : isDegreeTaughtInEnglish === false
+                ? false
+                : true,
+            isPassedAnyEnglishTest:
+              isPassedAnyEnglishTest === true
+                ? true
+                : isPassedAnyEnglishTest === false
+                ? false
+                : true,
+            testType: testType ? testType : "",
+          },
+          education: {
+            qualification: qualification ? qualification : "",
+            awardingInstitute: awardingInstitute ? awardingInstitute : "",
+            grade: grade ? grade : "",
+            courseSubject: courseSubject ? courseSubject : "",
+            courseLength: courseLength ? courseLength : "",
+            yearOfAward: yearOfAward ? yearOfAward : "",
+            countryOfAward: countryOfAward ? countryOfAward : "",
+            state: state ? state : "",
+          },
+          employment: {
+            isEmployed:
+              isEmployed === true ? true : isEmployed === false ? false : true,
+            jobStartDate: jobStartDate
+              ? format(new Date(jobStartDate), "yyyy-MM-dd")
+              : "",
+            employerName: employerName ? employerName : "",
+            employerTelephone: employerTelephone ? employerTelephone : "",
+            employerEmail: employerEmail ? employerEmail : "",
+            annualSalary: annualSalary ? annualSalary : "",
+            jobTitle: jobTitle ? jobTitle : "",
+            employerAddress1: employerAddress1 ? employerAddress1 : "",
+            employerAddress2: employerAddress2 ? employerAddress2 : "",
+            employerLocation: employerLocation ? employerLocation : "",
+            employerLocationCode: employerLocationCode
+              ? employerLocationCode
+              : "",
+            employerTown: employerTown ? employerTown : "",
+            employerCounty: employerCounty ? employerCounty : "",
+            employerPostCode: employerPostCode ? employerPostCode : "",
+            employerCountryPrefix: employerCountryPrefix
+              ? employerCountryPrefix
+              : "",
+            employerCountry: employerCountry ? employerCountry : "",
+            employerFax: employerFax ? employerFax : "",
+            employerVatRate: employerVatRate ? employerVatRate : "",
+            unEmployedReason: unEmployedReason ? unEmployedReason : "",
+          },
+          maintenance: {
+            bankName: bankName ? bankName : "",
+            isRegisteredFinancialInstitute: isRegisteredFinancialInstitute
+              ? isRegisteredFinancialInstitute
+              : "",
+            countryFundsHeldIn: countryFundsHeldIn ? countryFundsHeldIn : "",
+            currencyFundsHeldIn: currencyFundsHeldIn ? currencyFundsHeldIn : "",
+            amountHeld: amountHeld ? amountHeld : "",
+            fundsDateHeldFrom: fundsDateHeldFrom
+              ? format(new Date(fundsDateHeldFrom), "yyyy-MM-dd")
+              : "",
+          },
+          travel: {
+            areYouCurrentlyInUk:
+              areYouCurrentlyInUk == true
+                ? true
+                : areYouCurrentlyInUk == false
+                ? false
+                : true,
+            countryVisited: countryVisited ? countryVisited : "",
+            ukLeaveDate: ukLeaveDate
+              ? format(new Date(ukLeaveDate), "yyyy-MM-dd")
+              : "",
+            returnDate: returnDate
+              ? format(new Date(returnDate), "yyyy-MM-dd")
+              : "",
+            reasonForVisit: reasonForVisit ? reasonForVisit : "",
+            numberOfVisitsToUk:
+              numberOfVisitsToUk > 0 ? numberOfVisitsToUk : "",
+            lastUkVisits:
+              lastUkVisits?.length > 0
+                ? formattedTravelDetails
+                : lastVisitsToUk,
+            isVisitedUkIllegally:
+              isVisitedUkIllegally === true
+                ? true
+                : isVisitedUkIllegally === false
+                ? false
+                : true,
+            illegalVisitDetail: illegalVisitDetail ? illegalVisitDetail : "",
+            isStayedBeyondExpiryDateInUk:
+              isStayedBeyondExpiryDateInUk === true
+                ? true
+                : isStayedBeyondExpiryDateInUk === false
+                ? false
+                : true,
+            reasonForStayingExpiryDateInUk: reasonForStayingExpiryDateInUk
+              ? reasonForStayingExpiryDateInUk
+              : "",
+            everBeenToUkOrAnyCountry: everBeenToUkOrAnyCountry
+              ? everBeenToUkOrAnyCountry
+              : "",
+            isBreachedLeaveConditions:
+              isBreachedLeaveConditions === true
+                ? true
+                : isBreachedLeaveConditions === false
+                ? false
+                : true,
+            reasonForBreachedLeave: reasonForBreachedLeave
+              ? reasonForBreachedLeave
+              : "",
+            isWorkedWithoutPermission:
+              isWorkedWithoutPermission === true
+                ? true
+                : isWorkedWithoutPermission === false
+                ? false
+                : true,
+            reasonForWorkedWithoutPermission: reasonForWorkedWithoutPermission
+              ? reasonForWorkedWithoutPermission
+              : "",
+            isReceivedPublicFunds:
+              isReceivedPublicFunds === true
+                ? true
+                : isReceivedPublicFunds === false
+                ? false
+                : true,
+            detailsForPublicFunds: detailsForPublicFunds
+              ? detailsForPublicFunds
+              : "",
+            everGivenFalseInfoForApplyingVisa:
+              everGivenFalseInfoForApplyingVisa === true
+                ? true
+                : everGivenFalseInfoForApplyingVisa === false
+                ? false
+                : true,
+            reasonForFalseInformation: reasonForFalseInformation
+              ? reasonForFalseInformation
+              : "",
+            everUsedDeceptionInPrevVisaApplication:
+              everUsedDeceptionInPrevVisaApplication === true
+                ? true
+                : everUsedDeceptionInPrevVisaApplication === false
+                ? false
+                : true,
+            reasonForDeception: reasonForDeception ? reasonForDeception : "",
+            everBreachedOtherImmigrationLaws:
+              everBreachedOtherImmigrationLaws === true
+                ? true
+                : everBreachedOtherImmigrationLaws === false
+                ? false
+                : true,
+            reasonForBreachingImmigrationLaw: reasonForBreachingImmigrationLaw
+              ? reasonForBreachingImmigrationLaw
+              : "",
+            everRefusedVisaOrBorderEntry:
+              everRefusedVisaOrBorderEntry === true
+                ? true
+                : everRefusedVisaOrBorderEntry === false
+                ? false
+                : true,
+            reasonForRefusedEntry: reasonForRefusedEntry
+              ? reasonForRefusedEntry
+              : "",
+            everRefusedPermissionToStay:
+              everRefusedPermissionToStay === true
+                ? true
+                : everRefusedPermissionToStay === false
+                ? false
+                : true,
+            reasonForRefusedPermissionToStay: reasonForRefusedPermissionToStay
+              ? reasonForRefusedPermissionToStay
+              : "",
+            everRefusedAsylum:
+              everRefusedAsylum === true
+                ? true
+                : everRefusedAsylum === false
+                ? false
+                : true,
+            reasonForRefusedAsylum: reasonForRefusedAsylum
+              ? reasonForRefusedAsylum
+              : "",
+            everDeported:
+              everDeported === true
+                ? true
+                : everDeported === false
+                ? false
+                : true,
+            reasonForDeported: reasonForDeported ? reasonForDeported : "",
+            everBannedFromAnyCountry:
+              everBannedFromAnyCountry === true
+                ? true
+                : everBannedFromAnyCountry === false
+                ? false
+                : true,
+            reasonForBanned: reasonForBanned ? reasonForBanned : "",
+          },
+          character: {
+            everChargedWithCriminalOffence:
+              everChargedWithCriminalOffence === true
+                ? true
+                : everChargedWithCriminalOffence === false
+                ? false
+                : true,
+            reasonForCharged: reasonForCharged ? reasonForCharged : "",
+            isPendingProsecutions:
+              isPendingProsecutions === true
+                ? true
+                : isPendingProsecutions === false
+                ? false
+                : true,
+            reasonForPendingProsecutions: reasonForPendingProsecutions
+              ? reasonForPendingProsecutions
+              : "",
+            isTerroristViews:
+              isTerroristViews === true
+                ? true
+                : isTerroristViews === false
+                ? false
+                : true,
+            reasonForTerroristViews: reasonForTerroristViews
+              ? reasonForTerroristViews
+              : "",
+            isWorkedForJudiciary:
+              isWorkedForJudiciary === true
+                ? true
+                : isWorkedForJudiciary === false
+                ? false
+                : true,
+            reasonForJudiciaryWork: reasonForJudiciaryWork
+              ? reasonForJudiciaryWork
+              : "",
+          },
+        },
+      });
     }
   }, [data]);
 
@@ -881,6 +1162,7 @@ const Phase4Page = () => {
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
+                    refetch={refetch}
                   />
                 )}
                 {activeTab === "/Accomodation" && data && initialValues && (
@@ -888,6 +1170,7 @@ const Phase4Page = () => {
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
+                    refetch={refetch}
                   />
                 )}
 
@@ -897,6 +1180,7 @@ const Phase4Page = () => {
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
                     setChildDetailsArr={setChildDetailsArr}
+                    refetch={refetch}
                   />
                 )}
 
@@ -907,6 +1191,7 @@ const Phase4Page = () => {
                       data={data}
                       setActiveTab={setActiveTab}
                       initialValues={initialValues}
+                      refetch={refetch}
                     />
                   )}
 
@@ -915,6 +1200,7 @@ const Phase4Page = () => {
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
+                    refetch={refetch}
                   />
                 )}
 
@@ -923,6 +1209,7 @@ const Phase4Page = () => {
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
+                    refetch={refetch}
                   />
                 )}
 
@@ -931,6 +1218,7 @@ const Phase4Page = () => {
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
+                    refetch={refetch}
                   />
                 )}
 
@@ -941,6 +1229,7 @@ const Phase4Page = () => {
                     initialValues={initialValues}
                     setLastVisitsToUk={setLastVisitsToUk}
                     lastVisitsToUk={lastVisitsToUk}
+                    refetch={refetch}
                   />
                 )}
 
@@ -949,6 +1238,7 @@ const Phase4Page = () => {
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
+                    refetch={refetch}
                   />
                 )}
               </div>

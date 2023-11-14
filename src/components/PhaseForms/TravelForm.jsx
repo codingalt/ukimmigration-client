@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   useGetCountriesQuery,
   usePostPhase4Mutation,
+  usePostTravelMutation,
 } from "../../services/api/applicationApi";
 import { maintenanceSchema } from "../../utils/ValidationSchema";
 import { toastError } from "../Toast";
@@ -15,17 +16,23 @@ const TravelForm = ({
   initialValues,
   setLastVisitsToUk,
   lastVisitsToUk,
+  refetch,
 }) => {
   const application = data?.application;
   console.log("Travel Phase 4", initialValues);
 
-  const [postPhase4, res] = usePostPhase4Mutation();
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postTravel, res] = usePostTravelMutation();
   const { isLoading, isSuccess, error } = res;
 
   const [isCurrentlyInUk, setIsCurrentlyInUk] = useState(
     initialValues?.phase4?.travel?.areYouCurrentlyInUk
   );
-  const [numOfVisits, setNumOfVisits] = useState(initialValues?.phase4?.travel?.numberOfVisitsToUk > 0 ? initialValues?.phase4?.travel?.numberOfVisitsToUk : 0);
+  const [numOfVisits, setNumOfVisits] = useState(
+    initialValues?.phase4?.travel?.numberOfVisitsToUk > 0
+      ? initialValues?.phase4?.travel?.numberOfVisitsToUk
+      : 0
+  );
   const [isEnteredUkIllegally, setIsEnteredUkIllegally] = useState(
     initialValues?.phase4?.travel?.isVisitedUkIllegally
   );
@@ -63,23 +70,24 @@ const TravelForm = ({
   const [everRefusedVisaOrBorderEntry, setEverRefusedVisaOrBorderEntry] =
     useState(initialValues?.phase4?.travel?.everRefusedVisaOrBorderEntry);
 
-    const [everRefusedPermissionToStay, setEverRefusedPermissionToStay] =
-      useState(initialValues?.phase4?.travel?.everRefusedPermissionToStay);
+  const [everRefusedPermissionToStay, setEverRefusedPermissionToStay] =
+    useState(initialValues?.phase4?.travel?.everRefusedPermissionToStay);
 
-      const [everRefusedAsylum, setEverRefusedAsylum] = useState(
-        initialValues?.phase4?.travel?.everRefusedAsylum
-      );
+  const [everRefusedAsylum, setEverRefusedAsylum] = useState(
+    initialValues?.phase4?.travel?.everRefusedAsylum
+  );
 
-      const [everDeported, setEverDeported] = useState(
-        initialValues?.phase4?.travel?.everDeported
-      );
+  const [everDeported, setEverDeported] = useState(
+    initialValues?.phase4?.travel?.everDeported
+  );
 
-      const [everBannedFromAnyCountry, setEverBannedFromAnyCountry] = useState(
-        initialValues?.phase4?.travel?.everBannedFromAnyCountry
-      );
+  const [everBannedFromAnyCountry, setEverBannedFromAnyCountry] = useState(
+    initialValues?.phase4?.travel?.everBannedFromAnyCountry
+  );
 
   useMemo(() => {
     if (isSuccess) {
+      refetch();
       setActiveTab("/character");
     }
   }, [isSuccess]);
@@ -91,12 +99,16 @@ const TravelForm = ({
   }, [error]);
 
   const handleSubmitData = async (values) => {
-    if (values.phase4.travel.numberOfVisitsToUk == 0){
-      toastError("Please Select number of visits to UK")
+    if (values.phase4.travel.numberOfVisitsToUk == 0) {
+      toastError("Please Select number of visits to UK");
       return;
     }
-      await postPhase4({ data: values, applicationId: application?._id });
-    console.log("submitted", values.phase4?.maintenance);
+        await postTravel({
+          data: values.phase4.travel,
+          applicationId: application?._id,
+        });
+
+    console.log("submitted travel", values);
   };
 
   const handleBackClick = () => {
@@ -123,11 +135,7 @@ const TravelForm = ({
 
   return (
     <>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmitData}
-        validationSchema={maintenanceSchema}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmitData}>
         {({ setFieldValue, errors, touched, values }) => (
           <Form
             style={{
@@ -528,10 +536,7 @@ const TravelForm = ({
                       "phase4.travel.isBreachedLeaveConditions",
                       false
                     );
-                    setFieldValue(
-                      "phase4.travel.reasonForBreachedLeave",
-                      ""
-                    );
+                    setFieldValue("phase4.travel.reasonForBreachedLeave", "");
                     setIsBreachedLeaveConditions(false);
                   }}
                 />
@@ -1195,6 +1200,7 @@ const TravelForm = ({
                 }}
               >
                 <button
+                  disabled={isLoading}
                   type="button"
                   className="back-button-new"
                   onClick={handleBackClick}
@@ -1202,6 +1208,7 @@ const TravelForm = ({
                   Back
                 </button>
                 <button
+                  disabled={isLoading}
                   type="submit"
                   className="Next-button"
                   style={{

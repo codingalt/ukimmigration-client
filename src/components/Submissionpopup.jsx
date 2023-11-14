@@ -4,7 +4,7 @@ import congrats from "../Assets/cong-phase4.svg"
 
 import { NavLink, useNavigate } from "react-router-dom"; // Import the useNavigate hook
 import messageicon from "../Assets/messag-icon-button.svg"
-import CharacterData from './Characterdata';
+// import CharacterData from './Characterdata';
 
 const Submissionpopup = () => {
     const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -19,7 +19,7 @@ const Submissionpopup = () => {
   
     return (
         <div>
-      <CharacterData/>
+      {/* <CharacterData/> */}
         <div className="overlay" onClick={handleOverlayClick}>
           <div className="popoup">
               <img src={congrats} alt="" className="cross-img" />

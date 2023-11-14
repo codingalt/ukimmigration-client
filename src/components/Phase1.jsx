@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef,useMemo } from 'react';
+import React, { useEffect, useState, useRef,useMemo, useContext } from 'react';
 import "../style/forgetpassword.css"
 import "../style/Phase1.css"
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Navbar from './Navbar';
 import Congratspopup from './Congratspopup';
+import MainContext from './Context/MainContext';
 
 const Phase1 = () => {
 
@@ -23,13 +24,13 @@ const Phase1 = () => {
     const [refusedVisaErr, setRefusedVisaErr] = useState(true);
     const [languagesArr,setLanguagesArr] = useState([]);
     const languageRef = useRef();
-    const { _id } = user;
     const [postPhase1, result] = usePostPhase1Mutation();
     const { isLoading, isSuccess, error } = result;
     const navigate = useNavigate();
+    const { socket } = useContext(MainContext);
 
     const initialValues = {
-      userId: _id,
+      userId: user?._id,
       phase1: {
         applicationType: applicationType ? applicationType : localStorage.getItem("phase1-applicationType"),
         name: "",
@@ -50,7 +51,6 @@ const Phase1 = () => {
       },
     };
 
-    console.log(applicationType);
 
     useMemo(() => {
       if (error) {
@@ -66,13 +66,23 @@ const Phase1 = () => {
 
     const handleSubmit = async(values,{resetForm}) => {
       console.log(values);
-      await postPhase1(values);
+      const {data} = await postPhase1(values);
+   
       resetForm({
         values: initialValues, 
       });
+      const {result} = data;
+      console.log("Result",result);
+      socket.emit("send phase data", {
+        userId: result?.userId,
+        applicationId: result?._id,
+        phase: 1,
+        phaseSubmittedByClient: result.phaseSubmittedByClient,
+        result: result
+      });
       setTimeout(() => {
         navigate("/filldata")
-      }, 3000);
+      }, 3500);
     };
 
     const handleRemove = (value)=>{
@@ -84,8 +94,6 @@ const Phase1 = () => {
         setLanguagesArr(filteredArray);
       }
     }
-
-    console.log(languagesArr);
 
 
     return (
@@ -249,7 +257,7 @@ const Phase1 = () => {
                             name="phase1.permissionInCountry"
                             className="phase-1-input-left-side"
                           >
-                            <option value="">Select Type of permission</option>
+                            <option value="">Select Type of Permission</option>
                             <option value="National">National</option>
                             <option value="Settlement">Settlement</option>
                             <option value="TemporaryVisa">
@@ -377,7 +385,7 @@ const Phase1 = () => {
                       marginLeft: "4px",
                     }}
                   >
-                    {languagesArr.map((item) => (
+                    {languagesArr?.map((item) => (
                       <div
                         key={item}
                         style={{

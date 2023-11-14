@@ -4,7 +4,8 @@ const initialState = {
   user: null,
   isAuthenticated: false,
   applicationType: "",
-  captcha: null
+  captcha: null,
+  socket: null,
 };
 
 const payment = {
@@ -29,13 +30,21 @@ export const userSlice = createSlice({
       state.applicationType = action.payload;
     },
 
+    setSocket: (state, action) => {
+      state.socket = action.payload;
+    },
+
     setCaptchaToSlice: (state, action) => {
       state.captcha = action.payload;
     },
-
   },
 });
 
-export const { setUserData, logout, setApplicationTypeToSlice, setCaptchaToSlice } =
-  userSlice.actions;
+export const {
+  setUserData,
+  logout,
+  setApplicationTypeToSlice,
+  setCaptchaToSlice,
+  setSocket,
+} = userSlice.actions;
 export default userSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import Logo2 from '../Assets/Ukimmigration-logo.png';
 import bellicon2 from "../Assets/bell-icon-svg.svg"
 import profileimg from "../Assets/profile-img-svg.svg"
@@ -14,6 +14,7 @@ import { toastError, toastSuccess } from './Toast';
 import Loader from './Loader';
 import StripeCheckout from "react-stripe-checkout";
 import Navbar from './Navbar';
+import MainContext from './Context/MainContext';
 
 const Phase3 = () => {
     const [chalan, setChalan] = useState("");
@@ -29,6 +30,7 @@ const Phase3 = () => {
     const application = applicationData?.application;
     console.log(application?._id);
     const [isAllowed, setIsAllowed] = useState(false);
+    const { socket } = useContext(MainContext);
 
     useMemo(()=>{
         if(error){
@@ -57,7 +59,13 @@ const Phase3 = () => {
         let formData = new FormData();
         formData.append("applicationId", application?._id);
         formData.append("chalan", chalan);
-        await postPhase3({formData: formData, applicationId: application?._id})
+        await postPhase3({formData: formData, applicationId: application?._id});
+
+        socket.emit("send phase data", {
+          userId: application?.userId,
+          applicationId: application?._id,
+          phase: 3,
+        });
     }
 
     const handleToken = async (token) => {
@@ -79,6 +87,11 @@ const Phase3 = () => {
     useMemo(() => {
       if (paymentSuccess) {
         toastSuccess("Congratulations! Payment Successfull.");
+        socket.emit("send phase data", {
+          userId: application?.userId,
+          applicationId: application?._id,
+          phase: 3,
+        });
         setTimeout(() => {
           navigate("/filldata")
         }, 1200);
@@ -92,6 +105,11 @@ const Phase3 = () => {
           application.phaseSubmittedByClient === 2
         ) {
           setIsAllowed(true);
+        } else if (
+          application.phase === 4 &&
+          application.phaseStatus === "approved"
+        ) {
+          navigate("/phase4/data");
         } else {
           setIsAllowed(false);
           navigate("/filldata");

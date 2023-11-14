@@ -1,26 +1,30 @@
 import React, { useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useVerifyEmailMutation } from "../services/api/userApi";
 import { toastError } from "./Toast";
 import Loader from "./Loader";
 
 const EmailVerify = () => {
+  const navigate = useNavigate();
   const { userId, token } = useParams();
   const [verifyEmail, result] = useVerifyEmailMutation();
   const { data, error, isSuccess, isError, isLoading } = result;
 
-  // useMemo(() => {
-  //   if (error) toastError("Invalid Link");
-  // }, [error]);
+  useMemo(()=>{
+    if(isSuccess){
+      navigate("/companyscreen")
+    }
+  },[isSuccess,isLoading])
 
   const handleVerifyEmail = async () => {
     await verifyEmail({ userId: userId, token: token });
   };
 
   useEffect(() => {
-    handleVerifyEmail();
-  }, []);
-  console.log(userId, token);
+    if(userId && token){
+      handleVerifyEmail();
+    }
+  }, [verifyEmail]);
 
   if(isLoading){
     return (
@@ -30,22 +34,15 @@ const EmailVerify = () => {
       </div>
     );
   }
-  
-  return (
-    <>
-      {isSuccess && (
-        <div>
-          <h3>Email Verified Successfully. Now you can close this tab</h3>
-        </div>
-      )}
 
-      {isError && (
-        <div>
-          <h3>Invalid Link</h3>
-        </div>
-      )}
-    </>
-  );
+  if (!isLoading && error) {
+    return (
+      <div>
+        <h3>Invalid Link</h3>
+      </div>
+    );
+  }
+
 };
 
 export default EmailVerify;

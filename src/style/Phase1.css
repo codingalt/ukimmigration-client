@@ -41,6 +41,7 @@
   scroll-behavior: smooth;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   box-sizing: border-box;
   /* shape-outside: margin-box; */
   margin-bottom: 52rem;
@@ -48,6 +49,7 @@
   border-radius: 5px;
   width: 81.5rem;
   max-width: 118%;
+  position: relative;
 }
 
 .left-side-header{
@@ -58,7 +60,7 @@
 
 .right-side-header{
   
-  margin-left: 53rem;
+  margin-left: 0;
     display: flex;
     margin-top: 0.5rem;
 }
@@ -90,6 +92,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .bell-icon-notification{
@@ -110,20 +113,20 @@
   height: 11px;
   margin-top: 1.2rem;
   position: relative;
-  right: 4rem;
+  right: 2.2rem;
   cursor: pointer;
 }
 
 .Jhon-profile-text{
-  width: 5rem;
+  max-width: 5rem;
   margin-top: 1rem;
   font-family: Poppins;
   font-size: 12px;
   font-weight: 500;
-  line-height: 12px;
+  line-height: 18px;
   letter-spacing: 0em;
   text-align: left;
-
+  margin-left: 10px;
 }
 
 .Admin-text{
@@ -166,7 +169,6 @@ text-align: left;
 
 .phase-1-input-left-side-selector{
   width: 30rem;
-
   height: 39px;
   border: 1px solid #E2E2E4;
   border-radius: 10px;
@@ -176,7 +178,6 @@ text-align: left;
 }
 .phase-1-input-right-side-selector{
   width: 30rem;
-
   height: 39px;
   border: 1px solid #E2E2E4;
   border-radius: 10px;

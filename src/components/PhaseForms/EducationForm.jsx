@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   useGetCountriesQuery,
+  usePostEducationMutation,
   usePostPhase4Mutation,
 } from "../../services/api/applicationApi";
 import { educationSchema } from "../../utils/ValidationSchema";
@@ -10,33 +11,39 @@ import Loader from "../Loader";
 import SelectCountry from "../SelectCountry";
 import SelectState from "../SelectState";
 
-const EducationForm = ({ data, setActiveTab, initialValues }) => {
-    const application = data?.application;
-    console.log("Education Phase 4", initialValues);
+const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
+  const application = data?.application;
+  console.log("Education Phase 4", initialValues);
 
-    const [postPhase4, res] = usePostPhase4Mutation();
-    const { isLoading, isSuccess, error } = res;
+  // const [postPhase4, res] = usePostPhase4Mutation();
+  const [postEducation, res] = usePostEducationMutation();
+  const { isLoading, isSuccess, error } = res;
 
-    useMemo(() => {
-      if (isSuccess) {
-        setActiveTab("/employement");
-      }
-    }, [isSuccess]);
+  useMemo(() => {
+    if (isSuccess) {
+      refetch();
+      setActiveTab("/employement");
+    }
+  }, [isSuccess]);
 
-    useMemo(() => {
-      if (error) {
-        toastError("Something went wrong");
-      }
-    }, [error]);
+  useMemo(() => {
+    if (error) {
+      toastError("Something went wrong");
+    }
+  }, [error]);
 
-    const handleSubmitData = async (values) => {
-        await postPhase4({ data: values, applicationId: application?._id });
-      console.log("submitted", values.phase4?.education);
-    };
+  const handleSubmitData = async (values) => {
+        await postEducation({
+          data: values.phase4.education,
+          applicationId: application?._id,
+        });
 
-    const handleBackClick = () => {
-      setActiveTab("/languageprofeciency");
-    };
+    console.log("submitted education", values);
+  };
+
+  const handleBackClick = () => {
+    setActiveTab("/languageprofeciency");
+  };
   return (
     <>
       <Formik
@@ -178,6 +185,7 @@ const EducationForm = ({ data, setActiveTab, initialValues }) => {
                 }}
               >
                 <button
+                  disabled={isLoading}
                   type="button"
                   className="back-button-new"
                   onClick={handleBackClick}
@@ -185,6 +193,7 @@ const EducationForm = ({ data, setActiveTab, initialValues }) => {
                   Back
                 </button>
                 <button
+                  disabled={isLoading}
                   type="submit"
                   className="Next-button"
                   style={{

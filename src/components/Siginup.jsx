@@ -147,7 +147,7 @@ const Signup = () => {
                   {/* <ErrorMessage name="name" component="div" className="error" /> */}
 
                   <Field
-                    type="email"
+                    type="text"
                     id="email"
                     name="email"
                     placeholder="Email Address"
@@ -266,12 +266,24 @@ const Signup = () => {
                   ></div>
 
                   <button
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginTop: "2.6rem",
-                    }}
+                    style={
+                      isLoading
+                        ? {
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: "2.6rem",
+                            opacity: 0.55,
+                            pointerEvents: "none",
+                            userSelect: "none",
+                          }
+                        : {
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: "2.6rem",
+                          }
+                    }
                     disabled={isLoading}
                     type="submit"
                   >
@@ -285,7 +297,7 @@ const Signup = () => {
               )}
             </Formik>
 
-            <p className="Or-gap-2">Or</p>
+            <p className="Or-gap-2">or</p>
             <div
               className="sign-in-with-google-2"
               style={{ cursor: "pointer" }}

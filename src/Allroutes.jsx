@@ -13,29 +13,12 @@ import Companyscreen from "./components/Companyscreen"
 import Agreement from './components/Agreement';
 import Phase3 from './components/Phase3';
 import Adddetails from './components/Adddetails';
-import Phase4 from './components/Phase4';
 import Settings from './components/Settings';
-import Acomodation from './components/Acomodation';
-import Family from './components/Family';
-import LanguageProfeciency from './components/LanguageProfeciency';
-import Education from './components/Education';
-import Employement from './components/Employement';
-import Mainteance from './components/Mainteance';
-import Travel from './components/Travel';
-import Charcater from './components/Charcater';
 import Message from './components/Messagechatbox';
 import Filldata2 from './components/Filldata2';
 import Rejectpopup from './components/Rejectpopup';
 import Filldataphase4 from './components/Filldataphase4';
-import Acomodationdata from './components/Acomodationdata';
-import FamilyData from './components/FamilyData';
 import Congratspopup from './components/Congratspopup';
-import Languageprofeciencydata from './components/Languageprofeciencydata';
-import Educationdata from './components/Educationdata';
-import Employementdatafill from './components/Employementdatafill';
-import Mainteincedata from './components/Mainteincedata';
-import Traveldata from './components/Traveldata';
-import CharacterData from './components/Characterdata';
 import Rejectedbyauthority from './components/Rejectedbyauthority';
 import Approvedbyauthority from './components/Approvedbyauthority';
 import FilldataAllphase from './components/FilldataAllphase';
@@ -47,10 +30,7 @@ import EmailVerify from './components/EmailVerify';
 import Payment from './components/Payment';
 import Phase4Page from './pages/Phase4Page';
 import Phase4FilledDataPage from './pages/Phase4FilledDataPage';
-import PdfView from './components/Documents/PdfView';
-
-
-
+import Accept from './components/Accept';
 
 const Allroutes = () => {
   return (
@@ -71,10 +51,7 @@ const Allroutes = () => {
         path="/restpassword/:userId/:token"
         element={<Protected Component={Resetpassword} />}
       />
-      <Route
-        path="/:userId/verify/:token"
-        element={<Protected Component={EmailVerify} />}
-      />
+      <Route path="/:userId/verify/:token" element={<EmailVerify />} />
       <Route
         path="/companyscreen"
         element={<Protected Component={Companyscreen} />}
@@ -87,7 +64,10 @@ const Allroutes = () => {
       <Route path="/phase4" element={<Protected Component={Phase4Page} />} />
       <Route path="/setting" element={<Protected Component={Settings} />} />
       <Route path="/message" element={<Protected Component={Message} />} />
-      <Route path="/Rejectpopup" element={<Rejectpopup />} />
+      <Route
+        path="/reject"
+        element={<Protected Component={Rejectpopup} />}
+      />
       <Route path="/finaldata2" element={<Filldata2 />} />
       <Route path="/finaldataphase4" element={<Filldataphase4 />} />
       <Route
@@ -99,8 +79,9 @@ const Allroutes = () => {
       <Route path="/Approvedbyauthority" element={<Approvedbyauthority />} />
       <Route path="/filldataallphase" element={<FilldataAllphase />} />
       <Route path="/filldataallphase2" element={<FilldataAllphases2 />} />
-      <Route path="/congratsphase4" element={<Congratsphase4 />} />
+      <Route path="/congrats/phase4" element={<Protected Component={Congratsphase4} />} />
       <Route path="/submissionpopup" element={<Submissionpopup />} />
+      <Route path="/accept" element={<Accept />} />
     </Routes>
   );
 }

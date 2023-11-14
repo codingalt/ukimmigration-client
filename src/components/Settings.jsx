@@ -13,7 +13,7 @@ import Logo2 from "../Assets/Ukimmigration-logo.png";
 import bellicon2 from "../Assets/bell-icon-svg.svg";
 import profileimg from "../Assets/profile-img-svg.svg";
 import dropdownicon from "../Assets/dropdown-icon-svg.svg";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import NotificationBox from "./Notification";
 import SettingBox from "./Settingbox";
 import settingprofileimg from "../Assets/setting-profile.svg";
@@ -28,6 +28,7 @@ const Settings = () => {
   const settingsRef = useRef(null);
   const [imageName, setImageName] = useState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.user);
   const { name, email, contact, profilePic,googleId } = user && user;
@@ -157,11 +158,14 @@ const Settings = () => {
       >
         <div className="left-side-forget-password-2">
           <p className="Required-data-text">Setting*</p>
-          <NavLink to="/filldata">
-            <button type="submit" className="back-button">
-              back
-            </button>
-          </NavLink>
+
+          <button
+            onClick={() => navigate(-1)}
+            type="button"
+            className="back-button"
+          >
+            back
+          </button>
 
           <Formik initialValues={initialValues} onSubmit={handleUpdateData}>
             {({ setFieldValue }) => (

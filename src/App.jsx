@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Allroutes from './Allroutes';
 import "./App.css";
 
 function App() {
 
+  
+
   return (
-    <div className="App">
+    <div className="App Container-main-div">
       <wc-toast theme="light"></wc-toast>
       <Allroutes />
     </div>

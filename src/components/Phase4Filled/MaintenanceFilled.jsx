@@ -7,7 +7,7 @@ import star from "../../Assets/Star-svg.svg";
 import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
-const MaintenanceFilled = ({data}) => {
+const MaintenanceFilled = ({data,application}) => {
     const app = data?.maintenance;
     console.log("Maintenance filled", app);
 
@@ -34,7 +34,7 @@ const MaintenanceFilled = ({data}) => {
         paperSize="A4"
         margin="2cm"
         ref={pdfRef}
-        fileName="UkImmigration-Phase4-Maintenance"
+        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-Maintenance`}
       >
         <div className="phase-1">
           <p className="Form-data-heading">Maintenance</p>

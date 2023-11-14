@@ -5,7 +5,6 @@ import "../style/Rejectpopup.css";
 const Congratspopup = () => {
     return (
         <div>
-      
     
           <div className="overlay">
           <div className="popoup">
