@@ -23,7 +23,6 @@ import { renderToString } from "react-dom/server";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import MainContext from './Context/MainContext';
 
-
 const Filldata = () => {
    const { toPDF, targetRef } = usePDF({ filename: "ukimmigration.pdf" });
   const { socket } = useContext(MainContext);
@@ -739,7 +738,7 @@ const Filldata = () => {
                     </div>
                   )}
 
-                  {application?.phase2?.other && (
+                  {application?.phase2?.other.length > 0 && (
                     <div
                       className="fill"
                       style={{
@@ -806,6 +805,7 @@ const Filldata = () => {
                             cursor: "pointer",
                           }}
                           href={application?.phase3?.onlinePaymentEvidence}
+                          target='_blank'
                           download={true}
                         >
                           Download Receipt
@@ -836,6 +836,7 @@ const Filldata = () => {
                           href={`${import.meta.env.VITE_IMG_URI}${
                             application?.phase3?.paymentEvidence
                           }`}
+                          target='_blank'
                           download={true}
                         >
                           Download Receipt
@@ -863,7 +864,8 @@ const Filldata = () => {
                         border: "none",
                       }
                     : {
-                        width: "auto",
+                        // width: "auto",
+                        minWidth:"11rem",
                         paddingLeft: "15px",
                         paddingRight: "13px",
                       }

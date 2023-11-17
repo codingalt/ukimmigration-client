@@ -521,6 +521,7 @@ const Phase1 = () => {
                     disabled={isLoading}
                     type="submit"
                     className="submit-email-btn-2"
+                    style={isLoading ? {opacity: 0.55} : {}}
                   >
                     {isLoading ? (
                       <Loader width={25} color={"#fff"} />

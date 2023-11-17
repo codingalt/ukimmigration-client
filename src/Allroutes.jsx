@@ -31,6 +31,10 @@ import Payment from './components/Payment';
 import Phase4Page from './pages/Phase4Page';
 import Phase4FilledDataPage from './pages/Phase4FilledDataPage';
 import Accept from './components/Accept';
+import OtpGroup from './components/OtpGroup';
+import VerifyGroupEmail from './components/VerifyGroupEmail';
+import SignupGroupClient from "./components/SignupGroupClient";
+import GroupPhase1 from './components/GroupPhase1';
 
 const Allroutes = () => {
   return (
@@ -43,10 +47,7 @@ const Allroutes = () => {
       <Route exact path="/" element={<Signin />} />
       <Route path="/signup" element={<Singup />} />
       <Route path="/otp" element={<Otp />} />
-      <Route
-        path="/forgetpassword"
-        element={<Protected Component={Forgetpassword} />}
-      />
+      <Route path="/forgetpassword" element={<Forgetpassword />} />
       <Route
         path="/restpassword/:userId/:token"
         element={<Protected Component={Resetpassword} />}
@@ -64,10 +65,7 @@ const Allroutes = () => {
       <Route path="/phase4" element={<Protected Component={Phase4Page} />} />
       <Route path="/setting" element={<Protected Component={Settings} />} />
       <Route path="/message" element={<Protected Component={Message} />} />
-      <Route
-        path="/reject"
-        element={<Protected Component={Rejectpopup} />}
-      />
+      <Route path="/reject" element={<Protected Component={Rejectpopup} />} />
       <Route path="/finaldata2" element={<Filldata2 />} />
       <Route path="/finaldataphase4" element={<Filldataphase4 />} />
       <Route
@@ -79,9 +77,24 @@ const Allroutes = () => {
       <Route path="/Approvedbyauthority" element={<Approvedbyauthority />} />
       <Route path="/filldataallphase" element={<FilldataAllphase />} />
       <Route path="/filldataallphase2" element={<FilldataAllphases2 />} />
-      <Route path="/congrats/phase4" element={<Protected Component={Congratsphase4} />} />
+      <Route
+        path="/congrats/phase4"
+        element={<Protected Component={Congratsphase4} />}
+      />
       <Route path="/submissionpopup" element={<Submissionpopup />} />
       <Route path="/accept" element={<Accept />} />
+
+      {/* Group Client  */}
+      <Route
+        path="/groupclient/signup/:applicationId"
+        element={<SignupGroupClient />}
+      />
+      <Route path="/group/otp/:applicationId" element={<OtpGroup />} />
+      <Route
+        path="/group/:userId/verify/:token/:applicationId"
+        element={<VerifyGroupEmail />}
+      />
+      <Route path="/group/phase1/:applicationId" element={<GroupPhase1 />} />
     </Routes>
   );
 }

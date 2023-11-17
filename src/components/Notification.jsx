@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useGetClientNotificationQuery } from '../services/api/userApi';
 import { toastError } from './Toast';
 import MainContext from './Context/MainContext';
+import Loader from './Loader';
 
 const NotificationBox = () => {
  
@@ -30,7 +31,7 @@ const NotificationBox = () => {
   }, [received]);
 
 
-  if(data?.notifications?.length === 0){
+  if(!isLoading && data?.notifications?.length === 0){
     return (
       <div className="notification-box">
         <div className="notification-header">
@@ -63,198 +64,58 @@ const NotificationBox = () => {
       </div>
       <div className="notification-list">
         <ul>
-          {data?.notifications?.map((item) => (
-            <li
-              className="notification-item"
-              key={item._id}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                navigate(
-                  item.phaseStatus === "rejected"
-                    ? `/reject`
-                    : item.phase === 1
-                    ? "/phase2"
-                    : item.phase === 2
-                    ? "/agreement"
-                    : item.phase === 3
-                    ? "/phase4"
-                    : item.phase === 4
-                    ? "/congrats/phase4"
-                    : "/filldata"
-                )
-              }
-            >
-              <div className="Notifiction-img">
-                <img
-                  src={item.phaseStatus === "approved" ? approved : reject}
-                  alt=""
-                  className="approved"
-                />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase {item?.phase}</p>
-                <p
-                  className={
-                    item.phaseStatus === "approved"
-                      ? "notification-status-approved"
-                      : "notification-status-rejct"
-                  }
-                  style={{ textTransform: "capitalize" }}
-                >
-                  {item?.phaseStatus}
-                </p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          ))}
-          {/* <Link to="/phase2">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={approved} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 1 </p>
-                <p className="notification-status-approved">Approved</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-          <Link to="/Rejectpopup">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={reject} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 1 </p>
-                <p className="notification-status-rejct">Reject</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-
-          <Link to="/agreement">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={approved} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 2 </p>
-                <p className="notification-status-approved">Approved</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-
-          <Link to="/Rejectpopup">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={reject} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 2 </p>
-                <p className="notification-status-rejct">Reject</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-
-          <Link to="/phase4">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={approved} alt="" className="approved" />
-              </div>
-
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 3 </p>
-                <p className="notification-status-approved">Approved</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-
-          <Link to="/Rejectpopup">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={reject} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 3 </p>
-                <p className="notification-status-rejct">Reject</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-
-          <Link to="/congratsphase4">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={approved} alt="" className="approved" />
-              </div>
-
-              <div className="right-side-noti">
-                <p className="notification-heading">Phase 4 </p>
-                <p className="notification-status-approved">Approved</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-          <li className="notification-item">
-            <div className="Notifiction-img">
-              <img src={reject} alt="" className="approved" />
+          {isLoading && (
+            <div style={{width:"100%",display:"flex",justifyContent:"center",alignItems:"center",marginTop:"3.5rem"}}>
+              <Loader width={36} color={"#5D982E"} />
             </div>
-            <div className="right-side-noti">
-              <p className="notification-heading">Phase 4 </p>
-              <p className="notification-status-rejct">Reject</p>
-              <p className="notification-text">
-                Click here to proceed next step
-              </p>
-            </div>
-          </li>
-          <Link to="/Approvedbyauthority">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={approved} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Approved by Authority</p>
-                <p className="notification-status-approved">Approved</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link>
-          <Link to="/rejectbyauthority">
-            <li className="notification-item">
-              <div className="Notifiction-img">
-                <img src={reject} alt="" className="approved" />
-              </div>
-              <div className="right-side-noti">
-                <p className="notification-heading">Reject By Authority</p>
-                <p className="notification-status-rejct">Reject</p>
-                <p className="notification-text">
-                  Click here to proceed next step
-                </p>
-              </div>
-            </li>
-          </Link> */}
-          {/* Add more static notification items here */}
+          )}
+          {!isLoading &&
+            data?.notifications?.map((item) => (
+              <li
+                className="notification-item"
+                key={item._id}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  navigate(
+                    item.phaseStatus === "rejected"
+                      ? `/reject`
+                      : item.phase === 1
+                      ? "/phase2"
+                      : item.phase === 2
+                      ? "/agreement"
+                      : item.phase === 3
+                      ? "/phase4"
+                      : item.phase === 4
+                      ? "/congrats/phase4"
+                      : "/filldata"
+                  )
+                }
+              >
+                <div className="Notifiction-img">
+                  <img
+                    src={item.phaseStatus === "approved" ? approved : reject}
+                    alt=""
+                    className="approved"
+                  />
+                </div>
+                <div className="right-side-noti">
+                  <p className="notification-heading">Phase {item?.phase}</p>
+                  <p
+                    className={
+                      item.phaseStatus === "approved"
+                        ? "notification-status-approved"
+                        : "notification-status-rejct"
+                    }
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    {item?.phaseStatus}
+                  </p>
+                  <p className="notification-text">
+                    Click here to proceed next step
+                  </p>
+                </div>
+              </li>
+            ))}
         </ul>
       </div>
     </div>

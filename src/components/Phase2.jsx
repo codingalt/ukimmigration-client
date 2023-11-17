@@ -104,7 +104,9 @@ const Phase2 = () => {
          application?.phase2?.bankStatements == "" &&
          Yup.mixed().nullable().required(),
        other:
-         application?.phase2?.other == "" && Yup.mixed().nullable().required(),
+         application?.phase2?.other.length > 0 &&
+         application?.phase2?.other[0] != "notreq" &&
+         Yup.mixed().nullable().required(),
      });
 
     const handleSubmit = async(values, {resetForm})=>{
@@ -132,18 +134,22 @@ const Phase2 = () => {
           return;
         }
         try {
-          await postPhase2(formData);
+          const {data} = await postPhase2(formData);
           resetForm({
             values: initialValues,
           });
           socket.emit("send phase data", {
             userId: application?.userId,
             applicationId: application?._id,
+            phaseSubmittedByClient: application?.phaseSubmittedByClient,
             phase: 2,
           });
-          setTimeout(() => {
-            navigate("/filldata");
-          }, 3500);
+          if(data.success){
+            setTimeout(() => {
+              navigate("/filldata");
+            }, 3500);
+          }
+          
         } catch (error) {
           console.error(error);
         }
@@ -539,44 +545,56 @@ const Phase2 = () => {
                         </>
                       )}
 
-                      {application?.phase2?.other != "notreq" && (
-                        <>
-                          <p className="password-text">OTHER</p>
-                          <input
-                            ref={otherRef}
-                            type="file"
-                            id="other"
-                            name="other"
-                            accept=".pdf"
-                            onChange={(event) => openFile(event, setFieldValue)}
-                            style={{ display: "none" }}
-                            multiple
-                          />
-                          <div
-                            className="pdf-input"
-                            style={
-                              errors.other &&
-                              touched.other && { border: "1px solid red" }
-                            }
-                            onClick={() => otherRef.current.click()}
-                          >
-                            {values.other
-                              ? values.other.name
-                              : "Click here to open PDF"}
-                            <img src={pdfimg} alt="" className="pdf-icon" />
-                          </div>
-                        </>
-                      )}
+                      {application?.phase2?.other.length > 0 &&
+                        application?.phase2?.other[0] != "notreq" && (
+                          <>
+                            <p className="password-text">OTHER</p>
+                            <input
+                              ref={otherRef}
+                              type="file"
+                              id="other"
+                              name="other"
+                              accept=".pdf"
+                              onChange={(event) =>
+                                openFile(event, setFieldValue)
+                              }
+                              style={{ display: "none" }}
+                              multiple
+                            />
+                            <div
+                              className="pdf-input"
+                              style={
+                                errors.other &&
+                                touched.other && { border: "1px solid red" }
+                              }
+                              onClick={() => otherRef.current.click()}
+                            >
+                              {values.other
+                                ? values.other.name
+                                : "Click here to open PDF"}
+                              <img src={pdfimg} alt="" className="pdf-icon" />
+                            </div>
+                          </>
+                        )}
 
                       <button
                         disabled={isLoadingPostPhase}
                         type="submit"
                         className="submit-email-btn-2"
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
+                        style={
+                          isLoading
+                            ? {
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                opacity: 0.55,
+                              }
+                            : {
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }
+                        }
                       >
                         {isLoadingPostPhase ? <Loader /> : "Submit"}
                       </button>

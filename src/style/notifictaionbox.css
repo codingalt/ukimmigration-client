@@ -10,12 +10,12 @@
     z-index: 1;
     background-color: #FCFCFC;
     border-radius: 10px;
-    /* overflow-x: hidden;
-    overflow-y: auto; */
-    /* scrollbar-color: #5d982e white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-color: #5d982e white;
     scrollbar-width: thin;
-    scroll-behavior: smooth; */
-    margin-left: -37rem;
+    scroll-behavior: smooth;
+    margin-left: -36.5rem;
   }
 
   .notification-wrapper{

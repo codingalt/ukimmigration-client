@@ -59,14 +59,14 @@
 
 .case-approved-option{
     width: 15rem;
-    height: 4rem;
+    height: 3.7rem;
     background-color: #5d982e;
     border-radius: 37px;
     border: 1px solid #5d982e;
     color: white;
     /* margin-left: 53rem; */
     /* padding: 1rem; */
-    margin-bottom: 1.5rem;
+    margin-bottom: .7rem;
     cursor: pointer;
 }
 
@@ -91,7 +91,7 @@
 
 .button-container-2{
     align-items: center;
-    bottom: 5rem;
+    bottom: 3rem;
     -webkit-column-gap: 2rem;
     column-gap: 2rem;
     display: flex;
@@ -224,11 +224,10 @@ width: max-content;
         position: -webkit-sticky;
         position: fixed;
         right: 12rem;
-        top: 48rem;
+        top: 51.5rem;
     }
     
   }
-
 
   
 @media (max-width: 1440px ) {
@@ -243,7 +242,7 @@ width: max-content;
         position: -webkit-sticky;
         position: fixed;
         right: 6rem;
-        top: 48rem;
+        top: 51rem;
     }
     
   }
