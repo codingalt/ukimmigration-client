@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useGetCountriesQuery, usePostGeneralMutation, usePostPhase4Mutation } from "../../services/api/applicationApi";
@@ -6,16 +6,14 @@ import SelectCountry from "../SelectCountry";
 import { generalSchema } from "../../utils/ValidationSchema";
 import { toastError } from "../Toast";
 import Loader from "../Loader";
-import { useSelector } from "react-redux";
-import MainContext from "../Context/MainContext";
-import { useGetUserChatsQuery, useGetUserMessagesQuery } from "../../services/api/chatApi";
+import { usePostGroupGeneralMutation } from "../../services/api/companyClient";
 
-const GeneralForm = ({ data, setActiveTab, initialValues, refetch }) => {
+const GeneralFormGroup = ({ data, setActiveTab, initialValues, refetch }) => {
   const application = data?.application;
   console.log("General Phase 4", initialValues);
 
   // const [postPhase4, res] = usePostPhase4Mutation();
-  const [postGeneral, res] = usePostGeneralMutation();
+  const [postGroupGeneral, res] = usePostGroupGeneralMutation();
   const { isLoading, isSuccess, error } = res;
 
   useMemo(() => {
@@ -33,10 +31,10 @@ const GeneralForm = ({ data, setActiveTab, initialValues, refetch }) => {
 
   const handleSubmitData = async (values) => {
     console.log(values);
-        await postGeneral({
-          data: values.phase4.general,
-          applicationId: application?._id,
-        });
+    await postGroupGeneral({
+      data: values.phase4.general,
+      applicationId: application?._id,
+    });
 
     console.log("submitted", values);
   };
@@ -810,4 +808,4 @@ const GeneralForm = ({ data, setActiveTab, initialValues, refetch }) => {
   );
 };
 
-export default GeneralForm;
+export default GeneralFormGroup;

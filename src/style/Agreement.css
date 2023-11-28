@@ -1,86 +1,82 @@
-.Agreement-description{
-    width: 69rem;
-    height: 29rem;
-
-    border: 1px solid #E2E2E4;
-
-    border-radius: 10px;
-    margin-top: 6rem;
-    margin-right: 6rem;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-color: #5d982e white;
-    scrollbar-width: thin;
-    scroll-behavior: smooth;
-    padding: 40px;
-    font-family: Poppins;
-font-size: 14px;
-font-weight: 400;
-line-height: 21px;
-letter-spacing: 0em;
-text-align: left;
-
+.Agreement-description-1 {
+  width: 69rem;
+  height: 29rem;
+  border: 1px solid #e2e2e4;
+  border-radius: 10px;
+  margin-top: 6rem;
+  margin-right: 4rem;
+  margin-left: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-color: #5d982e white;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  padding: 40px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: left;
+  position: relative;
 }
-.confirmation-text-2{
-    position: relative;
-    left: 6.7rem;
-    top: 3rem;
-    font-family: Poppins;
-font-size: 16px;
-font-weight: 600;
-line-height: 24px;
-letter-spacing: 0em;
-text-align: left;
-color: #6A6C6F;
-
+.confirmation-text-2 {
+  position: absolute;
+  left: 4rem;
+  top: 2.8rem;
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #6a6c6f;
 }
 
-.checkbox{
-    display: flex;
-    margin-top: 55rem;
-    /* margin-right: -26rem; */
-    position: absolute;
-    top: -14rem;
+.checkbox-agree {
+  display: flex;
+  margin-top: 55rem;
+  /* margin-right: -26rem; */
+  position: absolute;
+  top: -14rem;
 
-    right: 40.2rem;
-    column-gap: 4rem;
-    font-family: Poppins;
-font-size: 16px;
-font-weight: 500;
-line-height: 24px;
-letter-spacing: 0em;
-text-align: left;
-
+  right: 40.2rem;
+  column-gap: 4rem;
+  font-family: Poppins;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
 }
 
-.main-box{
-    position: relative;
-    right: 1rem;
+.main-box {
+  position: relative;
+  right: 1rem;
 }
 
-.days-text{
-    position: absolute;
-    top: 44rem;
+.days-text {
+  position: absolute;
+  top: 44rem;
 
-    left: 6.7rem;
-    font-family: Poppins;
-font-size: 14px;
-font-weight: 400;
-line-height: 21px;
-letter-spacing: 0em;
-text-align: left;
-
+  left: 6.7rem;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: left;
 }
 
-.submit-agreement{
-    width: 11rem;
-    height: 3rem;
-    color: white;
-    background-color: #5d982e;
-    border: 1px solid #5d982e;
-    border-radius: 11px;
-    position: absolute;
-    left: 64.5rem;
-    top: 43rem;
-    cursor: pointer;
+.submit-agreement {
+  width: 11rem;
+  height: 3rem;
+  color: white;
+  background-color: #5d982e;
+  border: 1px solid #5d982e;
+  border-radius: 11px;
+  position: absolute;
+  left: 64.5rem;
+  top: 43rem;
+  cursor: pointer;
 }

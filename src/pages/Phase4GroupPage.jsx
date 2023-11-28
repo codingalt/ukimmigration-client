@@ -1,84 +1,112 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { applicationApi, useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
 import { NavLink, useNavigate } from "react-router-dom";
-import Logo2 from "../Assets/Ukimmigration-logo.png";
-import bellicon2 from "../Assets/bell-icon-svg.svg";
-import profileimg from "../Assets/profile-img-svg.svg";
-import dropdownicon from "../Assets/dropdown-icon-svg.svg";
-import NotificationBox from "../components/Notification";
-import SettingBox from "../components/Settingbox";
 import "../style/Phase4.css";
 import "../style/buttons.css";
-import GeneralForm from "../components/PhaseForms/GeneralForm";
-import AccomodationForm from "../components/PhaseForms/AccomodationForm";
 import moment from "moment";
 import { format } from "date-fns";
-import FamilyForm from "../components/PhaseForms/FamilyForm";
-import LanguageProficiencyForm from "../components/PhaseForms/LanguageProficiencyForm";
-import EducationForm from "../components/PhaseForms/EducationForm";
 import Navbar from "../components/Navbar";
-import EmploymentForm from "../components/PhaseForms/EmploymentForm";
-import MaintenanceForm from "../components/PhaseForms/MaintenanceForm";
-import TravelForm from "../components/PhaseForms/TravelForm";
-import CharacterForm from "../components/PhaseForms/CharacterForm";
 import MainContext from "../components/Context/MainContext";
+import { useGetGroupClientAppByUserIdQuery } from "../services/api/companyClient";
+import GeneralFormGroup from "../components/Phase4GroupForms/GeneralFormGroup";
+import AccomodationFormGroup from "../components/Phase4GroupForms/AccomodationFormGroup";
+import FamilyFormGroup from "../components/Phase4GroupForms/FamilyFormGroup";
+import LanguageProficiencyFormGroup from "../components/Phase4GroupForms/LanguageProficiencyFormGroup";
+import EducationFormGroup from "../components/Phase4GroupForms/EducationFormGroup";
+import EmploymentFormGroup from "../components/Phase4GroupForms/EmploymentFormGroup";
+import MaintenanceFormGroup from "../components/Phase4GroupForms/MaintenanceFormGroup";
+import TravelFormGroup from "../components/Phase4GroupForms/TravelFormGroup";
+import CharacterFormGroup from "../components/Phase4GroupForms/CharacterFormGroup";
 
-const Phase4Page = () => {
-  const { data, refetch } = useGetApplicationByUserIdQuery();
+const Phase4GroupPage = () => {
+  const { data, refetch } = useGetGroupClientAppByUserIdQuery();
   // const { data, isFetching, refetch } = useQuery(applicationApi.endpoints.getApplicationByUserId);
-    const [isAllowed, setIsAllowed] = useState(false);
-    const [childDetailsArr, setChildDetailsArr] = useState([]);
-    const [lastVisitsToUk, setLastVisitsToUk] = useState([]);
-    const navigate = useNavigate();
-    const { socket } = useContext(MainContext);
-    const [received, setReceived] = useState(null);
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [childDetailsArr, setChildDetailsArr] = useState([]);
+  const [lastVisitsToUk, setLastVisitsToUk] = useState([]);
+  const navigate = useNavigate();
+  const { socket } = useContext(MainContext);
+  const [received, setReceived] = useState(null);
+  console.log(data);
 
-    const [initialValues, setInitialValues] = useState({
-      phase4: {
-        general: {
-          fullName: "",
-          isKnownByOtherName: true,
-          previousName: "",
-          prevNameFrom: "",
-          prevNameTo: "",
-          countryOfBirth: "",
-          placeOfBirth: "",
-          currentNationality: "",
-          isOtherNationality: true,
-          otherNationality: "",
-          nationalityFrom: "",
-          nationalityUntill: "",
-          currentPassportNumber: "",
-          passportIssueDate: "",
-          passportExpiryDate: "",
-          issuingAuthority: "",
-          passportPlaceOfIssue: "",
-          isNationalIDCard: true,
-          idCardNumber: "",
-          idCardIssueDate: "",
-          isBrp: true,
-          brpNumber: "",
-          brpIssueDate: "",
-          motherName: "",
-          motherDob: "",
-          motherNationality: "",
-          motherCountry: "",
-          motherPlaceOfBirth: "",
-          fatherName: "",
-          fatherDob: "",
-          fatherNationality: "",
-          fatherCountry: "",
-          fatherPlaceOfBirth: "",
-          isUKNINumber: true,
-          ukNINumber: "",
-          niNumberIssueDate: "",
-          isUKDrivingLicense: true,
-          ukDrivingLicenseNumber: "",
-          ukLicenseIssueDate: "",
-          email: "",
-          mobileNumber: "",
-        },
-        accommodation: {
+  const [initialValues, setInitialValues] = useState({
+    phase4: {
+      general: {
+        fullName: "",
+        isKnownByOtherName: true,
+        previousName: "",
+        prevNameFrom: "",
+        prevNameTo: "",
+        countryOfBirth: "",
+        placeOfBirth: "",
+        currentNationality: "",
+        isOtherNationality: true,
+        otherNationality: "",
+        nationalityFrom: "",
+        nationalityUntill: "",
+        currentPassportNumber: "",
+        passportIssueDate: "",
+        passportExpiryDate: "",
+        issuingAuthority: "",
+        passportPlaceOfIssue: "",
+        isNationalIDCard: true,
+        idCardNumber: "",
+        idCardIssueDate: "",
+        isBrp: true,
+        brpNumber: "",
+        brpIssueDate: "",
+        motherName: "",
+        motherDob: "",
+        motherNationality: "",
+        motherCountry: "",
+        motherPlaceOfBirth: "",
+        fatherName: "",
+        fatherDob: "",
+        fatherNationality: "",
+        fatherCountry: "",
+        fatherPlaceOfBirth: "",
+        isUKNINumber: true,
+        ukNINumber: "",
+        niNumberIssueDate: "",
+        isUKDrivingLicense: true,
+        ukDrivingLicenseNumber: "",
+        ukLicenseIssueDate: "",
+        email: "",
+        mobileNumber: "",
+      },
+      accommodation: {
+        address1: "",
+        address2: "",
+        locationName: "",
+        locationCode: "",
+        town: "",
+        county: "",
+        postCode: "",
+        countryPrefix: "",
+        country: "",
+        fax: "",
+        vatRate: "",
+        moveInDate: null,
+        timeLivedAtCurrentAddress: "",
+        homeType: "",
+        otherHomeDetails: "",
+        landLordName: "",
+        landLordEmail: "",
+        landLordTelephone: "",
+        landLordAddress1: "",
+        landLordAddress2: "",
+        landLordLocationName: "",
+        landLordLocationCode: "",
+        landLordCounty: "",
+        landLordTown: "",
+        landLordPostCode: "",
+        landLordCountryPrefix: "",
+        landLordCountry: "",
+        landLordFax: null,
+        landLordVatRate: null,
+        bedrooms: 0,
+        otherRooms: 0,
+        otherWhoLives: "",
+        previousHomeDetails: {
           address1: "",
           address2: "",
           locationName: "",
@@ -90,164 +118,131 @@ const Phase4Page = () => {
           country: "",
           fax: "",
           vatRate: "",
-          moveInDate: null,
-          timeLivedAtCurrentAddress: "",
-          homeType: "",
-          otherHomeDetails: "",
-          landLordName: "",
-          landLordEmail: "",
-          landLordTelephone: "",
-          landLordAddress1: "",
-          landLordAddress2: "",
-          landLordLocationName: "",
-          landLordLocationCode: "",
-          landLordCounty: "",
-          landLordTown: "",
-          landLordPostCode: "",
-          landLordCountryPrefix: "",
-          landLordCountry: "",
-          landLordFax: null,
-          landLordVatRate: null,
-          bedrooms: 0,
-          otherRooms: 0,
-          otherWhoLives: "",
-          previousHomeDetails: {
-            address1: "",
-            address2: "",
-            locationName: "",
-            locationCode: "",
-            town: "",
-            county: "",
-            postCode: "",
-            countryPrefix: "",
-            country: "",
-            fax: "",
-            vatRate: "",
-          },
-        },
-        family: {
-          maritalStatus: "",
-          spouseName: "",
-          marriageDate: null,
-          whereGotMarried: "",
-          spouseDob: "",
-          spouseNationality: "",
-          spousePassportNumber: "",
-          whereDidYouMeet: "",
-          whenDidRelationshipBegan: "",
-          whenLastSawEachOther: null,
-          isLiveTogether: true,
-          whichDateStartedLivingTogether: null,
-          isChildren: true,
-          numberOfChildren: 0,
-          childDetails: null,
-          isMarriedBefore: true,
-          exName: null,
-          exNationality: "",
-          marriageDateWithEx: null,
-          divorceDateWithEx: null,
-          isCurrentPartnerMarriedBefore: null,
-          currentPartnerExName: "",
-          currentPartnerExDob: null,
-          currentPartnerExNationality: "",
-          currentPartnerExMarriageDate: null,
-          currentPartnerExDivorceDate: null,
-          isFamilyFriendsInHomeCountry: null,
-          relativeName: "",
-          relationship: "",
-        },
-        languageProficiency: {
-          isDegreeTaughtInEnglish: true,
-          isPassedAnyEnglishTest: true,
-          testType: "",
-        },
-        education: {
-          qualification: "",
-          awardingInstitute: "",
-          grade: "",
-          courseSubject: "",
-          courseLength: "",
-          yearOfAward: "",
-          countryOfAward: "",
-          state: "",
-        },
-        employment: {
-          isEmployed: true,
-          jobStartDate: "",
-          employerName: "",
-          employerTelephone: "",
-          employerEmail: "",
-          annualSalary: "",
-          jobTitle: "",
-          employerAddress1: "",
-          employerAddress2: "",
-          employerLocation: "",
-          employerLocationCode: "",
-          employerTown: "",
-          employerCounty: "",
-          employerPostCode: "",
-          employerCountryPrefix: "",
-          employerCountry: "",
-          employerFax: "",
-          employerVatRate: "",
-          unEmployedReason: "",
-        },
-        maintenance: {
-          bankName: "",
-          isRegisteredFinancialInstitute: "",
-          countryFundsHeldIn: "",
-          currencyFundsHeldIn: "",
-          amountHeld: "",
-          fundsDateHeldFrom: "",
-        },
-        travel: {
-          areYouCurrentlyInUk: true,
-          countryVisited: "",
-          ukLeaveDate: "",
-          returnDate: "",
-          reasonForVisit: "",
-          numberOfVisitsToUk: "",
-          lastUkVisits: null,
-          isVisitedUkIllegally: true,
-          illegalVisitDetail: "",
-          isStayedBeyondExpiryDateInUk: true,
-          reasonForStayingExpiryDateInUk: "",
-          everBeenToUkOrAnyCountry: "",
-          isBreachedLeaveConditions: true,
-          reasonForBreachedLeave: "",
-          isWorkedWithoutPermission: true,
-          reasonForWorkedWithoutPermission: "",
-          isReceivedPublicFunds: true,
-          detailsForPublicFunds: "",
-          everGivenFalseInfoForApplyingVisa: true,
-          reasonForFalseInformation: "",
-          everUsedDeceptionInPrevVisaApplication: true,
-          reasonForDeception: "",
-          everBreachedOtherImmigrationLaws: true,
-          reasonForBreachingImmigrationLaw: "",
-          everRefusedVisaOrBorderEntry: true,
-          reasonForRefusedEntry: "",
-          everRefusedPermissionToStay: true,
-          reasonForRefusedPermissionToStay: "",
-          everRefusedAsylum: true,
-          reasonForRefusedAsylum: "",
-          everDeported: true,
-          reasonForDeported: "",
-          everBannedFromAnyCountry: true,
-          reasonForBanned: "",
-        },
-        character: {
-          everChargedWithCriminalOffence: true,
-          reasonForCharged: "",
-          isPendingProsecutions: true,
-          reasonForPendingProsecutions: "",
-          isTerroristViews: true,
-          reasonForTerroristViews: "",
-          isWorkedForJudiciary: true,
-          reasonForJudiciaryWork: "",
         },
       },
-    });
+      family: {
+        maritalStatus: "",
+        spouseName: "",
+        marriageDate: null,
+        whereGotMarried: "",
+        spouseDob: "",
+        spouseNationality: "",
+        spousePassportNumber: "",
+        whereDidYouMeet: "",
+        whenDidRelationshipBegan: "",
+        whenLastSawEachOther: null,
+        isLiveTogether: true,
+        whichDateStartedLivingTogether: null,
+        isChildren: true,
+        numberOfChildren: 0,
+        childDetails: null,
+        isMarriedBefore: true,
+        exName: null,
+        exNationality: "",
+        marriageDateWithEx: null,
+        divorceDateWithEx: null,
+        isCurrentPartnerMarriedBefore: null,
+        currentPartnerExName: "",
+        currentPartnerExDob: null,
+        currentPartnerExNationality: "",
+        currentPartnerExMarriageDate: null,
+        currentPartnerExDivorceDate: null,
+        isFamilyFriendsInHomeCountry: null,
+        relativeName: "",
+        relationship: "",
+      },
+      languageProficiency: {
+        isDegreeTaughtInEnglish: true,
+        isPassedAnyEnglishTest: true,
+        testType: "",
+      },
+      education: {
+        qualification: "",
+        awardingInstitute: "",
+        grade: "",
+        courseSubject: "",
+        courseLength: "",
+        yearOfAward: "",
+        countryOfAward: "",
+        state: "",
+      },
+      employment: {
+        isEmployed: true,
+        jobStartDate: "",
+        employerName: "",
+        employerTelephone: "",
+        employerEmail: "",
+        annualSalary: "",
+        jobTitle: "",
+        employerAddress1: "",
+        employerAddress2: "",
+        employerLocation: "",
+        employerLocationCode: "",
+        employerTown: "",
+        employerCounty: "",
+        employerPostCode: "",
+        employerCountryPrefix: "",
+        employerCountry: "",
+        employerFax: "",
+        employerVatRate: "",
+        unEmployedReason: "",
+      },
+      maintenance: {
+        bankName: "",
+        isRegisteredFinancialInstitute: "",
+        countryFundsHeldIn: "",
+        currencyFundsHeldIn: "",
+        amountHeld: "",
+        fundsDateHeldFrom: "",
+      },
+      travel: {
+        areYouCurrentlyInUk: true,
+        countryVisited: "",
+        ukLeaveDate: "",
+        returnDate: "",
+        reasonForVisit: "",
+        numberOfVisitsToUk: "",
+        lastUkVisits: null,
+        isVisitedUkIllegally: true,
+        illegalVisitDetail: "",
+        isStayedBeyondExpiryDateInUk: true,
+        reasonForStayingExpiryDateInUk: "",
+        everBeenToUkOrAnyCountry: "",
+        isBreachedLeaveConditions: true,
+        reasonForBreachedLeave: "",
+        isWorkedWithoutPermission: true,
+        reasonForWorkedWithoutPermission: "",
+        isReceivedPublicFunds: true,
+        detailsForPublicFunds: "",
+        everGivenFalseInfoForApplyingVisa: true,
+        reasonForFalseInformation: "",
+        everUsedDeceptionInPrevVisaApplication: true,
+        reasonForDeception: "",
+        everBreachedOtherImmigrationLaws: true,
+        reasonForBreachingImmigrationLaw: "",
+        everRefusedVisaOrBorderEntry: true,
+        reasonForRefusedEntry: "",
+        everRefusedPermissionToStay: true,
+        reasonForRefusedPermissionToStay: "",
+        everRefusedAsylum: true,
+        reasonForRefusedAsylum: "",
+        everDeported: true,
+        reasonForDeported: "",
+        everBannedFromAnyCountry: true,
+        reasonForBanned: "",
+      },
+      character: {
+        everChargedWithCriminalOffence: true,
+        reasonForCharged: "",
+        isPendingProsecutions: true,
+        reasonForPendingProsecutions: "",
+        isTerroristViews: true,
+        reasonForTerroristViews: "",
+        isWorkedForJudiciary: true,
+        reasonForJudiciaryWork: "",
+      },
+    },
+  });
 
   // console.log(data);
   const app = data?.application?.phase4;
@@ -275,7 +270,7 @@ const Phase4Page = () => {
     maintenance,
     travel,
   } = app ? app : {};
-  console.log("Application",app);
+  console.log("Application", app);
   const {
     fullName,
     isKnownByOtherName,
@@ -393,129 +388,123 @@ const Phase4Page = () => {
   const { isDegreeTaughtInEnglish, isPassedAnyEnglishTest, testType } =
     app?.languageProficiency || {};
 
-    const {
-      qualification,
-      awardingInstitute,
-      grade,
-      courseSubject,
-      courseLength,
-      yearOfAward,
-      countryOfAward,
-      state,
-    } = app?.education || {};
+  const {
+    qualification,
+    awardingInstitute,
+    grade,
+    courseSubject,
+    courseLength,
+    yearOfAward,
+    countryOfAward,
+    state,
+  } = app?.education || {};
 
-    const {
-      isEmployed,
-      jobStartDate,
-      employerName,
-      employerTelephone,
-      employerEmail,
-      annualSalary,
-      jobTitle,
-      employerAddress1,
-      employerAddress2,
-      employerLocation,
-      employerLocationCode,
-      employerTown,
-      employerCounty,
-      employerPostCode,
-      employerCountryPrefix,
-      employerCountry,
-      employerFax,
-      employerVatRate,
-      unEmployedReason,
-    } = app?.employment || {};
+  const {
+    isEmployed,
+    jobStartDate,
+    employerName,
+    employerTelephone,
+    employerEmail,
+    annualSalary,
+    jobTitle,
+    employerAddress1,
+    employerAddress2,
+    employerLocation,
+    employerLocationCode,
+    employerTown,
+    employerCounty,
+    employerPostCode,
+    employerCountryPrefix,
+    employerCountry,
+    employerFax,
+    employerVatRate,
+    unEmployedReason,
+  } = app?.employment || {};
 
-    const {
-      bankName,
-      isRegisteredFinancialInstitute,
-      countryFundsHeldIn,
-      currencyFundsHeldIn,
-      amountHeld,
-      fundsDateHeldFrom,
-    } = app?.maintenance || {};
+  const {
+    bankName,
+    isRegisteredFinancialInstitute,
+    countryFundsHeldIn,
+    currencyFundsHeldIn,
+    amountHeld,
+    fundsDateHeldFrom,
+  } = app?.maintenance || {};
 
-    const {
-      areYouCurrentlyInUk,
-      countryVisited,
-      ukLeaveDate,
-      returnDate,
-      reasonForVisit,
-      numberOfVisitsToUk,
-      lastUkVisits,
-      isVisitedUkIllegally,
-      illegalVisitDetail,
-      isStayedBeyondExpiryDateInUk,
-      reasonForStayingExpiryDateInUk,
-      everBeenToUkOrAnyCountry,
-      isBreachedLeaveConditions,
-      reasonForBreachedLeave,
-      isWorkedWithoutPermission,
-      reasonForWorkedWithoutPermission,
-      isReceivedPublicFunds,
-      detailsForPublicFunds,
-      everGivenFalseInfoForApplyingVisa,
-      reasonForFalseInformation,
-      everUsedDeceptionInPrevVisaApplication,
-      reasonForDeception,
-      everBreachedOtherImmigrationLaws,
-      reasonForBreachingImmigrationLaw,
-      everRefusedVisaOrBorderEntry,
-      reasonForRefusedEntry,
-      everRefusedPermissionToStay,
-      reasonForRefusedPermissionToStay,
-      everRefusedAsylum,
-      reasonForRefusedAsylum,
-      everDeported,
-      reasonForDeported,
-      everBannedFromAnyCountry,
-      reasonForBanned,
-    } = app?.travel || {};
+  const {
+    areYouCurrentlyInUk,
+    countryVisited,
+    ukLeaveDate,
+    returnDate,
+    reasonForVisit,
+    numberOfVisitsToUk,
+    lastUkVisits,
+    isVisitedUkIllegally,
+    illegalVisitDetail,
+    isStayedBeyondExpiryDateInUk,
+    reasonForStayingExpiryDateInUk,
+    everBeenToUkOrAnyCountry,
+    isBreachedLeaveConditions,
+    reasonForBreachedLeave,
+    isWorkedWithoutPermission,
+    reasonForWorkedWithoutPermission,
+    isReceivedPublicFunds,
+    detailsForPublicFunds,
+    everGivenFalseInfoForApplyingVisa,
+    reasonForFalseInformation,
+    everUsedDeceptionInPrevVisaApplication,
+    reasonForDeception,
+    everBreachedOtherImmigrationLaws,
+    reasonForBreachingImmigrationLaw,
+    everRefusedVisaOrBorderEntry,
+    reasonForRefusedEntry,
+    everRefusedPermissionToStay,
+    reasonForRefusedPermissionToStay,
+    everRefusedAsylum,
+    reasonForRefusedAsylum,
+    everDeported,
+    reasonForDeported,
+    everBannedFromAnyCountry,
+    reasonForBanned,
+  } = app?.travel || {};
 
-    const {
-      everChargedWithCriminalOffence,
-      reasonForCharged,
-      isPendingProsecutions,
-      reasonForPendingProsecutions,
-      isTerroristViews,
-      reasonForTerroristViews,
-      isWorkedForJudiciary,
-      reasonForJudiciaryWork,
-    } = app?.character || {};
+  const {
+    everChargedWithCriminalOffence,
+    reasonForCharged,
+    isPendingProsecutions,
+    reasonForPendingProsecutions,
+    isTerroristViews,
+    reasonForTerroristViews,
+    isWorkedForJudiciary,
+    reasonForJudiciaryWork,
+  } = app?.character || {};
 
+  const formattedChildDetails = childDetails?.map((child) => ({
+    ...child,
+    childDob: format(new Date(child.childDob), "yyyy-MM-dd"),
+    childPassportIssueDate: child.childPassportIssueDate
+      ? format(new Date(child.childPassportIssueDate), "yyyy-MM-dd")
+      : "",
+    childPassportExpiryDate: child.childPassportExpiryDate
+      ? format(new Date(child.childPassportExpiryDate), "yyyy-MM-dd")
+      : "",
+    childVisaIssueDate: child.childVisaIssueDate
+      ? format(new Date(child.childVisaIssueDate), "yyyy-MM-dd")
+      : "",
+    childVisaExpiryDate: child.childVisaExpiryDate
+      ? format(new Date(child.childVisaExpiryDate), "yyyy-MM-dd")
+      : "",
+  }));
 
+  const formattedTravelDetails = lastUkVisits?.map((child) => ({
+    entryDate: format(new Date(child.entryDate), "yyyy-MM-dd"),
+    departureDate: format(new Date(child.departureDate), "yyyy-MM-dd"),
+    reasonForVisit: child.reasonForVisit,
+  }));
 
-    const formattedChildDetails = childDetails?.map((child) => ({
-      ...child,
-      childDob: format(new Date(child.childDob), "yyyy-MM-dd"),
-      childPassportIssueDate: child.childPassportIssueDate ? format(
-        new Date(child.childPassportIssueDate),
-        "yyyy-MM-dd"
-      ) : "",
-      childPassportExpiryDate: child.childPassportExpiryDate
-        ? format(new Date(child.childPassportExpiryDate), "yyyy-MM-dd")
-        : "",
-      childVisaIssueDate: child.childVisaIssueDate ? format(
-        new Date(child.childVisaIssueDate),
-        "yyyy-MM-dd"
-      ) : "",
-      childVisaExpiryDate: child.childVisaExpiryDate ? format(
-        new Date(child.childVisaExpiryDate),
-        "yyyy-MM-dd"
-      ) : "",
-    }));
-
-    const formattedTravelDetails = lastUkVisits?.map((child) => ({
-      entryDate: format(new Date(child.entryDate), "yyyy-MM-dd"),
-      departureDate: format(new Date(child.departureDate), "yyyy-MM-dd"),
-      reasonForVisit: child.reasonForVisit
-    }));
-
-  
-  // Genral Phase Date Formating 
+  // Genral Phase Date Formating
   const prevNameFromDate = new Date(prevNameFrom);
   const prevNameToDate = new Date(prevNameTo);
-  const nationalityFromDate = new Date(nationalityFrom)
+  const nationalityFromDate = new Date(nationalityFrom);
   const nationalityUntillDate = new Date(nationalityUntill);
   const passportIssueDateObj = new Date(passportIssueDate);
   const passportExpiryDateObj = new Date(passportExpiryDate);
@@ -547,7 +536,7 @@ const Phase4Page = () => {
   //     ? "/travel"
   //     : "/character"
   // );
-  const [activeTab, setActiveTab] = useState("/phase4")
+  const [activeTab, setActiveTab] = useState("/phase4");
 
   useEffect(() => {
     if (topDivRef.current) {
@@ -1157,7 +1146,7 @@ const Phase4Page = () => {
 
               <div className="Main-form" ref={topDivRef}>
                 {activeTab === "/phase4" && data && initialValues && (
-                  <GeneralForm
+                  <GeneralFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1165,7 +1154,7 @@ const Phase4Page = () => {
                   />
                 )}
                 {activeTab === "/Accomodation" && data && initialValues && (
-                  <AccomodationForm
+                  <AccomodationFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1174,7 +1163,7 @@ const Phase4Page = () => {
                 )}
 
                 {activeTab === "/family" && data && initialValues && (
-                  <FamilyForm
+                  <FamilyFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1187,7 +1176,7 @@ const Phase4Page = () => {
                 {activeTab === "/languageprofeciency" &&
                   data &&
                   initialValues && (
-                    <LanguageProficiencyForm
+                    <LanguageProficiencyFormGroup
                       data={data}
                       setActiveTab={setActiveTab}
                       initialValues={initialValues}
@@ -1196,7 +1185,7 @@ const Phase4Page = () => {
                   )}
 
                 {activeTab === "/education" && data && initialValues && (
-                  <EducationForm
+                  <EducationFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1205,7 +1194,7 @@ const Phase4Page = () => {
                 )}
 
                 {activeTab === "/employement" && data && initialValues && (
-                  <EmploymentForm
+                  <EmploymentFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1214,7 +1203,7 @@ const Phase4Page = () => {
                 )}
 
                 {activeTab === "/maintenance" && data && initialValues && (
-                  <MaintenanceForm
+                  <MaintenanceFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1223,7 +1212,7 @@ const Phase4Page = () => {
                 )}
 
                 {activeTab === "/travel" && data && initialValues && (
-                  <TravelForm
+                  <TravelFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1234,7 +1223,7 @@ const Phase4Page = () => {
                 )}
 
                 {activeTab === "/character" && data && initialValues && (
-                  <CharacterForm
+                  <CharacterFormGroup
                     data={data}
                     setActiveTab={setActiveTab}
                     initialValues={initialValues}
@@ -1250,4 +1239,4 @@ const Phase4Page = () => {
   );
 };
 
-export default Phase4Page;
+export default Phase4GroupPage;

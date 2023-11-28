@@ -1,13 +1,72 @@
-import React, { useRef } from 'react'
-import { NavLink } from 'react-router-dom';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom';
 import chatbox from "../../Assets/chat-icon.svg";
 import "../../style/Phase4.css";
 import "../../style/buttons.css";
 import star from "../../Assets/Star-svg.svg";
 import moment from 'moment';
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import { Fade } from "react-awesome-reveal";
+import { useSelector } from 'react-redux';
+import MainContext from '../Context/MainContext';
+import { useGetUserChatsQuery, useGetUserMessagesQuery, useReadMessagesByChatMutation } from '../../services/api/chatApi';
 
 const GeneralFilled = ({data,application}) => {
+  const location = useLocation();
+  const state = location.state;
+  const { user } = useSelector((state) => state.user);
+  const { socket } = useContext(MainContext);
+  const [count, setCount] = useState();
+  const [chatId, setChatId] = useState();
+  const [messages, setMessages] = useState([]);
+
+  const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
+  const [readMessagesByChat, res] = useReadMessagesByChatMutation();
+
+  const {
+    data: messageData,
+    isLoading: loading,
+    refetch: refetchMessages,
+  } = useGetUserMessagesQuery(chat?.chats[0]._id, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    if (messageData) {
+      setMessages(messageData?.result);
+    }
+  }, [messageData]);
+
+  useEffect(() => {
+    let countTemp = 0;
+    messages?.map((item) => {
+      if (item.isRead === 0 && item.sender != user?._id) {
+        countTemp++;
+      }
+    });
+    setCount(countTemp);
+  }, [messages]);
+
+  useMemo(() => {
+    if (state?.from === "/message") {
+      readMessagesByChat(chat?.chats[0]._id);
+    }
+  }, [state]);
+
+useEffect(() => {
+  socket?.on("message notification", async (newMessageReceived) => {
+    setChatId(newMessageReceived?.result?.chatId);
+    setMessages([...messages, newMessageReceived.result]);
+  });
+});
+
+useEffect(() => {
+  if (chatId) {
+    refetchMessages();
+  }
+}, [chatId]);
+
+
     const app = data?.general;
     console.log("General filled", app);
     
@@ -195,10 +254,14 @@ const GeneralFilled = ({data,application}) => {
           )}
 
           <div className="fill">
-            <img src={star} alt="" className="star" />
-            <p className="Name-title">Do you have a BRP?</p>
+            <Fade direction="left">
+              <img src={star} alt="" className="star" />
+              <p className="Name-title">Do you have a BRP?</p>
+            </Fade>
             <div className="border-y"></div>
-            <p className="Name-text">{app?.isBrp ? "Yes" : "No"}</p>
+            <Fade>
+              <p className="Name-text">{app?.isBrp ? "Yes" : "No"}</p>
+            </Fade>
           </div>
 
           {app?.isBrp && (
@@ -382,7 +445,27 @@ const GeneralFilled = ({data,application}) => {
             "Case Rejected by case worker"}
         </button>
 
-        <NavLink to="/message">
+        <NavLink to="/message" style={{ position: "relative" }}>
+          {count && count > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                right: "0",
+                top: "-1rem",
+                width: "26px",
+                height: "26px",
+                background: "red",
+                borderRadius: "50%",
+                color: "#fff",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: "20",
+              }}
+            >
+              {count}
+            </span>
+          )}
           <img src={chatbox} alt="" className="chat-icon-box" />
         </NavLink>
       </div>

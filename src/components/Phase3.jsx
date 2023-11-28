@@ -15,8 +15,10 @@ import Loader from './Loader';
 import StripeCheckout from "react-stripe-checkout";
 import Navbar from './Navbar';
 import MainContext from './Context/MainContext';
+import { useSelector } from 'react-redux';
 
 const Phase3 = () => {
+    const { user } = useSelector((state) => state.user);
     const [chalan, setChalan] = useState("");
     const chalanRef = useRef();
     const [fileName,setFileName] = useState("");
@@ -59,19 +61,45 @@ const Phase3 = () => {
         let formData = new FormData();
         formData.append("applicationId", application?._id);
         formData.append("chalan", chalan);
-        await postPhase3({formData: formData, applicationId: application?._id});
+       const {data: response} = await postPhase3({formData: formData, applicationId: application?._id});
+        if (response.success) {
+          socket.emit("send phase data", {
+            userId: application?.userId,
+            applicationId: application?._id,
+            phase: 3,
+          });
 
-        socket.emit("send phase data", {
-          userId: application?.userId,
-          applicationId: application?._id,
-          phase: 3,
-        });
+          if (response?.application?.caseWorkerId) {
+            if (response?.application?.caseWorkerId === user?.referringAgent) {
+              socket.emit("send noti to caseworker", {
+                userId: application?.userId,
+                applicationId: application?._id,
+                phase: 3,
+                phaseSubmittedByClient: application?.phaseSubmittedByClient,
+                caseWorkerId: response?.application?.caseWorkerId,
+              });
+            }
+          }
+        }
+        
     }
 
     const handleToken = async (token) => {
       try {
-       const {data} = await payWithCard({token: token, applicationId: application?._id})
-        console.log(data);
+       const {data: response} = await payWithCard({token: token, applicationId: application?._id})
+        if (response.success) {
+          if (response?.application?.caseWorkerId) {
+            if (response?.application?.caseWorkerId === user?.referringAgent) {
+              socket.emit("send noti to caseworker", {
+                userId: application?.userId,
+                applicationId: application?._id,
+                phase: 3,
+                phaseSubmittedByClient: application?.phaseSubmittedByClient,
+                caseWorkerId: response?.application?.caseWorkerId,
+              });
+            }
+          }
+        }
         
       } catch (error) {
         console.log(error);

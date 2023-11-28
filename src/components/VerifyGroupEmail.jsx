@@ -12,7 +12,7 @@ const VerifyGroupEmail = () => {
 
   useMemo(() => {
     if (isSuccess) {
-      navigate(`/group/phase1/${applicationId}`);
+      navigate(`/group/phase1`);
     }
   }, [isSuccess, isLoading]);
 

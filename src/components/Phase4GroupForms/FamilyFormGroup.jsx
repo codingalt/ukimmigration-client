@@ -7,13 +7,14 @@ import { familySchema } from '../../utils/ValidationSchema';
 import { NavLink } from 'react-router-dom';
 import Loader from '../Loader';
 import FamilyInfoForm from './FamilyInfoForm';
+import { usePostGroupFamilyMutation } from '../../services/api/companyClient';
 
-const FamilyForm = ({
+const FamilyFormGroup = ({
   data,
   setActiveTab,
   initialValues,
-  childDetailsArr,
   setChildDetailsArr,
+  childDetailsArr,
   refetch,
 }) => {
   const application = data?.application;
@@ -21,16 +22,16 @@ const FamilyForm = ({
   // console.log("Family Phase 4", initialValues?.phase4);
 
   // const [postPhase4, res] = usePostPhase4Mutation();
-  const [postFamily, res] = usePostFamilyMutation();
+  const [postGroupFamily, res] = usePostGroupFamilyMutation();
   const { isLoading, isSuccess, error } = res;
 
   const [marriedStatus, setMarriedStatus] = useState(
     initialValues.phase4.family.maritalStatus
   );
 
-  useEffect(() => {
+  useEffect(()=>{
     setMarriedStatus(initialValues.phase4.family.maritalStatus);
-  }, [initialValues]);
+  },[initialValues])
 
   const [showAddChildCount, setShowAddChildCount] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -56,8 +57,6 @@ const FamilyForm = ({
 
     setShowAddChildCount(false);
     setShowModal(true);
-
-    console.log(numChildren);
 
     setChildDetailsArr(
       Array(parseInt(numChildren)).fill({
@@ -114,7 +113,7 @@ const FamilyForm = ({
 
     if (
       marriedStatus != "single" &&
-      values.phase4.family.childDetails.length == 0
+      values.phase4.family.childDetails.length === 0
     ) {
       toastError("Please fill out Child Details.");
       return;
@@ -128,12 +127,8 @@ const FamilyForm = ({
       return;
     }
 
-    const excludedProperties = [
-      "childPassportExpiryDate",
-      "childPassportIssueDate",
-      "childVisaExpiryDate",
-      "childVisaIssueDate",
-    ];
+    console.log("child details",values.phase4.family.childDetails);
+    const excludedProperties = ['childPassportExpiryDate', 'childPassportIssueDate', 'childVisaExpiryDate', 'childVisaIssueDate'];
     const isemptyValue = values.phase4.family.childDetails.some((obj) =>
       Object.entries(obj).some(([key, value]) =>
         excludedProperties.includes(key)
@@ -141,18 +136,67 @@ const FamilyForm = ({
           : value === null || value === ""
       )
     );
+    //  const isemptyValue = values.phase4.family.childDetails.some((obj) =>
+    //    Object.values(obj).some((value) => value === null || value === "")
+    //  );
 
-    if (marriedStatus != "single" && isemptyValue) {
+     console.log("isempty value",isemptyValue);
+     if (marriedStatus != "single" && isemptyValue) {
       toastError("Please fill out Complete Child Details.");
       return;
-    }
+     }
+
+    // Check if any child detail object has empty properties
+    // const hasEmptyChildDetails = values.phase4.family.childDetails.some(
+    //   (child) => {
+    //     if (child.isChildPassport) {
+    //       // Check these properties only if isChildPassport is true
+    //       return (
+    //         !child.childName.trim() ||
+    //         !child.childGender.trim() ||
+    //         !child.childDob.trim() ||
+    //         !child.childNationality.trim() ||
+    //         !child.childPassportNumber.trim() ||
+    //         !child.childPassportIssueDate.trim() ||
+    //         !child.childPassportExpiryDate.trim() ||
+    //         !child.childVisaType.trim() ||
+    //         !child.childVisaIssueDate.trim() ||
+    //         !child.childVisaExpiryDate.trim()
+    //       );
+    //     } else if (child.isChildVisa) {
+    //       return (
+    //         !child.childName.trim() ||
+    //         !child.childGender.trim() ||
+    //         !child.childDob.trim() ||
+    //         !child.childNationality.trim() ||
+    //         !child.childPassportNumber.trim() ||
+    //         !child.childPassportIssueDate.trim() ||
+    //         !child.childPassportExpiryDate.trim() ||
+    //         !child.childVisaType.trim() ||
+    //         !child.childVisaIssueDate.trim() ||
+    //         !child.childVisaExpiryDate.trim()
+    //       );
+    //     } else {
+    //       return (
+    //         !child.childName.trim() ||
+    //         !child.childGender.trim() ||
+    //         !child.childDob.trim() ||
+    //         !child.childNationality.trim()
+    //       );
+    //     }
+    //   }
+    // );
+
+    // if (marriedStatus != "single" && hasEmptyChildDetails) {
+    //   toastError("Please fill out Complete Child Details.");
+    //   return;
+    // }
 
     console.log("submitted family", values?.phase4?.family);
-        await postFamily({
-          data: values.phase4.family,
-          applicationId: application?._id,
-        });
-
+    await postGroupFamily({
+      data: values.phase4.family,
+      applicationId: application?._id,
+    });
   };
 
   const handleBackClick = () => {
@@ -206,45 +250,45 @@ const FamilyForm = ({
     //   }
     // );
 
-    const hasEmptyChildDetails = values.phase4.family.childDetails.some(
-      (child) => {
-        if (child.isChildPassport) {
-          // Check these properties only if isChildPassport is true
-          return (
-            !child.childName.trim() ||
-            !child.childGender.trim() ||
-            !child.childDob.trim() ||
-            !child.childNationality.trim() ||
-            !child.childPassportNumber.trim() ||
-            !child.childPassportIssueDate.trim() ||
-            !child.childPassportExpiryDate.trim() ||
-            !child.childVisaType.trim() ||
-            !child.childVisaIssueDate.trim() ||
-            !child.childVisaExpiryDate.trim()
-          );
-        } else if (child.isChildVisa) {
-          return (
-            !child.childName.trim() ||
-            !child.childGender.trim() ||
-            !child.childDob.trim() ||
-            !child.childNationality.trim() ||
-            !child.childPassportNumber.trim() ||
-            !child.childPassportIssueDate.trim() ||
-            !child.childPassportExpiryDate.trim() ||
-            !child.childVisaType.trim() ||
-            !child.childVisaIssueDate.trim() ||
-            !child.childVisaExpiryDate.trim()
-          );
-        } else {
-          return (
-            !child.childName.trim() ||
-            !child.childGender.trim() ||
-            !child.childDob.trim() ||
-            !child.childNationality.trim()
-          );
-        }
-      }
-    );
+    // const hasEmptyChildDetails = values.phase4.family.childDetails.some(
+    //   (child) => {
+    //     if (child.isChildPassport) {
+    //       // Check these properties only if isChildPassport is true
+    //       return (
+    //         !child.childName.trim() ||
+    //         !child.childGender.trim() ||
+    //         !child.childDob.trim() ||
+    //         !child.childNationality.trim() ||
+    //         !child.childPassportNumber.trim() ||
+    //         !child.childPassportIssueDate.trim() ||
+    //         !child.childPassportExpiryDate.trim() ||
+    //         !child.childVisaType.trim() ||
+    //         !child.childVisaIssueDate.trim() ||
+    //         !child.childVisaExpiryDate.trim()
+    //       );
+    //     } else if (child.isChildVisa) {
+    //       return (
+    //         !child.childName.trim() ||
+    //         !child.childGender.trim() ||
+    //         !child.childDob.trim() ||
+    //         !child.childNationality.trim() ||
+    //         !child.childPassportNumber.trim() ||
+    //         !child.childPassportIssueDate.trim() ||
+    //         !child.childPassportExpiryDate.trim() ||
+    //         !child.childVisaType.trim() ||
+    //         !child.childVisaIssueDate.trim() ||
+    //         !child.childVisaExpiryDate.trim()
+    //       );
+    //     } else {
+    //       return (
+    //         !child.childName.trim() ||
+    //         !child.childGender.trim() ||
+    //         !child.childDob.trim() ||
+    //         !child.childNationality.trim()
+    //       );
+    //     }
+    //   }
+    // );
 
     // if (hasEmptyChildDetails) {
     //   toastError("Please fill in all child details");
@@ -1492,4 +1536,4 @@ const FamilyForm = ({
   );
 };
 
-export default FamilyForm
+export default FamilyFormGroup;

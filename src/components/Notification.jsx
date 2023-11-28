@@ -56,6 +56,38 @@ const NotificationBox = () => {
       </div>
     );
   }
+  console.log("noti---",data);
+  const handleNavigate = (item)=>{
+    if(data?.companyClient){
+      navigate(
+        item.phaseStatus === "rejected"
+          ? `/group/reject`
+          : item.phase === 1
+          ? "/group/agreement"
+          : item.phase === 2
+          ? "/group/phase3"
+          : item.phase === 3
+          ? "/group/phase4"
+          : item.phase === 4
+          ? "/congrats/phase4"
+          : "/group/filldata"
+      );
+    }else{
+      navigate(
+        item.phaseStatus === "rejected"
+          ? `/reject`
+          : item.phase === 1
+          ? "/phase2"
+          : item.phase === 2
+          ? "/agreement"
+          : item.phase === 3
+          ? "/phase4"
+          : item.phase === 4
+          ? "/congrats/phase4"
+          : "/filldata"
+      );
+    }
+  }
 
   return (
     <div className="notification-box">
@@ -75,21 +107,7 @@ const NotificationBox = () => {
                 className="notification-item"
                 key={item._id}
                 style={{ cursor: "pointer" }}
-                onClick={() =>
-                  navigate(
-                    item.phaseStatus === "rejected"
-                      ? `/reject`
-                      : item.phase === 1
-                      ? "/phase2"
-                      : item.phase === 2
-                      ? "/agreement"
-                      : item.phase === 3
-                      ? "/phase4"
-                      : item.phase === 4
-                      ? "/congrats/phase4"
-                      : "/filldata"
-                  )
-                }
+                onClick={()=>handleNavigate(item)}
               >
                 <div className="Notifiction-img">
                   <img

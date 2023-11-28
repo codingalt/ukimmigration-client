@@ -18,7 +18,9 @@ import { useDispatch } from 'react-redux';
 import { setUserData } from '../services/redux/userSlice';
 import Loader from './Loader';
 
+
 import ReCAPTCHA from "react-google-recaptcha";
+import { Fade } from 'react-awesome-reveal';
 
 const Signin = () => {
 const [email, setEmail] = useState("");
@@ -79,7 +81,8 @@ const handleSend = async () => {
   console.log(data);
   console.log(error);
   dispatch(setUserData(data?.user));
-  navigate(data.redirect);
+  console.log("data signin",data);
+  navigate(data?.user?.isGroupClient ? "/group/phase1" : data.redirect);
 
 };
 
@@ -90,9 +93,10 @@ const handleSigninWithGoogle = useGoogleLogin({
     });
     console.log(data);
     if (data.success) {
-      setTimeout(() => {
-        navigate(data.redirect);
-      }, 900);
+        setTimeout(() => {
+          navigate(data?.user?.isGroupClient ? "/group/phase1" : data.redirect);
+        }, 900);
+      
     }
   },
   onError: (error) => toastError("Login Failed", error),
@@ -130,14 +134,17 @@ function onChange(value) {
 //   handleCaptchaRes();
 // }, []);
 
-
   return (
     <div className="sinin-container">
       <div className="Container-forgetpassword">
         <div className="Forgetpassword-sub">
           <div className="left-side-signin">
-            <img src={Logo} alt="" className="Logo-img-signin" />
-            <p className="Verfication-text-signin">Welcome Back</p>
+            <Fade direction="up" duration={500}>
+              <img src={Logo} alt="" className="Logo-img-signin" />
+            </Fade>
+            <Fade direction="left" duration={500}>
+              <p className="Verfication-text-signin">Welcome Back</p>
+            </Fade>
             <div className="login-form">
               <form>
                 <input

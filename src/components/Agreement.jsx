@@ -63,11 +63,11 @@ const Agreement = () => {
     return (
       <>
         {isAllowed && (
-          <div className="Container-forgetpassword-phase1">
+          <div className="Container-forgetpassword-phase1" >
             <Navbar />
             <div className="Forgetpassword-sub-2">
               <p className="confirmation-text-2">Confirmation</p>
-              <div className="Agreement-description">
+              <div className="Agreement-description-1">
                 1. YOUR AGREEMENT By using this Site, you agree to be bound by,
                 and to comply with, these Terms and Conditions. If you do not
                 agree to these Terms and Conditions, please do not use this
@@ -172,7 +172,7 @@ const Agreement = () => {
                 orders.
               </div>
               <form style={{ display: "flex", columnGap: "4rem" }}>
-                <div className="checkbox">
+                <div className="checkbox-agree">
                   <p className="ist-check">
                     <input
                       className="main-box"

@@ -32,6 +32,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 import ReCAPTCHA from "react-google-recaptcha";
+import { useSignupCompanyClientMutation } from "../services/api/companyClient";
 
 const SignupGroupClient = () => {
   const {applicationId} = useParams();
@@ -112,7 +113,7 @@ const SignupGroupClient = () => {
       console.log(data);
       if (data.success) {
         setTimeout(() => {
-          navigate(`/group/phase1/${applicationId}`);
+          navigate(`/group/phase1`);
         }, 1000);
       }
     },

@@ -1,42 +1,38 @@
-import React, { useEffect, useState, useRef, useContext, useMemo } from 'react';
-import Logo2 from '../Assets/Ukimmigration-logo.png';
-import bellicon2 from "../Assets/bell-icon-svg.svg"
-import profileimg from "../Assets/profile-img-svg.svg"
-import dropdownicon from "../Assets/dropdown-icon-svg.svg"
+import React, { useEffect, useState, useRef, useContext, useMemo } from "react";
+import Logo2 from "../Assets/Ukimmigration-logo.png";
+import bellicon2 from "../Assets/bell-icon-svg.svg";
+import profileimg from "../Assets/profile-img-svg.svg";
+import dropdownicon from "../Assets/dropdown-icon-svg.svg";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import "../style/filldata.css"
-import star from "../Assets/Star-svg.svg"
-import NotificationBox from './Notification';
-import SettingBox from "./Settingbox"
-import chatbox from "../Assets/chat-icon.svg"
-import { useGetApplicationByUserIdQuery } from '../services/api/applicationApi';
+import "../style/filldata.css";
+import star from "../Assets/Star-svg.svg";
+import NotificationBox from "./Notification";
+import SettingBox from "./Settingbox";
+import chatbox from "../Assets/chat-icon.svg";
+import { useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
 import moment from "moment";
 import PDfimg from "../Assets/pdf-img.png";
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 import { usePDF } from "react-to-pdf";
 import { useReactToPrint } from "react-to-print";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import PDF from './Documents/PDF';
+import PDF from "./Documents/PDF";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { renderToString } from "react-dom/server";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
-import MainContext from './Context/MainContext';
-import { useSelector } from 'react-redux';
-import { useChatNotificationsMutation,useGetUserChatsQuery, useGetUserMessagesQuery, useReadMessagesByChatMutation } from "../services/api/chatApi";
+import MainContext from "./Context/MainContext";
+import { useGetCompanyDetailsByIdQuery, useGetGroupClientAppByUserIdQuery } from "../services/api/companyClient";
+import { useSelector } from "react-redux";
+import { useGetUserChatsQuery, useGetUserMessagesQuery, useReadMessagesByChatMutation } from "../services/api/chatApi";
 
-const Filldata = () => {
+const GroupFilledData = () => {
   const location = useLocation();
   const state = location.state;
   const { user } = useSelector((state) => state.user);
-   const { toPDF, targetRef } = usePDF({ filename: "ukimmigration.pdf" });
-  const { socket } = useContext(MainContext);
-  const [received, setReceived] = useState(null)
-  const { messageCount } = useSelector((state) => state.user);
-  const [count,setCount] = useState();
-  const [chatId,setChatId] = useState();
+  const [count, setCount] = useState();
+  const [chatId, setChatId] = useState();
   const [messages, setMessages] = useState([]);
-  const [chatClicked,setChatClicked] = useState(null);
 
   const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
@@ -45,7 +41,9 @@ const Filldata = () => {
     data: messageData,
     isLoading: loading,
     refetch: refetchMessages,
-  } = useGetUserMessagesQuery(chat?.chats[0]._id,{refetchOnMountOrArgChange: true});
+  } = useGetUserMessagesQuery(chat?.chats[0]._id, {
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
     if (messageData) {
@@ -54,7 +52,6 @@ const Filldata = () => {
   }, [messageData]);
 
   useEffect(() => {
-
     let countTemp = 0;
     messages?.map((item) => {
       if (item.isRead === 0 && item.sender != user?._id) {
@@ -64,65 +61,77 @@ const Filldata = () => {
     setCount(countTemp);
   }, [messages]);
 
-     const pdfRef = useRef(null);
-     const pdfExportComponent = useRef(null);
-     const generatePDF = () => {
-       let element = pdfRef.current || document.body;
-       savePDF(element, {
-         paperSize: "A3",
-         margin: "2cm",
-         fileName: `UkImmigration`,
-       });
-     };
-
-     const exportPDFWithComponent = () => {
-       if (pdfExportComponent.current) {
-         pdfExportComponent.current.save();
-       }
-     };
-
-   const componentRef = useRef();
-   const handlePrint = useReactToPrint({
-     content: () => componentRef.current,
-     documentTitle: "UK Immigration"
-   });
-
-   const {data,isLoading, refetch,isFetching} = useGetApplicationByUserIdQuery(null, {refetchOnMountOrArgChange: true});
-   const application = data?.application;
-
-   useEffect(() => {
-       socket.on("phase notification received", (phaseNoti) => {
-        setReceived(phaseNoti);
-         console.log("phase notification received application", phaseNoti);
-       });
-     
-   });
-
-   useEffect(()=>{
-    if(received){
-      refetch();
+  useMemo(() => {
+    if (state?.from === "/message") {
+      readMessagesByChat(chat?.chats[0]._id);
     }
-   },[received]);
+  }, [state]);
 
-   useMemo(() => {
-     if (state?.from === "/message") {
-       readMessagesByChat(chat?.chats[0]._id);
-     }
-   }, [state]);
-
-
-useEffect(() => {
-  socket?.on("message notification", async (newMessageReceived) => {
+  useEffect(() => {
+    socket?.on("message notification", async (newMessageReceived) => {
       setChatId(newMessageReceived?.result?.chatId);
       setMessages([...messages, newMessageReceived.result]);
+    });
   });
-});
 
-useEffect(()=>{
-  if(chatId){
-    refetchMessages();
-  }
-},[chatId]);
+  useEffect(() => {
+    if (chatId) {
+      refetchMessages();
+    }
+  }, [chatId]);
+  
+  const { toPDF, targetRef } = usePDF({ filename: "ukimmigration.pdf" });
+  const { socket } = useContext(MainContext);
+  const [received, setReceived] = useState(null);
+  const { messageCount } = useSelector((state) => state.user);
+
+  const pdfRef = useRef(null);
+  const pdfExportComponent = useRef(null);
+  const generatePDF = () => {
+    let element = pdfRef.current || document.body;
+    savePDF(element, {
+      paperSize: "A3",
+      margin: "2cm",
+      fileName: `UkImmigration`,
+    });
+  };
+  const exportPDFWithComponent = () => {
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
+  };
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "UK Immigration",
+  });
+
+  const { data, isLoading, refetch, isFetching } =
+    useGetGroupClientAppByUserIdQuery(null, {
+      refetchOnMountOrArgChange: true,
+    });
+  const application = data?.application;
+
+  const { data: company } = useGetCompanyDetailsByIdQuery(
+    data?.application?.companyId,
+    { skip: !data?.application?.companyId }
+  );
+
+  console.log(application);
+
+  useEffect(() => {
+    socket.on("phase notification received", (phaseNoti) => {
+      setReceived(phaseNoti);
+      console.log("phase notification received application", phaseNoti);
+    });
+  });
+
+  useEffect(() => {
+    if (received) {
+      refetch();
+    }
+  }, [received]);
 
   return (
     <div className="Container-forgetpassword-phase1">
@@ -140,14 +149,47 @@ useEffect(()=>{
             Download File
           </button>
 
-          {/* Phase 1 */}
           <PDFExport
             scale={0.8}
-            paperSize="A3"
+            paperSize="A2"
             margin="2cm"
             ref={pdfRef}
-            fileName={`${application?.phase1?.name}-${application?.caseId}`}
+            fileName={`${application?.phase1?.fullNameAsPassport}-${application?.caseId}`}
           >
+            <div className="Group-dataa-main">
+              <p className="req-term-con-text"> Company Details</p>
+
+              <div className="new-group-input">
+                <div className="company-name-group">
+                  <p className="company-name">Company Name</p>
+                  <div className="border-line-between"></div>
+                  <p>{company?.company?.name}</p>
+                </div>
+
+                <div className="company-name-group-2">
+                  <p className="company-name">Company Email</p>
+                  <div className="border-line-between"></div>
+                  <p>{company?.company?.email}</p>
+                </div>
+              </div>
+
+              <div className="new-group-input-2">
+                <div className="company-name-group">
+                  <p className="company-name"> Full Name</p>
+                  <div className="border-line-between"></div>
+                  <p>{company?.company?.fullName}</p>
+                </div>
+
+                <div className="company-name-group-2">
+                  <p className="company-name">Company Address</p>
+                  <div className="border-line-between"></div>
+                  <p>{company?.company?.address}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Phase 1 */}
+
             <div>
               <div
                 className="phase-1"
@@ -167,9 +209,13 @@ useEffect(()=>{
                   }}
                 >
                   <img src={star} alt="" className="star" />
-                  <p className="Name-title">Name</p>
+                  <p className="Name-title">
+                    Full name as it appears in the passport
+                  </p>
                   <div className="border-y"></div>
-                  <p className="Name-text">{application?.phase1?.name}</p>
+                  <p className="Name-text">
+                    {application?.phase1?.fullNameAsPassport}
+                  </p>
                 </div>
                 <div
                   className="fill"
@@ -181,9 +227,11 @@ useEffect(()=>{
                   }}
                 >
                   <img src={star} alt="" className="star" />
-                  <p className="Name-title">Email</p>
+                  <p className="Name-title">Full Postal Address</p>
                   <div className="border-y"></div>
-                  <p className="Name-text">{application?.phase1?.email}</p>
+                  <p className="Name-text">
+                    {application?.phase1?.postalAddress}
+                  </p>
                 </div>
                 <div
                   className="fill"
@@ -195,21 +243,7 @@ useEffect(()=>{
                   }}
                 >
                   <img src={star} alt="" className="star" />
-                  <p className="Name-title">Telephone</p>
-                  <div className="border-y"></div>
-                  <p className="Name-text">{application?.phase1?.contact}</p>
-                </div>
-                <div
-                  className="fill"
-                  style={{
-                    display: "flex",
-                    width: "1100px",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <img src={star} alt="" className="star" />
-                  <p className="Name-title">Date Of Birth</p>
+                  <p className="Name-title">Date of Birth</p>
                   <div className="border-y"></div>
                   <p className="Name-text">
                     {moment(application?.phase1?.birthDate).format(
@@ -227,52 +261,12 @@ useEffect(()=>{
                   }}
                 >
                   <img src={star} alt="" className="star" />
-                  <p className="Name-title">Country</p>
-                  <div className="border-y"></div>
-                  <p className="Name-text">{application?.phase1?.country}</p>
-                </div>
-
-                <div
-                  className="fill"
-                  style={{
-                    display: "flex",
-                    width: "1100px",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <img src={star} alt="" className="star" />
-                  <p className="Name-title">
-                    Do you have residence in this country?*
-                  </p>
+                  <p className="Name-title">Nationality</p>
                   <div className="border-y"></div>
                   <p className="Name-text">
-                    {application?.phase1?.sameResidence ? "Yes" : "No"}
+                    {application?.phase1?.nationality}
                   </p>
                 </div>
-
-                {application?.phase1?.sameResidence && (
-                  <div
-                    className="fill"
-                    style={{
-                      display: "flex",
-                      width: "1100px",
-                      alignItems: "center",
-                      gap: "12px",
-                    }}
-                  >
-                    <img src={star} alt="" className="star" />
-                    <p className="Name-title">
-                      If Yes, what type of permission do you have to be in the
-                      country?
-                    </p>
-                    <div className="border-y"></div>
-                    <p className="Name-text">
-                      {application?.phase1?.permissionInCountry}
-                    </p>
-                  </div>
-                )}
-
                 <div
                   className="fill"
                   style={{
@@ -283,149 +277,11 @@ useEffect(()=>{
                   }}
                 >
                   <img src={star} alt="" className="star" />
-                  <p className="Name-title">Do you speak English?*</p>
+                  <p className="Name-title">Passport Number</p>
                   <div className="border-y"></div>
                   <p className="Name-text">
-                    {application?.phase1?.speakEnglish ? "Yes" : "No"}
+                    {application?.phase1?.passportNumber}
                   </p>
-                </div>
-
-                {application?.phase1?.speakEnglish && (
-                  <div
-                    className="fill"
-                    style={{
-                      display: "flex",
-                      width: "1100px",
-                      alignItems: "center",
-                      gap: "12px",
-                    }}
-                  >
-                    <img src={star} alt="" className="star" />
-                    <p className="Name-title">
-                      If Yes, what level of proficiency?
-                    </p>
-                    <div className="border-y"></div>
-                    <p className="Name-text">
-                      {application?.phase1?.proficiency}
-                    </p>
-                  </div>
-                )}
-
-                <div
-                  className="fill"
-                  style={{
-                    display: "flex",
-                    width: "1100px",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <img src={star} alt="" className="star" />
-                  <p className="Name-title">
-                    What other languages do you speak?
-                  </p>
-                  <div className="border-y"></div>
-                  {application?.phase1?.otherLanguagesSpeak?.map((item) => (
-                    <p key={item} className="Name-text">
-                      {item},
-                    </p>
-                  ))}
-                </div>
-
-                <div
-                  className="fill"
-                  style={{
-                    display: "flex",
-                    width: "1100px",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <img src={star} alt="" className="star" />
-                  <p className="Name-title">
-                    Have you ever been refused a visa/entry to any country in
-                    the world?
-                  </p>
-                  <div className="border-y"></div>
-                  <p className="Name-text">
-                    {application?.phase1.isRefusedVisaEntry ? "Yes" : "No"}
-                  </p>
-                </div>
-
-                {application?.phase1.isRefusedVisaEntry && (
-                  <>
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">if yes, please...</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        {application?.phase1?.refusedVisaType}
-                      </p>
-                    </div>
-
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">Date</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        {moment(application?.phase1?.refusedVisaDate).format(
-                          "dddd, MMMM Do"
-                        )}
-                      </p>
-                    </div>
-
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">
-                        if yes, please provide type of visa refused reason
-                      </p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        {application?.phase1?.refusedVisaReason}
-                      </p>
-                    </div>
-                  </>
-                )}
-
-                <div
-                  className="fill"
-                  style={{
-                    display: "flex",
-                    width: "1100px",
-                    alignItems: "center",
-                    gap: "12px",
-                  }}
-                >
-                  <img src={star} alt="" className="star" />
-                  <p className="Name-title">
-                    Please provide in your own words how we can help you?
-                  </p>
-                  <div className="border-y"></div>
-                  <p className="Name-text">{application?.phase1?.message}</p>
                 </div>
               </div>
 
@@ -937,7 +793,7 @@ useEffect(()=>{
                   "Case Rejected by case worker"}
               </button>
             </NavLink>
-            <NavLink to="/message" style={{ position: "relative" }} onClick={()=> {setChatClicked(chatId)}}>
+            <NavLink to="/message" style={{ position: "relative" }}>
               {chat && count > 0 && (
                 <span
                   style={{
@@ -965,6 +821,6 @@ useEffect(()=>{
       </div>
     </div>
   );
-}
+};
 
-export default Filldata
+export default GroupFilledData;

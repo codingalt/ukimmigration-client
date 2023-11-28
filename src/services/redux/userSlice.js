@@ -6,6 +6,7 @@ const initialState = {
   applicationType: "",
   captcha: null,
   socket: null,
+  messageCount: 0,
 };
 
 const payment = {
@@ -34,6 +35,10 @@ export const userSlice = createSlice({
       state.socket = action.payload;
     },
 
+    setMessageCount: (state, action) => {
+      state.messageCount = action.payload;
+    },
+
     setCaptchaToSlice: (state, action) => {
       state.captcha = action.payload;
     },
@@ -46,5 +51,6 @@ export const {
   setApplicationTypeToSlice,
   setCaptchaToSlice,
   setSocket,
+  setMessageCount,
 } = userSlice.actions;
 export default userSlice.reducer;

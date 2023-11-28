@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthQuery } from "../services/api/userApi";
 import { useDispatch } from "react-redux";
-import { setSocket, setUserData } from "../services/redux/userSlice";
+import { setMessageCount, setSocket, setUserData } from "../services/redux/userSlice";
 import io from "socket.io-client";
 import MainContext from "./Context/MainContext";
 const ENDPOINT = import.meta.env.VITE_IMG_URI;
@@ -15,6 +15,15 @@ const Protected = ({ Component }) => {
   const [show, setShow] = useState(null);
   const { data, isSuccess, isLoading } = useAuthQuery();
   console.log(data?.data);
+
+  // Get Unread Messages Count 
+  // const {data: count,refetch,isLoading: loadingUnread} = useGetUnreadMessagesCountQuery(null,{refetchOnMountOrArgChange: true});
+
+  // useEffect(()=>{
+  //   if(count){
+  //     dispatch(setMessageCount(count?.count))
+  //   }
+  // },[count]);
 
   useEffect(() => {
     socket = io(ENDPOINT);

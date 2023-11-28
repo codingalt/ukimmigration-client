@@ -1,45 +1,44 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useGetApplicationByUserIdQuery } from '../services/api/applicationApi';
-import Navbar from '../components/Navbar';
-import { NavLink } from 'react-router-dom';
-import GeneralFilled from '../components/Phase4Filled/GeneralFilled';
-import AccomodationFilled from '../components/Phase4Filled/AccomodationFilled';
-import FamilyFilled from '../components/Phase4Filled/FamilyFilled';
-import LanguageFilled from '../components/Phase4Filled/LanguageFilled';
-import EducationFilled from '../components/Phase4Filled/EducationFilled';
-import EmploymentFilled from '../components/Phase4Filled/EmploymentFilled';
-import MaintenanceFilled from '../components/Phase4Filled/MaintenanceFilled';
-import TravelFilled from '../components/Phase4Filled/TravelFilled';
-import CharacterFilled from '../components/Phase4Filled/CharacterFilled';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef, useState } from "react";
+import { useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
+import Navbar from "../components/Navbar";
+import { NavLink } from "react-router-dom";
+import GeneralFilled from "../components/Phase4Filled/GeneralFilled";
+import AccomodationFilled from "../components/Phase4Filled/AccomodationFilled";
+import FamilyFilled from "../components/Phase4Filled/FamilyFilled";
+import LanguageFilled from "../components/Phase4Filled/LanguageFilled";
+import EducationFilled from "../components/Phase4Filled/EducationFilled";
+import EmploymentFilled from "../components/Phase4Filled/EmploymentFilled";
+import MaintenanceFilled from "../components/Phase4Filled/MaintenanceFilled";
+import TravelFilled from "../components/Phase4Filled/TravelFilled";
+import CharacterFilled from "../components/Phase4Filled/CharacterFilled";
+import { useGetGroupClientAppByUserIdQuery } from "../services/api/companyClient";
+import { useSelector } from "react-redux";
 
-const Phase4FilledDataPage = () => {
-    const { data } = useGetApplicationByUserIdQuery();
-    const app = data?.application?.phase4;
+const Phase4FilledGroupPage = () => {
+  const { data } = useGetGroupClientAppByUserIdQuery();
+  const app = data?.application?.phase4;
   const { messageCount } = useSelector((state) => state.user);
-    
-    const topDivRef = useRef();
-    const [activeTab, setActiveTab] = useState("/general");
-    const [isAllowed, setIsAllowed] = useState(false);
 
-    useEffect(() => {
-      if (topDivRef.current) {
-        topDivRef.current.scrollTop = 0;
-      }
-    }, [activeTab]);
+  const topDivRef = useRef();
+  const [activeTab, setActiveTab] = useState("/general");
+  const [isAllowed, setIsAllowed] = useState(false);
 
-    useEffect(() => {
-      if (data?.application) {
-        if (
-          data?.application?.phaseSubmittedByClient === 4 
-        ) {
-          setIsAllowed(true);
-        } else {
-          setIsAllowed(false);
-          navigate("/filldata");
-        }
+  useEffect(() => {
+    if (topDivRef.current) {
+      topDivRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (data?.application) {
+      if (data?.application?.phaseSubmittedByClient === 4) {
+        setIsAllowed(true);
+      } else {
+        setIsAllowed(false);
+        navigate("/filldata");
       }
-    }, [data]);
+    }
+  }, [data]);
   return (
     <>
       {isAllowed && (
@@ -48,7 +47,7 @@ const Phase4FilledDataPage = () => {
           <div className="Forgetpassword-sub-2">
             <div className="left-side-forget-password-2">
               <p className="Required-data-text">Required Data*</p>
-              <NavLink to="/filldata">
+              <NavLink to="/group/filldata">
                 <button type="button" className="back-button">
                   back
                 </button>
@@ -217,6 +216,6 @@ const Phase4FilledDataPage = () => {
       )}
     </>
   );
-}
+};
 
-export default Phase4FilledDataPage
+export default Phase4FilledGroupPage;

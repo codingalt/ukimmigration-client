@@ -237,6 +237,17 @@ const validationSchema = Yup.object().shape({
   }),
 });
 
+// Group Phase 1 Schema 
+export const groupPhase1Schema = Yup.object({
+  fullNameAsPassport: Yup.string()
+    .min(3)
+    .required("Full Name as passport is Required"),
+  postalAddress: Yup.string().required("Postal Address is Required"),
+  birthDate: Yup.string().required("Birth Date is Required"),
+  nationality: Yup.string().required("Nationality is Required"),
+  passportNumber: Yup.string().required("Passport Number is Required"),
+});
+
 
 
 

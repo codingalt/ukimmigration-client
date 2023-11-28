@@ -35,6 +35,16 @@ import OtpGroup from './components/OtpGroup';
 import VerifyGroupEmail from './components/VerifyGroupEmail';
 import SignupGroupClient from "./components/SignupGroupClient";
 import GroupPhase1 from './components/GroupPhase1';
+import GroupFilledData from './components/GroupFilledData';
+import AgreementGroup from './components/AgreementGroup';
+import RejectpopupGroup from './components/RejectPopupGroup';
+import AuthorityToAct from './components/AuthorityToAct';
+import AuthorityToAllow from './components/AuthorityToAllow';
+import AuthorityToShare from './components/AuthorityToShare';
+import GroupPhase2 from './components/GroupPhase2';
+import GroupPhase3 from './components/GroupPhase3';
+import Phase4GroupPage from './pages/Phase4GroupPage';
+import Phase4FilledGroupPage from './pages/Phase4FilledGroupPage';
 
 const Allroutes = () => {
   return (
@@ -94,7 +104,50 @@ const Allroutes = () => {
         path="/group/:userId/verify/:token/:applicationId"
         element={<VerifyGroupEmail />}
       />
-      <Route path="/group/phase1/:applicationId" element={<GroupPhase1 />} />
+      <Route
+        path="/group/phase1"
+        element={<Protected Component={GroupPhase1} />}
+      />
+      <Route
+        path="/group/phase2"
+        element={<Protected Component={GroupPhase2} />}
+      />
+      <Route
+        path="/group/phase3"
+        element={<Protected Component={GroupPhase3} />}
+      />
+      <Route
+        path="/group/phase4"
+        element={<Protected Component={Phase4GroupPage} />}
+      />
+      <Route
+        path="/phase4/group/data"
+        element={<Protected Component={Phase4FilledGroupPage} />}
+      />
+      <Route
+        path="/group/agreement"
+        element={<Protected Component={AgreementGroup} />}
+      />
+      <Route
+        path="/authoritytoact"
+        element={<Protected Component={AuthorityToAct} />}
+      />
+      <Route
+        path="/authoritytoallow"
+        element={<Protected Component={AuthorityToAllow} />}
+      />
+      <Route
+        path="/authoritytoshare"
+        element={<Protected Component={AuthorityToShare} />}
+      />
+      <Route
+        path="/group/filldata"
+        element={<Protected Component={GroupFilledData} />}
+      />
+      <Route
+        path="/group/reject"
+        element={<Protected Component={RejectpopupGroup} />}
+      />
     </Routes>
   );
 }

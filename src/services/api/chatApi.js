@@ -13,7 +13,7 @@ export const chatApi = createApi({
   endpoints: (builder) => ({
     getUserMessages: builder.query({
       query: (chatId) => `api/message/${chatId}`,
-      providesTags: ["Chat"],
+      // providesTags: ["Chat"],
     }),
 
     sendMessage: builder.mutation({
@@ -23,6 +23,24 @@ export const chatApi = createApi({
         body: data,
       }),
       invalidatesTags: ["Chat"],
+    }),
+
+    readMessagesByChat: builder.mutation({
+      query: (chatId) => ({
+        url: `api/chat/read/${chatId}`,
+        method: "POST",
+        body: chatId,
+      }),
+      // invalidatesTags: ["Chat"],
+    }),
+
+    chatNotifications: builder.mutation({
+      query: (chatId) => ({
+        url: `api/chat/unseen/count/${chatId}`,
+        method: "POST",
+        body: chatId,
+      }),
+      // invalidatesTags: ["Chat"],
     }),
 
     getUserChats: builder.query({
@@ -35,5 +53,7 @@ export const chatApi = createApi({
 export const {
   useGetUserChatsQuery,
   useGetUserMessagesQuery,
-  useSendMessageMutation
+  useSendMessageMutation,
+  useReadMessagesByChatMutation,
+  useChatNotificationsMutation,
 } = chatApi;

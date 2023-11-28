@@ -18,11 +18,11 @@ import Loader from './Loader';
 import Navbar from './Navbar';
 import Congratspopup from './Congratspopup';
 import MainContext from './Context/MainContext';
+import { useSelector } from 'react-redux';
 
 const Phase2 = () => {
 
-    const [isNotificationBoxVisible, setIsNotificationBoxVisible] = useState(false);
-    const [isSettingsBoxVisible, setIsSettingsBoxVisible] = useState(false);
+    const { user } = useSelector((state) => state.user);
     const notificationRef = useRef(null);
     const settingsRef = useRef(null);
     const [isAllowed,setIsAllowed] = useState(false)
@@ -134,17 +134,33 @@ const Phase2 = () => {
           return;
         }
         try {
-          const {data} = await postPhase2(formData);
+          console.log("form data",formData);
+          const {data: resp} = await postPhase2(formData);
           resetForm({
             values: initialValues,
           });
-          socket.emit("send phase data", {
-            userId: application?.userId,
-            applicationId: application?._id,
-            phaseSubmittedByClient: application?.phaseSubmittedByClient,
-            phase: 2,
-          });
-          if(data.success){
+          
+          console.log("Response data -------------", resp);
+          if (resp.success) {
+            socket.emit("send phase data", {
+              userId: application?.userId,
+              applicationId: application?._id,
+              phaseSubmittedByClient: application?.phaseSubmittedByClient,
+              phase: 2,
+            });
+
+            if (resp?.application?.caseWorkerId) {
+              if (resp?.application?.caseWorkerId === user?.referringAgent) {
+                socket.emit("send noti to caseworker", {
+                  userId: application?.userId,
+                  applicationId: application?._id,
+                  phase: 2,
+                  phaseSubmittedByClient: application?.phaseSubmittedByClient,
+                  caseWorkerId: resp?.application?.caseWorkerId,
+                });
+              }
+            }
+
             setTimeout(() => {
               navigate("/filldata");
             }, 3500);
@@ -153,12 +169,13 @@ const Phase2 = () => {
         } catch (error) {
           console.error(error);
         }
-        
+      
     }
 
     const openFile = (e,setFieldValue)=>{
         if (e.target.files && e.target.files[0]) {
           let pdf = e.target.files[0];
+          console.log(e.target.files);
           setFieldValue(e.target.name, pdf);
         }
     }

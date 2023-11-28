@@ -80,9 +80,21 @@ const Phase1 = () => {
         phaseSubmittedByClient: result.phaseSubmittedByClient,
         result: result
       });
-      setTimeout(() => {
-        navigate("/filldata")
-      }, 3500);
+
+      if (result?.caseWorkerId){
+        if(result?.caseWorkerId === user?.referringAgent){
+          socket.emit("send noti to caseworker", {
+            userId: result?.userId,
+            applicationId: result?._id,
+            phase: 1,
+            phaseSubmittedByClient: result.phaseSubmittedByClient,
+            caseWorkerId: result?.caseWorkerId,
+          });
+        }
+      }
+        setTimeout(() => {
+          navigate("/filldata");
+        }, 3500);
     };
 
     const handleRemove = (value)=>{

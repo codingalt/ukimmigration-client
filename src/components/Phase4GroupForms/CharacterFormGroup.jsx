@@ -12,17 +12,18 @@ import SelectCountry from "../SelectCountry";
 import SelectState from "../SelectState";
 import { useNavigate } from "react-router-dom";
 import MainContext from "../Context/MainContext";
+import { usePostGroupCharacterMutation } from "../../services/api/companyClient";
 import { useSelector } from "react-redux";
 
-const CharacterForm = ({ data, setActiveTab, initialValues, refetch }) => {
+const CharacterFormGroup = ({ data, setActiveTab, initialValues, refetch }) => {
+    const { user } = useSelector((state) => state.user);
   const application = data?.application;
-  const { user } = useSelector((state) => state.user);
   console.log("Character Phase 4", initialValues);
   const navigate = useNavigate();
     const { socket } = useContext(MainContext);
 
   // const [postPhase4, res] = usePostPhase4Mutation();
-  const [postCharacter, res] = usePostCharacterMutation();
+  const [postGroupCharacter, res] = usePostGroupCharacterMutation();
   const { isLoading, isSuccess, error } = res;
 
   const [everChargedWithCriminalOffence, setEverChargedWithCriminalOffence] =
@@ -51,7 +52,7 @@ const CharacterForm = ({ data, setActiveTab, initialValues, refetch }) => {
         phase: 4,
       });
       setTimeout(() => {
-        navigate("/phase4/data");
+        navigate("/phase4/group/data");
       }, 1700);
     }
   }, [isSuccess]);
@@ -63,10 +64,12 @@ const CharacterForm = ({ data, setActiveTab, initialValues, refetch }) => {
   }, [error]);
 
   const handleSubmitData = async (values) => {
-    const {data: response} = await postCharacter({ data: values.phase4.character, applicationId: application?._id });
-    console.log("submitted Character", values.phase4);
+    const {data: response} = await postGroupCharacter({
+      data: values.phase4.character,
+      applicationId: application?._id,
+    });
 
-    if(response.success){
+    if (response.success) {
       if (response?.application?.caseWorkerId) {
         if (response?.application?.caseWorkerId === user?.referringAgent) {
           socket.emit("send noti to caseworker", {
@@ -79,6 +82,7 @@ const CharacterForm = ({ data, setActiveTab, initialValues, refetch }) => {
         }
       }
     }
+    console.log("submitted Character", values.phase4);
   };
 
   const handleBackClick = () => {
@@ -389,4 +393,4 @@ const CharacterForm = ({ data, setActiveTab, initialValues, refetch }) => {
   );
 };
 
-export default CharacterForm
+export default CharacterFormGroup

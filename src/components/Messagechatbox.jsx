@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import Logo2 from '../Assets/Ukimmigration-logo.png';
 import bellicon2 from "../Assets/bell-icon-svg.svg"
 import profileimg from "../Assets/profile-img-svg.svg"
@@ -13,7 +13,12 @@ import adminprofile from "../Assets/admin-profile-img.png"
 import profile from "../Assets/profile-img-svg.svg"
 import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome CSS
 import { useNavigate } from 'react-router-dom';
-import { useGetUserChatsQuery, useGetUserMessagesQuery, useSendMessageMutation } from '../services/api/chatApi';
+import {
+  useGetUserChatsQuery,
+  useGetUserMessagesQuery,
+  useSendMessageMutation,
+  useReadMessagesByChatMutation,
+} from "../services/api/chatApi";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
 import ScrollableFeed from "react-scrollable-feed";
@@ -23,10 +28,13 @@ import pdfimg from "../Assets/pdf-img.png"
 import downloadicon from "../Assets/downloadicon.svg";
 import Navbar from './Navbar';
 import InputEmoji from "react-input-emoji";
+import { useLocation } from "react-router-dom";
 
 var socket;
 
 const Message = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
   const [isNotificationBoxVisible, setIsNotificationBoxVisible] = useState(false);
   const [isSettingsBoxVisible, setIsSettingsBoxVisible] = useState(false);
   const notificationRef = useRef(null);
@@ -46,18 +54,22 @@ const Message = () => {
     socket.on("connected", () => setSocketConnected(true));
   }, []);
 
+
   const navigate = useNavigate();
   const {data, isLoading} = useGetUserChatsQuery();
-  console.log(data);
+  console.log("chat",data?.chats[0]);
   const chatId = data?.chats[0]?._id;
   const applicationId = data?.chats[0]?.applicationId;
+
+  const [readMessagesByChat, res] = useReadMessagesByChatMutation();
+  const { refetch: refetchReadMsgs, isSuccess: isSuccessMsgRead } = res;
 
   // get messages 
   const {
     data: messageData,
     isLoading: loading,
     refetch,
-  } =  useGetUserMessagesQuery(chatId);
+  } =  useGetUserMessagesQuery(chatId,{refetchOnMountOrArgChange: true});
 
   const [sendMessage, sendMsgRes] = useSendMessageMutation();
   const {isLoading: isLoadingSend} = sendMsgRes;
@@ -80,7 +92,7 @@ const Message = () => {
       const { data } = await sendMessage(formData);
       console.log(data?.result);
       socket.emit("new message", data?.result);
-      // setMessages([...messages, data]);
+      setMessages([...messages, data?.result?.result]);
       setFiles([]);
     }
   };
@@ -116,37 +128,15 @@ const Message = () => {
     setNewMessage(newMessage);
   };
 
-// useEffect(() => {
-//   socket.on("message received", async (newMessageReceived) => {
-//     if (newMessageReceived) {
-//       setMessages((prevMessages) => [
-//         ...prevMessages,
-//         newMessageReceived?.result,
-//       ]);
-//     }
-//   });
-// }, []);
-
-// useEffect(() => {
-//   socket.on("message received", async (newMessageReceived) => {
-//     if (newMessageReceived) {
-//       const newMessage = newMessageReceived.result;
-//       console.log("message received client side");
-//       if (!messages.some((message) => message === newMessage)) {
-//         setMessages((prevMessages) => [...prevMessages, newMessage]);
-//         setReceiveMessage(newMessageReceived);
-//       }
-//     }
-//   });
-// }, [receiveMessage]);
+useMemo(()=>{
+  if(chatId){
+    readMessagesByChat(chatId);
+  }
+},[]);
 
 useEffect(() => {
-  socket.on("message received", async (newMessageReceived) => {
-    // Give Notification
-    if (newMessageReceived) {
-     !loading && refetch();
-      // await sendNotification({ receiverIds: [selectedChat?._id], title: userName, content: 'You have a new message', data: {test: 'test'}})
-    }
+  socket?.on("message received", async (newMessageReceived) => { 
+    setMessages([...messages, newMessageReceived.result]);
   });
 
 });
@@ -165,7 +155,7 @@ useEffect(() => {
         <button
           type="submit"
           className="back-button-chat"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(-1, { state: { from: currentPath } })}
         >
           back
         </button>
@@ -176,20 +166,36 @@ useEffect(() => {
               <div className="row">
                 <section className="chat-2">
                   <div className="header-chat-2">
-                    <img
-                      style={{
-                        width: "2.6rem",
-                        height: "2.6rem",
-                        borderRadius: "50%",
-                      }}
-                      src={
-                        user?.profilePic
-                          ? `${import.meta.env.VITE_IMG_URI}${user?.profilePic}`
-                          : userDefault
-                      }
-                      alt=""
-                      className="Message-profile-img-2"
-                    />
+                    {user?.googleId ? (
+                      <img
+                        style={{
+                          width: "2.6rem",
+                          height: "2.6rem",
+                          borderRadius: "50%",
+                        }}
+                        src={user?.profilePic ? user?.profilePic : userDefault}
+                        alt=""
+                        className="Message-profile-img-2"
+                      />
+                    ) : (
+                      <img
+                        style={{
+                          width: "2.6rem",
+                          height: "2.6rem",
+                          borderRadius: "50%",
+                        }}
+                        src={
+                          user?.profilePic
+                            ? `${import.meta.env.VITE_IMG_URI}${
+                                user?.profilePic
+                              }`
+                            : userDefault
+                        }
+                        alt=""
+                        className="Message-profile-img-2"
+                      />
+                    )}
+
                     <p className="name">{user?.name}</p>
                     <p className="Gmail-text-2">{user?.email}</p>
                     <p className="Date-time-text-2"></p>
@@ -206,22 +212,40 @@ useEffect(() => {
                             key={item._id}
                           >
                             <div className="photo-2">
-                              <img
-                                style={{
-                                  borderRadius: "50%",
-                                  width: "2rem",
-                                  height: "2rem",
-                                }}
-                                src={
-                                  isUserMessage && user?.profilePic
-                                    ? `${import.meta.env.VITE_IMG_URI}${
-                                        user?.profilePic
-                                      }`
-                                    : adminprofile
-                                }
-                                alt=""
-                                className="Second-profile-img-2"
-                              />
+                              {user?.googleId ? (
+                                <img
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "2rem",
+                                    height: "2rem",
+                                  }}
+                                  src={
+                                    isUserMessage && user?.profilePic
+                                      ? user?.profilePic
+                                      : adminprofile
+                                  }
+                                  alt=""
+                                  className="Second-profile-img-2"
+                                />
+                              ) : (
+                                <img
+                                  style={{
+                                    borderRadius: "50%",
+                                    width: "2rem",
+                                    height: "2rem",
+                                  }}
+                                  src={
+                                    isUserMessage && user?.profilePic
+                                      ? `${import.meta.env.VITE_IMG_URI}${
+                                          user?.profilePic
+                                        }`
+                                      : adminprofile
+                                  }
+                                  alt=""
+                                  className="Second-profile-img-2"
+                                />
+                              )}
+
                               <p className="Second-profile-name">
                                 {isUserMessage ? user.name : "Admin"}
                               </p>
@@ -267,6 +291,7 @@ useEffect(() => {
                                             import.meta.env.VITE_IMG_URI
                                           }${file}`}
                                           download
+                                          target="_blank"
                                         >
                                           <img
                                             src={downloadicon}

@@ -56,20 +56,42 @@ const Navbar = () => {
           className="bell-icon-notification"
           onClick={toggleNotificationBox}
         />
-        <img
-          style={{
-            width: "2.6rem",
-            height: "2.6rem",
-            borderRadius: "50%",
-            cursor: "pointer",
-          }}
-          src={
-            profilePic ? import.meta.env.VITE_IMG_URI + profilePic : userDefault
-          }
-          onClick={toggleSettingsBox}
-          alt=""
-          className="profile-img"
-        />
+        {user?.googleId ? (
+          <img
+            style={{
+              width: "2.6rem",
+              height: "2.6rem",
+              borderRadius: "50%",
+              cursor: "pointer",
+            }}
+            src={
+              profilePic
+                ? profilePic
+                : userDefault
+            }
+            onClick={toggleSettingsBox}
+            alt=""
+            className="profile-img"
+          />
+        ) : (
+          <img
+            style={{
+              width: "2.6rem",
+              height: "2.6rem",
+              borderRadius: "50%",
+              cursor: "pointer",
+            }}
+            src={
+              profilePic
+                ? import.meta.env.VITE_IMG_URI + profilePic
+                : userDefault
+            }
+            onClick={toggleSettingsBox}
+            alt=""
+            className="profile-img"
+          />
+        )}
+
         <p
           style={{ cursor: "pointer" }}
           className="Jhon-profile-text"
