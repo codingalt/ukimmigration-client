@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo, useContext } from "react";
 import "../style/forgetpassword.css";
 import "../style/Phase1.css";
 import Logo2 from "../Assets/Ukimmigration-logo.png";
@@ -10,8 +10,13 @@ import NotificationBox from "./Notification";
 import SettingBox from "./Settingbox";
 import { useSelector } from "react-redux";
 import userDefault from "../Assets/user-default.png";
+import { IoNotificationsOutline } from "react-icons/io5";
+import { MdOutlineSettings } from "react-icons/md";
+import { useGetClientNotificationQuery, useReadNotificationClientMutation } from "../services/api/userApi";
+import MainContext from "./Context/MainContext";
 
 const Navbar = () => {
+  const { socket } = useContext(MainContext);
     const [isNotificationBoxVisible, setIsNotificationBoxVisible] =
       useState(false);
     const [isSettingsBoxVisible, setIsSettingsBoxVisible] = useState(false);
@@ -19,6 +24,45 @@ const Navbar = () => {
     const settingsRef = useRef(null);
     const { user } = useSelector((state) => state.user);
     const { name, profilePic } = user? user : "";
+    const [received, setReceived] = useState(null);
+    const [count, setCount] = useState();
+    const [readNotificationClient,resp] = useReadNotificationClientMutation();
+    const {isSuccess} = resp;
+  const { data, refetch, isLoading, isFetching } =
+    useGetClientNotificationQuery(null, { refetchOnMountOrArgChange: true });
+
+    useEffect(() => {
+      socket?.on("phase notification received", (phaseNoti) => {
+        setReceived(phaseNoti);
+        console.log("phase notification received---- Navbar", phaseNoti);
+      });
+    }, [received]);
+
+    useEffect(() => {
+      if (received) {
+        refetch();
+      }
+    }, [received]);
+
+    useEffect(()=>{
+      if(isSuccess){
+        refetch();
+      }
+    },[isSuccess]);
+
+    useEffect(() => {
+      if (data) {
+        let countVal = 0;
+        data?.notifications?.map((item) => {
+          if (item.status === 0) {
+            countVal = countVal + 1;
+          }
+        });
+        setCount(countVal);
+      }
+    }, [data]);
+
+
         useEffect(() => {
           const handleClickOutside = (event) => {
             if (
@@ -39,23 +83,34 @@ const Navbar = () => {
 
         const toggleNotificationBox = () => {
           setIsNotificationBoxVisible(!isNotificationBoxVisible);
+          setTimeout(() => {
+            if(count > 0){
+              readNotificationClient();
+            }
+          }, 1000);
         };
 
         const toggleSettingsBox = () => {
           setIsSettingsBoxVisible(!isSettingsBoxVisible);
         };
+
   return (
     <div className="Header-topbar">
       <div className="left-side-header">
         <img src={Logo2} alt="" />
       </div>
       <div className="right-side-header">
-        <img
-          src={bellicon2}
-          alt=""
+        <IoNotificationsOutline
           className="bell-icon-notification"
           onClick={toggleNotificationBox}
+          style={{ fontSize: "1.7rem", color: "#000", marginRight: "10px" }}
         />
+        {count > 0 ? (
+          <div className="icon-badge-noti">
+            <span></span>
+          </div>
+        ) : null}
+
         {user?.googleId ? (
           <img
             style={{
@@ -64,11 +119,7 @@ const Navbar = () => {
               borderRadius: "50%",
               cursor: "pointer",
             }}
-            src={
-              profilePic
-                ? profilePic
-                : userDefault
-            }
+            src={profilePic ? profilePic : userDefault}
             onClick={toggleSettingsBox}
             alt=""
             className="profile-img"
@@ -92,22 +143,34 @@ const Navbar = () => {
           />
         )}
 
-        <p
-          style={{ cursor: "pointer" }}
-          className="Jhon-profile-text"
+        <div
           onClick={toggleSettingsBox}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: "60px",
+            gap: "8px",
+            cursor:"pointer"
+          }}
         >
-          {name}
-        </p>
-        {/* <p className="Admin-text">Admin</p> */}
-        <div ref={settingsRef} onClick={toggleSettingsBox}>
-          <img
-            src={dropdownicon}
-            alt=""
-            className="dropdown"
+          <p
+            style={{ cursor: "pointer" }}
+            className="Jhon-profile-text"
             onClick={toggleSettingsBox}
-          />
+          >
+            {name?.length > 15 ? `${name?.slice(0, 15)}..` : name}
+          </p>
+          <div ref={settingsRef} onClick={toggleSettingsBox}>
+            <img
+              src={dropdownicon}
+              alt=""
+              onClick={toggleSettingsBox}
+              style={{ width: "13px", marginTop: "18px" }}
+            />
+          </div>
         </div>
+
+        {/* <p className="Admin-text">Admin</p> */}
       </div>
 
       {/* Render NotificationBox conditionally */}

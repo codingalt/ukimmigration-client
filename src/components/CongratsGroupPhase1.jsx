@@ -9,7 +9,7 @@ const CongratsGroupPhase1 = () => {
         <div className="popoup">
           <img src={congrats} alt="" className="cross-img" />
           <p className="Confermation-text-2">Congratulations!</p>
-          <p className="form-submited-text">
+          <p className="form-submited-text" style={{textAlign:"center",maxWidth:"85%",marginLeft:"auto",marginRight:"auto",marginTop:"2.5rem"}}>
             Your Application is now with a caseworker and we will revert within
             48 hours.{" "}
           </p>

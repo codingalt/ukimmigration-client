@@ -7,8 +7,21 @@
     text-align: left;
     margin-top: 15px;
     padding: 6px;
-    
 }
+
+.icon-badge-noti{
+  position: absolute;
+  left: 1.8rem;
+  top: .83rem;
+  width: .79rem;
+  height: .79rem;
+  border-radius: 50%;
+  background-color: #5D982E;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
 
 .Container-forgetpassword-phase1{
   background-color: #f7f7f7;
@@ -59,10 +72,10 @@
 }
 
 .right-side-header{
-  
   margin-left: 0;
     display: flex;
     margin-top: 0.5rem;
+    position: relative;
 }
 
 .left-side-forget-password-2{
@@ -123,7 +136,7 @@
   font-family: Poppins;
   font-size: 12px;
   font-weight: 500;
-  line-height: 18px;
+  line-height: 25px;
   letter-spacing: 0em;
   text-align: left;
   margin-left: 10px;

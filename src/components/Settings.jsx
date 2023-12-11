@@ -191,22 +191,42 @@ const Settings = () => {
                     onChange={(event) => openImage(event, setFieldValue)}
                     style={{ display: "none" }}
                   />
-                  <img
-                    src={
-                      image
-                        ? image.image
-                        : profilePic
-                        ? `${import.meta.env.VITE_IMG_URI + profilePic}`
-                        : settingprofileimg
-                    }
-                    alt=""
-                    className="Profile-img"
-                    style={{
-                      width: "5rem",
-                      borderRadius: "50%",
-                      height: "5rem",
-                    }}
-                  />
+                  {user?.googleId ? (
+                    <img
+                      src={
+                        image
+                          ? image.image
+                          : profilePic
+                          ? profilePic
+                          : settingprofileimg
+                      }
+                      alt=""
+                      className="Profile-img"
+                      style={{
+                        width: "5rem",
+                        borderRadius: "50%",
+                        height: "5rem",
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={
+                        image
+                          ? image.image
+                          : profilePic
+                          ? `${import.meta.env.VITE_IMG_URI + profilePic}`
+                          : settingprofileimg
+                      }
+                      alt=""
+                      className="Profile-img"
+                      style={{
+                        width: "5rem",
+                        borderRadius: "50%",
+                        height: "5rem",
+                      }}
+                    />
+                  )}
+
                   <p className="uploading-text">
                     {imageName ? image && imageName : "Click to upload"}
                   </p>

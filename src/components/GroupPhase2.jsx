@@ -167,7 +167,7 @@ const GroupPhase2 = () => {
 
         setTimeout(() => {
           navigate("/group/filldata");
-        }, 3500);
+        }, 4000);
       }
     } catch (error) {
       console.error(error);
@@ -203,17 +203,16 @@ const GroupPhase2 = () => {
   }, []);
 
   useEffect(() => {
-    if (application) {
+    if (application && !isSuccess) {
       if (
         application.requestedPhase === 2 &&
         application.phaseSubmittedByClient === 1
       ) {
         setIsAllowed(true);
-      } else if (
-        application.phase === 4 &&
-        application.phaseStatus === "approved"
-      ) {
+      } else if (application.phase === 4 && application.phaseStatus === "approved") {
         navigate("/group/phase4/data");
+      } else if (application?.phase2?.status === "rejected") {
+        setIsAllowed(true);
       } else {
         setIsAllowed(false);
         navigate("/group/filldata");

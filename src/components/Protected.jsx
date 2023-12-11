@@ -49,6 +49,7 @@ const Protected = ({ Component }) => {
       setShow(true);
     }
   }, [data, isLoading, isSuccess]);
+  
   return (
     show && (
       <MainContext.Provider value={{socket}}>

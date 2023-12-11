@@ -227,8 +227,8 @@ const Signup = () => {
                   />
 
                   <Field
-                    placeholder="Referring Agent Email Address"
-                    type="email"
+                    placeholder="Referring Agent ID"
+                    type="text"
                     id="referringAgent"
                     name="referringAgent"
                     className={
@@ -242,18 +242,6 @@ const Signup = () => {
                     component="div"
                     className="error"
                   />
-
-                  {/* <div
-                    className="g-recaptcha"
-                    data-sitekey="6LfBUXkoAAAAAGGeIexiJn7fLlRuOOUQn5Ln9RGv"
-                    data-callback={setRecaptchaToken}
-                  ></div> */}
-
-                  {/* <ReCAPTCHA
-                    sitekey={import.meta.env.VITE_SITE_KEY}
-                    onChange={onChange}
-                    style={{ marginTop: "1.6rem", marginLeft: "3.5rem" }}
-                  /> */}
 
                   <div
                     id="recaptcha-container"

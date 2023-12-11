@@ -43,7 +43,7 @@ const AuthorityToAct = () => {
     <div className="Container-forgetpassword-phase1">
       <Navbar />
       <div className="Forgetpassword-sub-2">
-        <p className="confirmation-text-2">Terms*</p>
+        <p className="confirmation-text-2-group">Terms*</p>
 
         <div className="Agreement-All">
           {data?.application?.phase2?.isTerms && (
@@ -75,7 +75,7 @@ const AuthorityToAct = () => {
               className={`link-hover-effect ${
                 activeLink === "/authoritytoallow" ? "link-active" : ""
               }`}
-              style={{ width: "7rem" }}
+              style={{ width: "8rem" }}
             >
               <span>Authority to Allow</span>
             </NavLink>
@@ -187,7 +187,7 @@ const AuthorityToAct = () => {
           including any terms and conditions on any of customer's documents or
           purchase orders.
         </div>
-        <div className="checkbox">
+        <div className="checkbox-2">
           <p className="ist-check">
             <input
               required

@@ -53,6 +53,8 @@ const Agreement = () => {
           application.phaseSubmittedByClient === 2
         ) {
           setIsAllowed(true);
+        } else if (application?.phase3?.status === "rejected") {
+          setIsAllowed(true);
         } else {
           setIsAllowed(false);
           navigate("/filldata");

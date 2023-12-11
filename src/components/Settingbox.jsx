@@ -8,6 +8,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import "../style/notifictaionbox.css"
 import { useLogoutMutation } from '../services/api/userApi';
 import { toastError } from './Toast';
+import { MdOutlineSettings } from "react-icons/md";
+import { FaChevronRight } from "react-icons/fa";
+import { IoMdLogOut } from "react-icons/io";
 
 const settingbox = () => {
   const [logout, result] = useLogoutMutation();
@@ -27,28 +30,44 @@ const settingbox = () => {
 
   const handleLogout = async()=>{
     await logout();
+    window.location.reload(false);
   }
   return (
     <div className="Setting-box">
       <div className="notification-header"></div>
       <div className="setting-list">
         <ul>
-          <li className="notification-item">
-            <div className="Notifiction-img">
-              <img src={setting} alt="" className="icons" />
-            </div>
-            <div className="right-side-setting">
-              <Link to="/setting">
+          <Link to="/setting">
+            <li className="notification-item">
+              <div className="Notifiction-img">
+                <MdOutlineSettings
+                  className="icons"
+                  style={{ fontSize: "1.9rem", color: "#000" }}
+                />
+                {/* <img src={setting} alt="" className="icons" /> */}
+              </div>
+              <div className="right-side-setting">
                 <p className="Setting-heading">
                   Setting{" "}
-                  <img src={nextpge} alt="" className="next-page-icon" />
+                  <FaChevronRight
+                    className="next-page-icon"
+                    style={{ fontSize: "2rem", color: "#000" }}
+                  />
+                  {/* <img src={nextpge} alt="" className="next-page-icon" /> */}
                 </p>
-              </Link>
-            </div>
-          </li>
-          <li className="notification-item" onClick={handleLogout} style={{cursor:"pointer"}}>
+              </div>
+            </li>
+          </Link>
+          <li
+            className="notification-item"
+            onClick={handleLogout}
+            style={{ cursor: "pointer" }}
+          >
             <div className="Notifiction-img">
-              <img src={Logout} alt="" className="icons" />
+              <IoMdLogOut
+                className="icons"
+                style={{ fontSize: "2rem", color: "#000" }}
+              />
             </div>
             <div className="right-side-setting">
               <p className="Setting-heading">Logout</p>

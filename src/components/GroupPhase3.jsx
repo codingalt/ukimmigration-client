@@ -150,11 +150,10 @@ const GroupPhase3 = () => {
         application.phaseSubmittedByClient === 2
       ) {
         setIsAllowed(true);
-      } else if (
-        application.phase === 4 &&
-        application.phaseStatus === "approved"
-      ) {
+      } else if (application.phase === 4 && application.phaseStatus === "approved") {
         navigate("/group/phase4/data");
+      } else if (application?.phase3?.status === "rejected") {
+        setIsAllowed(true);
       } else {
         setIsAllowed(false);
         navigate("/group/filldata");

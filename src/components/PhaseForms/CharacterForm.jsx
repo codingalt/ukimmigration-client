@@ -56,9 +56,11 @@ const CharacterForm = ({ data, setActiveTab, initialValues, refetch }) => {
     }
   }, [isSuccess]);
 
+  console.log(application?.phase4.isCompleted);
+
   useMemo(() => {
     if (error) {
-      toastError("Something went wrong");
+      toastError(error?.data?.message ? error?.data?.message : "Something went wrong");
     }
   }, [error]);
 

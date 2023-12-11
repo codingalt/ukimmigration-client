@@ -1083,17 +1083,20 @@ const Phase4Page = () => {
           <div className="Forgetpassword-sub-2">
             <div className="left-side-forget-password-2">
               <p className="Required-data-text">Required Data*</p>
-              <NavLink to="/filldata">
-                <button type="submit" className="back-button">
-                  back
-                </button>
-              </NavLink>
+              <button
+                onClick={() => navigate(-1)}
+                type="submit"
+                className="back-button"
+              >
+                back
+              </button>
 
               <div className="phase-4-all-phase">
                 <span
                   className={`link-hover-effect ${
                     activeTab === "/phase4" ? "link-active" : ""
                   }`}
+                  
                 >
                   <span>General</span>
                 </span>
@@ -1101,6 +1104,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/Accomodation" ? "link-active" : ""
                   }`}
+                  
                 >
                   <span>Accomodation</span>
                 </span>
@@ -1108,6 +1112,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/family" ? "link-active" : ""
                   }`}
+              
                 >
                   <span>Family</span>
                 </span>
@@ -1115,6 +1120,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/languageprofeciency" ? "link-active" : ""
                   }`}
+               
                 >
                   <span>Language Proficiency</span>
                 </span>
@@ -1122,6 +1128,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/education" ? "link-active" : ""
                   }`}
+                 
                 >
                   <span>Education</span>
                 </span>
@@ -1129,6 +1136,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/employement" ? "link-active" : ""
                   }`}
+           
                 >
                   <span>Employment</span>
                 </span>
@@ -1136,6 +1144,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/maintenance" ? "link-active" : ""
                   }`}
+              
                 >
                   <span>Maintenance</span>
                 </span>
@@ -1143,6 +1152,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/travel" ? "link-active" : ""
                   }`}
+                  
                 >
                   <span>Travel</span>
                 </span>
@@ -1150,6 +1160,7 @@ const Phase4Page = () => {
                   className={`link-hover-effect ${
                     activeTab === "/character" ? "link-active" : ""
                   }`}
+               
                 >
                   <span>Character</span>
                 </span>

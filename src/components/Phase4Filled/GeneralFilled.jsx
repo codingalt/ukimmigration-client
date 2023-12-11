@@ -10,6 +10,8 @@ import { Fade } from "react-awesome-reveal";
 import { useSelector } from 'react-redux';
 import MainContext from '../Context/MainContext';
 import { useGetUserChatsQuery, useGetUserMessagesQuery, useReadMessagesByChatMutation } from '../../services/api/chatApi';
+import RejectpopupGroup from '../RejectPopupGroup';
+import Rejectpopup from '../Rejectpopup';
 
 const GeneralFilled = ({data,application}) => {
   const location = useLocation();
@@ -19,6 +21,8 @@ const GeneralFilled = ({data,application}) => {
   const [count, setCount] = useState();
   const [chatId, setChatId] = useState();
   const [messages, setMessages] = useState([]);
+  const [isReject, setIsReject] = useState();
+  const [companyId, setCompanyId] = useState();
 
   const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
@@ -77,8 +81,20 @@ useEffect(() => {
       }
     };
 
+    const handleRejectClick = () => {
+      if(application.companyId){
+        setCompanyId(true);
+      }else{
+        setCompanyId(true);
+      }
+      setIsReject(true);
+    };
+
   return (
     <div className="fill-data-border-phase4">
+      {companyId
+        ? isReject && <RejectpopupGroup show={isReject} setShow={setIsReject} />
+        : isReject && <Rejectpopup show={isReject} setShow={setIsReject} />}
       <button
         type="button"
         onClick={exportPDFWithComponent}
@@ -416,6 +432,11 @@ useEffect(() => {
 
       <div className="button-container-2">
         <button
+          onClick={() =>
+            application?.applicationStatus === "rejected"
+              ? handleRejectClick()
+              : null
+          }
           type="button"
           className="case-approved-option"
           style={
@@ -438,7 +459,7 @@ useEffect(() => {
             application?.phase === 4 &&
             application?.phaseStatus === "approved" &&
             "Case is been prepared for submission to authorities."}
-          {application?.phase < 4 &&
+          {application?.phase <= 4 &&
             application?.applicationStatus != "rejected" &&
             "Case is under Final Review"}
           {application?.applicationStatus === "rejected" &&
@@ -446,7 +467,7 @@ useEffect(() => {
         </button>
 
         <NavLink to="/message" style={{ position: "relative" }}>
-          {count && count > 0 && (
+          {chat && count > 0 && (
             <span
               style={{
                 position: "absolute",

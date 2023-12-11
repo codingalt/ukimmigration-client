@@ -29,6 +29,7 @@ import downloadicon from "../Assets/downloadicon.svg";
 import Navbar from './Navbar';
 import InputEmoji from "react-input-emoji";
 import { useLocation } from "react-router-dom";
+import Messageprofileimg from "../Assets/billing-table-img.png";
 
 var socket;
 
@@ -173,7 +174,11 @@ useEffect(() => {
                           height: "2.6rem",
                           borderRadius: "50%",
                         }}
-                        src={user?.profilePic ? user?.profilePic : userDefault}
+                        src={
+                          user?.profilePic
+                            ? user?.profilePic
+                            : Messageprofileimg
+                        }
                         alt=""
                         className="Message-profile-img-2"
                       />
@@ -189,7 +194,7 @@ useEffect(() => {
                             ? `${import.meta.env.VITE_IMG_URI}${
                                 user?.profilePic
                               }`
-                            : userDefault
+                            : Messageprofileimg
                         }
                         alt=""
                         className="Message-profile-img-2"
@@ -222,7 +227,9 @@ useEffect(() => {
                                   src={
                                     isUserMessage && user?.profilePic
                                       ? user?.profilePic
-                                      : adminprofile
+                                      : !isUserMessage
+                                      ? adminprofile
+                                      : Messageprofileimg
                                   }
                                   alt=""
                                   className="Second-profile-img-2"
@@ -239,7 +246,9 @@ useEffect(() => {
                                       ? `${import.meta.env.VITE_IMG_URI}${
                                           user?.profilePic
                                         }`
-                                      : adminprofile
+                                      : !isUserMessage
+                                      ? adminprofile
+                                      : Messageprofileimg
                                   }
                                   alt=""
                                   className="Second-profile-img-2"
@@ -262,7 +271,7 @@ useEffect(() => {
                               <p
                                 className="Second-profile-message"
                                 style={
-                                  item?.content?.includes("Apologies")
+                                  item?.isPhaseMessage
                                     ? { color: "red" }
                                     : item?.isPhaseApprovedMessage
                                     ? {

@@ -12,12 +12,13 @@ import Loader from './Loader';
 import { groupPhase1Schema } from '../utils/ValidationSchema';
 import CongratsGroupPhase1 from './CongratsGroupPhase1';
 import MainContext from './Context/MainContext';
+import { useSelector } from 'react-redux';
 
 const GroupPhase1 = () => {
+    const { user, applicationType } = useSelector((state) => state.user);
     const navigate = useNavigate();
     const [show,setShow] = useState();
     const { socket } = useContext(MainContext);
-    // const {data} = useGetGroupClientAppByIdQuery(applicationId);
     const { data } =
       useGetGroupClientAppByUserIdQuery(null, {
         refetchOnMountOrArgChange: true,
@@ -69,9 +70,23 @@ const GroupPhase1 = () => {
           phaseSubmittedByClient: 1,
           result: resp,
         });
+
+        const { result } = resp;
+
+        if (result?.caseWorkerId) {
+          if (result?.caseWorkerId === user?.referringAgent) {
+            socket.emit("send noti to caseworker", {
+              userId: result?.userId,
+              applicationId: result?._id,
+              phase: 1,
+              phaseSubmittedByClient: result.phaseSubmittedByClient,
+              caseWorkerId: result?.caseWorkerId,
+            });
+          }
+        }
         setTimeout(() => {
           navigate("/group/filldata");
-        }, 3500);
+        }, 7000);
       }
       resetForm({
         values: initialValues, 
@@ -79,11 +94,11 @@ const GroupPhase1 = () => {
     }
 
     useEffect(()=>{
-      if(data){
-        if(data?.application?.phaseSubmittedByClient === 1){
+      if (data && !isSuccess) {
+        if (data?.application?.phaseSubmittedByClient === 1) {
           setShow(false);
           navigate("/group/filldata");
-        }else{
+        } else {
           setShow(true);
         }
       }
@@ -92,15 +107,44 @@ const GroupPhase1 = () => {
   return (
     <>
       {isSuccess && <CongratsGroupPhase1 />}
+
       {show && (
         <div className="Container-forgetpassword-phase1">
           <Navbar />
           <div className="Forgetpassword-sub-2">
             <div className="left-side-forget-password-2">
-              <div className="Group-dataa-main-2">
+              <div
+                className="Group-dataa-main-2"
+                style={{ flexDirection: "column" }}
+              >
                 <p className="req-term-con-text">Company Details</p>
 
-                <div className="new-group-input-phase1">
+                <div className="com-phase1-row">
+                  <div className="com-left">
+                    <p>Company Name</p>
+                    <div className="com-border"></div>
+                    <p className="second-p">{company?.company?.name}</p>
+                  </div>
+                  <div className="com-right">
+                    <p>Company Email</p>
+                    <div className="com-border"></div>
+                    <p className="second-p">{company?.company?.email}</p>
+                  </div>
+                </div>
+                <div className="com-phase1-row">
+                  <div className="com-left">
+                    <p>Full Name</p>
+                    <div className="com-border"></div>
+                    <p className="second-p">{company?.company?.fullName}</p>
+                  </div>
+                  <div className="com-right">
+                    <p>Company Address</p>
+                    <div className="com-border"></div>
+                    <p className="second-p">{company?.company?.address}</p>
+                  </div>
+                </div>
+
+                {/* <div className="new-group-input-phase1">
                   <div className="company-name-group">
                     <p className="company-name">Company Name</p>
                     <div className="border-line-between"></div>
@@ -126,7 +170,7 @@ const GroupPhase1 = () => {
                     <div className="border-line-between"></div>
                     <p>{company?.company?.email}</p>
                   </div>
-                </div>
+                </div> */}
               </div>
               <p className="Required-data-text-Phase1">Required Data*</p>
 

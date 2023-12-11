@@ -25,6 +25,8 @@ import MainContext from "./Context/MainContext";
 import { useGetCompanyDetailsByIdQuery, useGetGroupClientAppByUserIdQuery } from "../services/api/companyClient";
 import { useSelector } from "react-redux";
 import { useGetUserChatsQuery, useGetUserMessagesQuery, useReadMessagesByChatMutation } from "../services/api/chatApi";
+import RejectpopupGroup from "./RejectPopupGroup";
+import Rejectpopup from "./Rejectpopup";
 
 const GroupFilledData = () => {
   const location = useLocation();
@@ -33,6 +35,8 @@ const GroupFilledData = () => {
   const [count, setCount] = useState();
   const [chatId, setChatId] = useState();
   const [messages, setMessages] = useState([]);
+  const [isReject, setIsReject] = useState();
+  const [companyId, setCompanyId] = useState();
 
   const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
@@ -133,8 +137,16 @@ const GroupFilledData = () => {
     }
   }, [received]);
 
+  const handleRejectClick = () => {
+    setIsReject(true);
+    setCompanyId(true);
+  };
+
   return (
     <div className="Container-forgetpassword-phase1">
+      {companyId
+        ? isReject && <RejectpopupGroup show={isReject} setShow={setIsReject} />
+        : isReject && <Rejectpopup show={isReject} setShow={setIsReject} />}
       <Navbar />
       <div className="Forgetpassword-sub-2" ref={targetRef}>
         <div className="fill-data-border">
@@ -156,36 +168,37 @@ const GroupFilledData = () => {
             ref={pdfRef}
             fileName={`${application?.phase1?.fullNameAsPassport}-${application?.caseId}`}
           >
-            <div className="Group-dataa-main">
+            <div
+              className="Group-dataa-main"
+              style={{ flexDirection: "column" }}
+            >
               <p className="req-term-con-text"> Company Details</p>
 
-              <div className="new-group-input">
-                <div className="company-name-group">
-                  <p className="company-name">Company Name</p>
-                  <div className="border-line-between"></div>
-                  <p>{company?.company?.name}</p>
+              <div className="com-phase1-row">
+                <div className="com-left">
+                  <p>Company Name</p>
+                  <div className="com-border"></div>
+                  <p className="second-p">{company?.company?.name}</p>
                 </div>
-
-                <div className="company-name-group-2">
-                  <p className="company-name">Company Email</p>
-                  <div className="border-line-between"></div>
-                  <p>{company?.company?.email}</p>
+                <div className="com-right">
+                  <p>Company Email</p>
+                  <div className="com-border"></div>
+                  <p className="second-p">{company?.company?.email}</p>
+                </div>
+              </div>
+              <div className="com-phase1-row">
+                <div className="com-left">
+                  <p>Full Name</p>
+                  <div className="com-border"></div>
+                  <p className="second-p">{company?.company?.fullName}</p>
+                </div>
+                <div className="com-right">
+                  <p>Company Address</p>
+                  <div className="com-border"></div>
+                  <p className="second-p">{company?.company?.address}</p>
                 </div>
               </div>
 
-              <div className="new-group-input-2">
-                <div className="company-name-group">
-                  <p className="company-name"> Full Name</p>
-                  <div className="border-line-between"></div>
-                  <p>{company?.company?.fullName}</p>
-                </div>
-
-                <div className="company-name-group-2">
-                  <p className="company-name">Company Address</p>
-                  <div className="border-line-between"></div>
-                  <p>{company?.company?.address}</p>
-                </div>
-              </div>
             </div>
 
             {/* Phase 1 */}
@@ -286,386 +299,31 @@ const GroupFilledData = () => {
               </div>
 
               {/* Phase 2  */}
-              {application?.phaseSubmittedByClient > 1 && (
-                <div
-                  className="Phase-2"
-                  style={{
-                    width: "1300px",
-                    // height: "700px",
-                  }}
-                >
-                  <p className="Form-data-heading">Form Phase (ii)</p>
-                  {application?.phase2?.passport && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">PASSPORT</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.passport
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.passport?.split("/Uploads/")}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.dependantPassport && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">DEPENDANT PASSPORT</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.dependantPassport
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.dependantPassport?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.utilityBill && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">UTILITY BILL</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.utilityBill
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.utilityBill?.split("/Uploads/")}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.brp && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">BRP</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.brp
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.brp?.split("/Uploads/")}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.previousVisaVignettes && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">PREVIOUS VISA VIGNETTES</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.previousVisaVignettes
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.previousVisaVignettes?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.refusalLetter && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">REFUSAL LETTER</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.refusalLetter
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.refusalLetter?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.educationCertificates && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">EDUCATION CERTIFICATES</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.educationCertificates
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.educationCertificates?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.englishLanguageCertificate && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">EGLISH LANGUAGE CERTIFICATES</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.englishLanguageCertificate
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.englishLanguageCertificate?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.marriageCertificate && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">MARRIAGE CERTIFICATE</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.marriageCertificate
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.marriageCertificate?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.bankStatements && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">BANK STATEMENTS</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                          }}
-                          href={`${import.meta.env.VITE_IMG_URI}${
-                            application?.phase2?.bankStatements
-                          }`}
-                          target="_blank"
-                        >
-                          {application?.phase2?.bankStatements?.split(
-                            "/Uploads/"
-                          )}{" "}
-                          <img src={PDfimg} alt="" />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-
-                  {application?.phase2?.other.length > 0 && (
-                    <div
-                      className="fill"
-                      style={{
-                        display: "flex",
-                        width: "1100px",
-                        alignItems: "center",
-                        gap: "12px",
-                      }}
-                    >
-                      <img src={star} alt="" className="star" />
-                      <p className="Name-title">OTHERS*</p>
-                      <div className="border-y"></div>
-                      <p className="Name-text">
-                        {application?.phase2?.other?.map((item) => (
+              {application?.phaseSubmittedByClient > 1 &&
+                application?.phase2?.status != "rejected" && (
+                  <div
+                    className="Phase-2"
+                    style={{
+                      width: "1300px",
+                      // height: "700px",
+                    }}
+                  >
+                    <p className="Form-data-heading">Form Phase (ii)</p>
+                    {application?.phase2?.passport && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">PASSPORT</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
                           <a
-                            key={item}
                             style={{
                               textDecoration: "underline",
                               cursor: "pointer",
@@ -673,19 +331,379 @@ const GroupFilledData = () => {
                               alignItems: "center",
                               gap: "18px",
                             }}
-                            href={`${import.meta.env.VITE_IMG_URI}${item}`}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.passport
+                            }`}
                             target="_blank"
                           >
-                            <span key={item}>{item?.split("/Uploads/")}</span>
-
+                            {application?.phase2?.passport?.split("/Uploads/")}{" "}
                             <img src={PDfimg} alt="" />
                           </a>
-                        ))}{" "}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.dependantPassport && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">DEPENDANT PASSPORT</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.dependantPassport
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.dependantPassport?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.utilityBill && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">UTILITY BILL</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.utilityBill
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.utilityBill?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.brp && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">BRP</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.brp
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.brp?.split("/Uploads/")}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.previousVisaVignettes && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">PREVIOUS VISA VIGNETTES</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.previousVisaVignettes
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.previousVisaVignettes?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.refusalLetter && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">REFUSAL LETTER</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.refusalLetter
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.refusalLetter?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.educationCertificates && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">EDUCATION CERTIFICATES</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.educationCertificates
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.educationCertificates?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.englishLanguageCertificate && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">
+                          EGLISH LANGUAGE CERTIFICATES
+                        </p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.englishLanguageCertificate
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.englishLanguageCertificate?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.marriageCertificate && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">MARRIAGE CERTIFICATE</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.marriageCertificate
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.marriageCertificate?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.bankStatements && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">BANK STATEMENTS</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          <a
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "18px",
+                            }}
+                            href={`${import.meta.env.VITE_IMG_URI}${
+                              application?.phase2?.bankStatements
+                            }`}
+                            target="_blank"
+                          >
+                            {application?.phase2?.bankStatements?.split(
+                              "/Uploads/"
+                            )}{" "}
+                            <img src={PDfimg} alt="" />
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {application?.phase2?.other.length > 0 && (
+                      <div
+                        className="fill"
+                        style={{
+                          display: "flex",
+                          width: "1100px",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <img src={star} alt="" className="star" />
+                        <p className="Name-title">OTHERS*</p>
+                        <div className="border-y"></div>
+                        <p className="Name-text">
+                          {application?.phase2?.other?.map((item) => (
+                            <a
+                              key={item}
+                              style={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "18px",
+                              }}
+                              href={`${import.meta.env.VITE_IMG_URI}${item}`}
+                              target="_blank"
+                            >
+                              <span key={item}>{item?.split("/Uploads/")}</span>
+
+                              <img src={PDfimg} alt="" />
+                            </a>
+                          ))}{" "}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
               {/* phase 3  */}
               {application?.phaseSubmittedByClient > 2 && (
@@ -764,6 +782,11 @@ const GroupFilledData = () => {
           <div className="button-container-2">
             <NavLink to="#">
               <button
+                onClick={() =>
+                  application?.applicationStatus === "rejected"
+                    ? handleRejectClick()
+                    : null
+                }
                 className="case-approved-option"
                 style={
                   application?.applicationStatus === "rejected"
@@ -786,7 +809,7 @@ const GroupFilledData = () => {
                   application?.phase === 4 &&
                   application?.phaseStatus === "approved" &&
                   "Case is been Prepared for Submission to Authorities."}
-                {application?.phase < 4 &&
+                {application?.phase <= 4 &&
                   application?.applicationStatus != "rejected" &&
                   "Case is under Final Review"}
                 {application?.applicationStatus === "rejected" &&

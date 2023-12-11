@@ -81,6 +81,13 @@ export const userApi = createApi({
       invalidatesTags: ["Users"],
     }),
 
+    readNotificationClient: builder.mutation({
+      query: () => ({
+        url: `api/notification/read/user`,
+        method: "PUT",
+      }),
+    }),
+
     updateUserData: builder.mutation({
       query: (formData) => ({
         url: `api/user/update`,
@@ -144,7 +151,6 @@ export const userApi = createApi({
 export const {
   useSignupUserMutation,
   useVerifyOtpMutation,
-  useGetUserQuery,
   useAuthQuery,
   useLoginpUserMutation,
   useVerifyEmailMutation,
@@ -157,5 +163,6 @@ export const {
   usePaymentIntentMutation,
   useVerifyCaptchaMutation,
   useGetClientNotificationQuery,
-  useGetPhaseNotificationQuery
+  useGetPhaseNotificationQuery,
+  useReadNotificationClientMutation
 } = userApi;

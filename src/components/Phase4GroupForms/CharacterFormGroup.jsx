@@ -59,11 +59,14 @@ const CharacterFormGroup = ({ data, setActiveTab, initialValues, refetch }) => {
 
   useMemo(() => {
     if (error) {
-      toastError("Something went wrong");
+      toastError(
+        error?.data?.message ? error?.data?.message : "Something went wrong"
+      );
     }
   }, [error]);
 
   const handleSubmitData = async (values) => {
+    
     const {data: response} = await postGroupCharacter({
       data: values.phase4.character,
       applicationId: application?._id,

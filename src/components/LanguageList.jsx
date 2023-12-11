@@ -9,7 +9,6 @@ function LanguageList({ name, className, onChange, prevValue, setFieldValue }) {
     axios
       .get("https://restcountries.com/v2/all")
       .then((response) => {
-        // Extract language data from the API response
         const languagesData = response?.data?.reduce((acc, country) => {
           return acc.concat(country.languages.map((lang) => lang.name));
         }, []);
@@ -27,7 +26,7 @@ function LanguageList({ name, className, onChange, prevValue, setFieldValue }) {
 
   return (
     <select
-      required
+      // required
       as="select"
       name={name}
       id={name}

@@ -163,7 +163,7 @@ const Phase2 = () => {
 
             setTimeout(() => {
               navigate("/filldata");
-            }, 3500);
+            }, 4000);
           }
           
         } catch (error) {
@@ -202,14 +202,19 @@ const Phase2 = () => {
 
 
     useEffect(()=>{
-      if(application){
-        if(application.requestedPhase === 2 && application.phaseSubmittedByClient === 1){
-          setIsAllowed(true)
+      if (application && !isSuccess) {
+        if (
+          application.requestedPhase === 2 &&
+          application.phaseSubmittedByClient === 1
+        ) {
+          setIsAllowed(true);
         } else if (
           application.phase === 4 &&
           application.phaseStatus === "approved"
         ) {
           navigate("/phase4/data");
+        } else if (application?.phase2?.status === "rejected"){
+          setIsAllowed(true);
         } else {
           setIsAllowed(false);
           navigate("/filldata");
