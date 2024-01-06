@@ -10,6 +10,13 @@
     overflow: auto;
   }
   
+ select{
+    border-right: 19px solid transparent !important;
+  }
+
+  input[type=date]::-webkit-calendar-picker-indicator {
+  margin-right: 18px;
+}
   
   h1,h2,h3,h4,h5,h6,p,span,a {
     padding:0;

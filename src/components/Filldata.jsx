@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, useMemo } from 'react';
-import Logo2 from '../Assets/Ukimmigration-logo.png';
+import Logo2 from "../Assets/Ukimmigration-logo.png";
 import bellicon2 from "../Assets/bell-icon-svg.svg"
 import profileimg from "../Assets/profile-img-svg.svg"
 import dropdownicon from "../Assets/dropdown-icon-svg.svg"
@@ -42,6 +42,7 @@ const Filldata = () => {
   const [chatClicked,setChatClicked] = useState(null);
   const [isReject, setIsReject] = useState();
   const [companyId, setCompanyId] = useState();
+  const [show, setShow] = useState(false);
 
   const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
@@ -50,7 +51,7 @@ const Filldata = () => {
     data: messageData,
     isLoading: loading,
     refetch: refetchMessages,
-  } = useGetUserMessagesQuery(chat?.chats[0]._id,{refetchOnMountOrArgChange: true});
+  } = useGetUserMessagesQuery(chat?.chats[0]?._id,{refetchOnMountOrArgChange: true});
 
   useEffect(() => {
     if (messageData) {
@@ -133,6 +134,13 @@ useEffect(()=>{
     setIsReject(true);
   }
 
+  const handlePdfDownload = ()=>{
+    setShow(true);
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
+  }
+
   return (
     <div className="Container-forgetpassword-phase1">
       {companyId
@@ -141,21 +149,14 @@ useEffect(()=>{
       <Navbar />
       <div className="Forgetpassword-sub-2" ref={targetRef}>
         <div className="fill-data-border">
-          <button
-            onClick={() => {
-              if (pdfRef.current) {
-                pdfRef.current.save();
-              }
-            }}
-            className="download-btn"
-          >
+          <button onClick={handlePdfDownload} className="download-btn">
             Download File
           </button>
 
           {/* Phase 1 */}
           <PDFExport
-            scale={0.8}
-            paperSize="A3"
+            // scale={0.8}
+            // paperSize="A2"
             margin="2cm"
             ref={pdfRef}
             fileName={`${application?.phase1?.name}-${application?.caseId}`}
@@ -168,6 +169,12 @@ useEffect(()=>{
                   // height: "1200px",
                 }}
               >
+                {show && (
+                  <div className="hidden-logo" style={{ marginBottom: "10px" }}>
+                    <img src={Logo2} alt="" />
+                  </div>
+                )}
+
                 <p className="Form-data-heading">Form Phase (i)</p>
                 <div
                   className="fill"

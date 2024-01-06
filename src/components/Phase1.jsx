@@ -19,6 +19,7 @@ import MainContext from './Context/MainContext';
 const Phase1 = () => {
 
     const { user,applicationType } = useSelector((state) => state.user);
+    const [isTempVisa, setIsTempVisa] = useState(false);
     const [permissionInCountryErr, setPermissionInCountryErr] = useState(true);
     const [speakEnglishErr, setSpeakEnglishErr] = useState(true);
     const [refusedVisaErr, setRefusedVisaErr] = useState(true);
@@ -45,6 +46,8 @@ const Phase1 = () => {
         country: "",
         sameResidence: true,
         permissionInCountry: "",
+        temporaryVisaDetails: "",
+        temporaryVisaValidUntill: "",
         speakEnglish: true,
         proficiency: "Beginner",
         otherLanguagesSpeak: languagesArr,
@@ -127,6 +130,18 @@ const Phase1 = () => {
       }
     }, [app]);
 
+    const handleTempVisa = (e, setFieldValue)=>{
+      if(e.target.value === "TemporaryVisa"){
+        setIsTempVisa(true);
+        setFieldValue("phase1.permissionInCountry", e.target.value);
+      }else{
+         setIsTempVisa(false);
+         setFieldValue("phase1.permissionInCountry", e.target.value);
+         setFieldValue("phase1.temporaryVisaDetails", "");
+         setFieldValue("phase1.temporaryVisaValidUntill", "");
+      }
+    }
+
     return (
       <>
         {isAllowed && (
@@ -141,7 +156,7 @@ const Phase1 = () => {
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
               >
-                {({ setFieldValue, errors, resetForm }) => (
+                {({ setFieldValue, errors, resetForm, values }) => (
                   <Form style={{ display: "flex", justifyContent: "center" }}>
                     <div className="left-side-forget-password-2">
                       <p className="Required-data-text">Required Data*</p>
@@ -291,6 +306,10 @@ const Phase1 = () => {
                                 id="phase1.permissionInCountry"
                                 name="phase1.permissionInCountry"
                                 className="phase-1-input-left-side"
+                                value={values.phase1.permissionInCountry}
+                                onChange={(e) =>
+                                  handleTempVisa(e, setFieldValue)
+                                }
                               >
                                 <option value="">
                                   Select Type of Permission
@@ -303,8 +322,42 @@ const Phase1 = () => {
                               </Field>
                             </>
                           )}
+                          {isTempVisa && (
+                            <>
+                              <div className="Date-input">
+                                <p className="phase-1-text-left-side">
+                                  Temporary Visa Details
+                                </p>
+                                <Field
+                                  required={isTempVisa}
+                                  type="text"
+                                  id="phase1.temporaryVisaDetails"
+                                  name="phase1.temporaryVisaDetails"
+                                  className="phase-1-input-left-side"
+                                  placeholder="Type Temporary Visa Details"
+                                />
+                              </div>
+                              <div className="Date-input">
+                                <p className="phase-1-text-left-side">
+                                  Valid Untill
+                                </p>
+                                <Field
+                                  required={isTempVisa}
+                                  type="date"
+                                  id="phase1.temporaryVisaValidUntill"
+                                  name="phase1.temporaryVisaValidUntill"
+                                  className="phase-1-input-left-side"
+                                />
+                              </div>
+                              <div className="Date-input" style={{visibility:"hidden"}}>
+                                <Field
+                                  type="text"
+                                  className="phase-1-input-left-side"
+                                />
+                              </div>
+                            </>
+                          )}
                         </div>
-                        {/* Nationality Input div ends  */}
                       </div>
                     </div>
 

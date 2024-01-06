@@ -3,7 +3,7 @@ import Logo2 from "../Assets/Ukimmigration-logo.png";
 import bellicon2 from "../Assets/bell-icon-svg.svg";
 import profileimg from "../Assets/profile-img-svg.svg";
 import dropdownicon from "../Assets/dropdown-icon-svg.svg";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import "../style/filldata.css";
 import star from "../Assets/Star-svg.svg";
 import NotificationBox from "./Notification";
@@ -29,6 +29,7 @@ import RejectpopupGroup from "./RejectPopupGroup";
 import Rejectpopup from "./Rejectpopup";
 
 const GroupFilledData = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const state = location.state;
   const { user } = useSelector((state) => state.user);
@@ -37,6 +38,7 @@ const GroupFilledData = () => {
   const [messages, setMessages] = useState([]);
   const [isReject, setIsReject] = useState();
   const [companyId, setCompanyId] = useState();
+  const [show, setShow] = useState(false);
 
   const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
@@ -122,8 +124,6 @@ const GroupFilledData = () => {
     { skip: !data?.application?.companyId }
   );
 
-  console.log(application);
-
   useEffect(() => {
     socket.on("phase notification received", (phaseNoti) => {
       setReceived(phaseNoti);
@@ -137,9 +137,27 @@ const GroupFilledData = () => {
     }
   }, [received]);
 
+  useEffect(()=>{
+      if (data) {
+        if (data?.application?.phaseSubmittedByClient > 3) {
+          setShow(false);
+          navigate("/phase4/group/data");
+        } else {
+          setShow(true);
+        }
+      }
+    },[data]);
+
   const handleRejectClick = () => {
     setIsReject(true);
     setCompanyId(true);
+  };
+
+  const handlePdfDownload = () => {
+    setShow(true);
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
   };
 
   return (
@@ -150,24 +168,22 @@ const GroupFilledData = () => {
       <Navbar />
       <div className="Forgetpassword-sub-2" ref={targetRef}>
         <div className="fill-data-border">
-          <button
-            onClick={() => {
-              if (pdfRef.current) {
-                pdfRef.current.save();
-              }
-            }}
-            className="download-btn"
-          >
+          <button onClick={handlePdfDownload} className="download-btn">
             Download File
           </button>
 
           <PDFExport
-            scale={0.8}
-            paperSize="A2"
+            // scale={0.8}
+            // paperSize="A2"
             margin="2cm"
             ref={pdfRef}
             fileName={`${application?.phase1?.fullNameAsPassport}-${application?.caseId}`}
           >
+            {show && (
+              <div className="hidden-logo" style={{ marginLeft:"31px",marginBottom:"-36px" }}>
+                <img src={Logo2} alt="" />
+              </div>
+            )}
             <div
               className="Group-dataa-main"
               style={{ flexDirection: "column" }}
@@ -198,7 +214,6 @@ const GroupFilledData = () => {
                   <p className="second-p">{company?.company?.address}</p>
                 </div>
               </div>
-
             </div>
 
             {/* Phase 1 */}

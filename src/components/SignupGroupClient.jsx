@@ -98,6 +98,7 @@ const SignupGroupClient = () => {
 
     console.log(data?.user);
     if (data?.success) {
+      localStorage.setItem("ukimmigration_token", data?.token);
       dispatch(setUserData({ data: data?.user }));
       navigate(`/group/otp/${applicationId}`);
     }
@@ -112,6 +113,7 @@ const SignupGroupClient = () => {
       });
       console.log(data);
       if (data.success) {
+        localStorage.setItem("ukimmigration_token", data?.token);
         setTimeout(() => {
           navigate(`/group/phase1`);
         }, 1000);

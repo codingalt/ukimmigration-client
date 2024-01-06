@@ -36,6 +36,7 @@
     border-bottom-left-radius: 110px;
     border-bottom-right-radius: 110px;
     text-align: center;
+    border-right: 26px solid transparent;
 }
 
 .confirmation-text{

@@ -6,33 +6,66 @@ import uni from "../Assets/universty-placement.svg";
 import imigrationmatter from "../Assets/imigartion-matters.svg";
 import others from "../Assets/others-img.svg";
 import { useGetApplicationByUserIdQuery } from "../services/api/applicationApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setApplicationTypeToSlice } from "../services/redux/userSlice";
 import { toastError } from "./Toast";
+import { useGetGroupClientAppByUserIdQuery } from "../services/api/companyClient";
 const CompanyScreen = () => {
+  const { user } = useSelector((state) => state.user);
   const { data, isLoading, error, isSuccess } =
     useGetApplicationByUserIdQuery();
+
+  const {
+    data: groupApp,
+    isLoading: isLoadingGroup,
+    isSuccess: isSuccessGroup,
+  } = useGetGroupClientAppByUserIdQuery(null, {
+    refetchOnMountOrArgChange: true,
+  });
+
   const [show, setShow] = useState(null);
   const [applicationType, setApplicationType] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log("application", data);
+
   useEffect(() => {
-    if (data && !data.application) {
-      setShow(true);
-    } else if (
-      data?.application?.phase === 4 &&
-      data?.application?.phaseStatus === "approved"
-    ) {
-      !isLoading && navigate("/phase4/data");
-    } else if (data?.application?.phaseSubmittedByClient >= 1) {
-      setShow(false);
-      !isLoading && navigate("/filldata");
-    } else if (data?.application?.phaseSubmittedByClient === 0) {
-      setShow(false);
-      !isLoading && navigate("/phase1");
+    if (user) {
+      if (user?.isGroupClient) {
+        // Group client checks
+        if (groupApp && !groupApp.application) {
+          setShow(true);
+        } else if (
+          groupApp?.application?.phase === 4 &&
+          groupApp?.application?.phaseStatus === "approved"
+        ) {
+          !isLoadingGroup && navigate("/phase4/group/data");
+        } else if (groupApp?.application?.phaseSubmittedByClient >= 1) {
+          setShow(false);
+          !isLoadingGroup && navigate("/group/filldata");
+        } else if (groupApp?.application?.phaseSubmittedByClient === 0) {
+          setShow(false);
+          !isLoadingGroup && navigate("/group/phase1");
+        }
+        return;
+      } else {
+        // Single Client checks
+        if (data && !data.application) {
+          setShow(true);
+        } else if (
+          data?.application?.phase === 4 &&
+          data?.application?.phaseStatus === "approved"
+        ) {
+          !isLoading && navigate("/phase4/data");
+        } else if (data?.application?.phaseSubmittedByClient >= 1) {
+          setShow(false);
+          !isLoading && navigate("/filldata");
+        } else if (data?.application?.phaseSubmittedByClient === 0) {
+          setShow(false);
+          !isLoading && navigate("/phase1");
+        }
+      }
     }
-  }, [data, isLoading, isSuccess]);
+  }, [data, isLoading, isSuccess, isLoadingGroup, isSuccessGroup, user]);
 
   const handleClick = (value) => {
     setApplicationType(value);
@@ -40,13 +73,13 @@ const CompanyScreen = () => {
     localStorage.setItem("phase1-applicationType", value);
   };
 
-  const handleNext = ()=>{
-    if(applicationType === ""){
+  const handleNext = () => {
+    if (applicationType === "") {
       toastError("Please Select Service Type");
       return;
     }
     navigate("/phase1");
-  }
+  };
 
   const selectRef = useRef();
 
@@ -111,16 +144,19 @@ const CompanyScreen = () => {
               </div>
 
               <div className="profile-box-1">
-                <div className="sponser-li" onClick={()=> toastError("Select other from dropdown below")}>
+                <div
+                  className="sponser-li"
+                  onClick={() => toastError("Select other from dropdown below")}
+                >
                   <img src={others} alt="" className="company-imgss-1" />
                 </div>
 
                 <select
-                 ref={selectRef}
+                  ref={selectRef}
                   className="title-space-option"
                   onChange={(e) => handleClick(e.target.value)}
                 >
-                  <option value="">Others</option>
+                  <option value="">Other</option>
                   <option value="AN1 – Naturalisation">
                     AN1 – Naturalisation{" "}
                   </option>
@@ -159,7 +195,7 @@ const CompanyScreen = () => {
                   <option value="SS – Settled Status">
                     SS – Settled Status{" "}
                   </option>
-                  <option value="Others">Others </option>
+                  <option value="Others">Other</option>
                 </select>
               </div>
             </div>

@@ -38,7 +38,7 @@ const Rejectpopup = ({ show, setShow }) => {
 
   return (
     <div>
-      <div className="overlay" style={{ overflow: "hidden" }}>
+      <div className="overlay" style={{ overflow: "hidden",zIndex:999 }}>
         <div className="Rejectpopoup" ref={buttonRef}>
           <img
             onClick={() => setShow(false)}

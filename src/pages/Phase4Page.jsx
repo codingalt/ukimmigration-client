@@ -359,7 +359,6 @@ const Phase4Page = () => {
   const {
     maritalStatus,
     spouseName,
-    isMarried,
     marriageDate,
     whereGotMarried,
     spouseDob,

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { NavLink } from "react-router-dom";
 import chatbox from "../../Assets/chat-icon.svg";
 import "../../style/Phase4.css";
@@ -6,9 +6,12 @@ import "../../style/buttons.css";
 import star from "../../Assets/Star-svg.svg";
 import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import Logo2 from "../../Assets/Ukimmigration-logo.png";
+
 
 const EmploymentFilled = ({data,application}) => {
     const app = data?.employment;
+  const [show, setShow] = useState(false);
     console.log("Employment filled", app);
 
     const pdfRef = useRef(null);
@@ -17,11 +20,18 @@ const EmploymentFilled = ({data,application}) => {
         pdfRef.current.save();
       }
     };
+
+    const handlePdfDownload = () => {
+      setShow(true);
+      if (pdfRef.current) {
+        pdfRef.current.save();
+      }
+    };
   return (
     <div className="fill-data-border-phase4">
       <button
         type="button"
-        onClick={exportPDFWithComponent}
+        onClick={handlePdfDownload}
         className="download-btn"
       >
         Download File
@@ -29,14 +39,23 @@ const EmploymentFilled = ({data,application}) => {
 
       {/* Employment */}
       <PDFExport
-        forcePageBreak=".page-break"
-        scale={0.8}
-        paperSize="A2"
-        margin="2cm"
+        // forcePageBreak=".page-break"
+        // scale={0.8}
+        // paperSize="A2"
+        margin="3cm"
         ref={pdfRef}
-        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-Employment`}
+        fileName={`${
+          application?.phase1?.name
+            ? application?.phase1?.name
+            : application?.phase1?.fullNameAsPassport
+        }-${application?.caseId}-Phase4-Employment`}
       >
         <div className="phase-1">
+          {show && (
+            <div className="hidden-logo" style={{ marginBottom: "10px" }}>
+              <img src={Logo2} alt="" />
+            </div>
+          )}
           <p className="Form-data-heading">Employment</p>
           <div className="fill">
             <img src={star} alt="" className="star" />

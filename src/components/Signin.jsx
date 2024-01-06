@@ -82,7 +82,8 @@ const handleSend = async () => {
   console.log(error);
   dispatch(setUserData(data?.user));
   console.log("data signin",data);
-  navigate(data?.user?.isGroupClient ? "/group/phase1" : data.redirect);
+  localStorage.setItem("ukimmigration_token", data?.token);
+  navigate(data?.user?.isGroupClient ? "/companyscreen" : data.redirect);
 
 };
 
@@ -93,8 +94,11 @@ const handleSigninWithGoogle = useGoogleLogin({
     });
     console.log(data);
     if (data.success) {
+      localStorage.setItem("ukimmigration_token", data?.token);
         setTimeout(() => {
-          navigate(data?.user?.isGroupClient ? "/group/phase1" : data.redirect);
+          navigate(
+            data?.user?.isGroupClient ? "/companyscreen" : data.redirect
+          );
         }, 900);
       
     }

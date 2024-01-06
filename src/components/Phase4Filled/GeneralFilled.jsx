@@ -1,19 +1,24 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom';
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import chatbox from "../../Assets/chat-icon.svg";
 import "../../style/Phase4.css";
 import "../../style/buttons.css";
 import star from "../../Assets/Star-svg.svg";
-import moment from 'moment';
+import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import { Fade } from "react-awesome-reveal";
-import { useSelector } from 'react-redux';
-import MainContext from '../Context/MainContext';
-import { useGetUserChatsQuery, useGetUserMessagesQuery, useReadMessagesByChatMutation } from '../../services/api/chatApi';
-import RejectpopupGroup from '../RejectPopupGroup';
-import Rejectpopup from '../Rejectpopup';
+import { useSelector } from "react-redux";
+import MainContext from "../Context/MainContext";
+import {
+  useGetUserChatsQuery,
+  useGetUserMessagesQuery,
+  useReadMessagesByChatMutation,
+} from "../../services/api/chatApi";
+import RejectpopupGroup from "../RejectPopupGroup";
+import Rejectpopup from "../Rejectpopup";
+import Logo2 from "../../Assets/Ukimmigration-logo.png";
 
-const GeneralFilled = ({data,application}) => {
+const GeneralFilled = ({ data, application }) => {
   const location = useLocation();
   const state = location.state;
   const { user } = useSelector((state) => state.user);
@@ -23,6 +28,7 @@ const GeneralFilled = ({data,application}) => {
   const [messages, setMessages] = useState([]);
   const [isReject, setIsReject] = useState();
   const [companyId, setCompanyId] = useState();
+  const [show, setShow] = useState(false);
 
   const { data: chat, refetch: refetchChat } = useGetUserChatsQuery();
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
@@ -57,38 +63,44 @@ const GeneralFilled = ({data,application}) => {
     }
   }, [state]);
 
-useEffect(() => {
-  socket?.on("message notification", async (newMessageReceived) => {
-    setChatId(newMessageReceived?.result?.chatId);
-    setMessages([...messages, newMessageReceived.result]);
+  useEffect(() => {
+    socket?.on("message notification", async (newMessageReceived) => {
+      setChatId(newMessageReceived?.result?.chatId);
+      setMessages([...messages, newMessageReceived.result]);
+    });
   });
-});
 
-useEffect(() => {
-  if (chatId) {
-    refetchMessages();
-  }
-}, [chatId]);
+  useEffect(() => {
+    if (chatId) {
+      refetchMessages();
+    }
+  }, [chatId]);
 
+  const app = data?.general;
+  console.log("General filled", app);
 
-    const app = data?.general;
-    console.log("General filled", app);
-    
-    const pdfRef = useRef(null);
-    const exportPDFWithComponent = () => {
-      if (pdfRef.current) {
-        pdfRef.current.save();
-      }
-    };
+  const pdfRef = useRef(null);
+  const exportPDFWithComponent = () => {
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
+  };
 
-    const handleRejectClick = () => {
-      if(application.companyId){
-        setCompanyId(true);
-      }else{
-        setCompanyId(true);
-      }
-      setIsReject(true);
-    };
+  const handleRejectClick = () => {
+    if (application.companyId) {
+      setCompanyId(true);
+    } else {
+      setCompanyId(true);
+    }
+    setIsReject(true);
+  };
+
+  const handlePdfDownload = () => {
+    setShow(true);
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
+  };
 
   return (
     <div className="fill-data-border-phase4">
@@ -97,7 +109,7 @@ useEffect(() => {
         : isReject && <Rejectpopup show={isReject} setShow={setIsReject} />}
       <button
         type="button"
-        onClick={exportPDFWithComponent}
+        onClick={handlePdfDownload}
         className="download-btn"
       >
         Download File
@@ -105,14 +117,23 @@ useEffect(() => {
 
       {/* Genral */}
       <PDFExport
-        forcePageBreak=".page-break"
-        scale={0.8}
-        paperSize="A2"
-        margin="2cm"
+        // forcePageBreak=".page-break"
+        // scale={0.8}
+        // paperSize="A2"
+        margin="3cm"
         ref={pdfRef}
-        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-General`}
+        fileName={`${
+          application?.phase1?.name
+            ? application?.phase1?.name
+            : application?.phase1?.fullNameAsPassport
+        }-${application?.caseId}-Phase4-General`}
       >
         <div className="phase-1 phase1-general">
+          {show && (
+            <div className="hidden-logo" style={{ marginBottom: "10px" }}>
+              <img src={Logo2} alt="" />
+            </div>
+          )}
           <p className="Form-data-heading">Genral</p>
           <div className="fill">
             <img src={star} alt="" className="star" />
@@ -270,14 +291,10 @@ useEffect(() => {
           )}
 
           <div className="fill">
-            <Fade direction="left">
               <img src={star} alt="" className="star" />
               <p className="Name-title">Do you have a BRP?</p>
-            </Fade>
             <div className="border-y"></div>
-            <Fade>
               <p className="Name-text">{app?.isBrp ? "Yes" : "No"}</p>
-            </Fade>
           </div>
 
           {app?.isBrp && (
@@ -492,6 +509,6 @@ useEffect(() => {
       </div>
     </div>
   );
-}
+};
 
-export default GeneralFilled
+export default GeneralFilled;

@@ -3,7 +3,7 @@
   height: 31rem;
   top: 20rem;
   border-radius: 20px;
-  border: 1px solid bisque;
+  /* border: 1px solid bisque; */
   /* position: relative; */
   background-color: #FCFCFC;
   left: 55rem;
@@ -16,7 +16,7 @@
   height: 34rem;
   top: 20rem;
   border-radius: 20px;
-  border: 1px solid bisque;
+  /* border: 1px solid bisque; */
   /* position: relative; */
   background-color: #FCFCFC;
   left: 55rem;
@@ -128,7 +128,6 @@
 }
 
 .Cncl-btn{
-   
   padding: 8px 20px 8px 20px;
   border-radius: 20px;
   border: 1px solid #5D982E;
@@ -143,7 +142,6 @@
 }
 
 .form-submited-text{
-
   font-family: Poppins;
   font-size: 20px;
   font-weight: 400;
@@ -184,7 +182,6 @@
 }
 
 .cnfrm-btn-2{
-
   padding: 8px 20px 8px 20px;
   border-radius: 20px;
   border: 1px solid #5D982E;

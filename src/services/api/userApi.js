@@ -7,6 +7,8 @@ export const userApi = createApi({
     prepareHeaders: async (headers, query) => {
       // headers.set("Content-Type", "application/json"),
       //   headers.set("Accept", "application/json");
+      const authToken = localStorage.getItem("ukimmigration_token");
+      headers.set("authorization", `Bearer ${authToken}`);
       return headers;
     },
     credentials: "include",

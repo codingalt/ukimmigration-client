@@ -6,10 +6,12 @@ import "../../style/buttons.css";
 import star from "../../Assets/Star-svg.svg";
 import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import Logo2 from "../../Assets/Ukimmigration-logo.png";
 
 const FamilyFilled = ({ data,application }) => {
   const app = data?.family;
   console.log("Family filled", app);
+  const [show, setShow] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedChild, setSelectedChild] = useState(1);
@@ -21,11 +23,18 @@ const FamilyFilled = ({ data,application }) => {
     }
   };
 
+  const handlePdfDownload = () => {
+    setShow(true);
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
+  };
+
   return (
     <div className="fill-data-border-phase4">
       <button
         type="button"
-        onClick={exportPDFWithComponent}
+        onClick={handlePdfDownload}
         className="download-btn"
       >
         Download File
@@ -33,14 +42,23 @@ const FamilyFilled = ({ data,application }) => {
 
       {/* Family */}
       <PDFExport
-        forcePageBreak=".page-break"
-        scale={0.8}
-        paperSize="A2"
-        margin="2cm"
+        // forcePageBreak=".page-break"
+        // scale={0.8}
+        // paperSize="A2"
+        margin="3cm"
         ref={pdfRef}
-        fileName={`${application?.phase1?.name}-${application?.caseId}-Phase4-Family`}
+        fileName={`${
+          application?.phase1?.name
+            ? application?.phase1?.name
+            : application?.phase1?.fullNameAsPassport
+        }-${application?.caseId}-Phase4-Family`}
       >
         <div className="phase-1">
+          {show && (
+            <div className="hidden-logo" style={{ marginBottom: "10px" }}>
+              <img src={Logo2} alt="" />
+            </div>
+          )}
           <p className="Form-data-heading">Family</p>
           <div className="fill">
             <img src={star} alt="" className="star" />
@@ -405,138 +423,148 @@ const FamilyFilled = ({ data,application }) => {
                   )}
                 </>
               )}
-            </>
-          )}
 
-          <div className="fill">
-            <img src={star} alt="" className="star" />
-            <p className="Name-title">Have you been married before ?*</p>
-            <div className="border-y"></div>
-            <p className="Name-text">{app?.isMarriedBefore ? "Yes" : "No"}</p>
-          </div>
-
-          {app?.isMarriedBefore && (
-            <>
               <div className="fill">
                 <img src={star} alt="" className="star" />
-                <p className="Name-title">i. Name of Ex*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">{app?.exName}</p>
-              </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">ii. Date of Birth (mm/dd/yyyy)*</p>
+                <p className="Name-title">Have you been married before ?*</p>
                 <div className="border-y"></div>
                 <p className="Name-text">
-                  {moment(app?.exDob).format("dddd, MMMM Do")}
+                  {app?.isMarriedBefore ? "Yes" : "No"}
                 </p>
               </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">iii. Nationality ?*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">{app?.exNationality}</p>
-              </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">iv. Date of Marriage (mm/dd/yyyy)*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">
-                  {moment(app?.marriageDateWithEx).format("dddd, MMMM Do")}
-                </p>
-              </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">v. Date of Divorce (mm/dd/yyyy)*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">
-                  {moment(app?.divorceDateWithEx).format("dddd, MMMM Do")}
-                </p>
-              </div>
-            </>
-          )}
 
-          <div className="fill">
-            <img src={star} alt="" className="star" />
-            <p className="Name-title">
-              Has your current partner been married before?*
-            </p>
-            <div className="border-y"></div>
-            <p className="Name-text">
-              {app?.isCurrentPartnerMarriedBefore ? "Yes" : "No"}
-            </p>
-          </div>
+              {app?.isMarriedBefore && (
+                <>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">i. Name of Ex*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">{app?.exName}</p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">
+                      ii. Date of Birth (mm/dd/yyyy)*
+                    </p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {moment(app?.exDob).format("dddd, MMMM Do")}
+                    </p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">iii. Nationality ?*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">{app?.exNationality}</p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">
+                      iv. Date of Marriage (mm/dd/yyyy)*
+                    </p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {moment(app?.marriageDateWithEx).format("dddd, MMMM Do")}
+                    </p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">
+                      v. Date of Divorce (mm/dd/yyyy)*
+                    </p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {moment(app?.divorceDateWithEx).format("dddd, MMMM Do")}
+                    </p>
+                  </div>
+                </>
+              )}
 
-          {app?.isCurrentPartnerMarriedBefore && (
-            <>
               <div className="fill">
                 <img src={star} alt="" className="star" />
-                <p className="Name-title">i. Name of Ex-Partner*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">{app?.currentPartnerExName}</p>
-              </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">ii. Date of Birth*</p>
+                <p className="Name-title">
+                  Has your current partner been married before?*
+                </p>
                 <div className="border-y"></div>
                 <p className="Name-text">
-                  {moment(app?.currentPartnerExDob).format("dddd, MMMM Do")}
+                  {app?.isCurrentPartnerMarriedBefore ? "Yes" : "No"}
                 </p>
               </div>
+
+              {app?.isCurrentPartnerMarriedBefore && (
+                <>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">i. Name of Ex-Partner*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">{app?.currentPartnerExName}</p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">ii. Date of Birth*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {moment(app?.currentPartnerExDob).format("dddd, MMMM Do")}
+                    </p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">iii. Nationality ?*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {app?.currentPartnerExNationality}
+                    </p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">iv. Date of Marriage*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {moment(app?.currentPartnerExMarriageDate).format(
+                        "dddd, MMMM Do"
+                      )}
+                    </p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">v. Date of Divorce*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">
+                      {moment(app?.currentPartnerExDivorceDate).format(
+                        "dddd, MMMM Do"
+                      )}
+                    </p>
+                  </div>
+                </>
+              )}
+
               <div className="fill">
                 <img src={star} alt="" className="star" />
-                <p className="Name-title">iii. Nationality ?*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">{app?.currentPartnerExNationality}</p>
-              </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">iv. Date of Marriage*</p>
+                <p className="Name-title">
+                  What family/friends do you have in your home country ?*
+                </p>
                 <div className="border-y"></div>
                 <p className="Name-text">
-                  {moment(app?.currentPartnerExMarriageDate).format(
-                    "dddd, MMMM Do"
-                  )}
+                  {app?.isFamilyFriendsInHomeCountry ? "Yes" : "No"}
                 </p>
               </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">v. Date of Divorce*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">
-                  {moment(app?.currentPartnerExDivorceDate).format(
-                    "dddd, MMMM Do"
-                  )}
-                </p>
-              </div>
-            </>
-          )}
 
-          <div className="fill">
-            <img src={star} alt="" className="star" />
-            <p className="Name-title">
-              What family/friends do you have in your home country ?*
-            </p>
-            <div className="border-y"></div>
-            <p className="Name-text">
-              {app?.isFamilyFriendsInHomeCountry ? "Yes" : "No"}
-            </p>
-          </div>
-
-          {app?.isFamilyFriendsInHomeCountry && (
-            <>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">i. Name of Relative*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">{app?.relativeName}</p>
-              </div>
-              <div className="fill">
-                <img src={star} alt="" className="star" />
-                <p className="Name-title">ii. Relationship*</p>
-                <div className="border-y"></div>
-                <p className="Name-text">{app?.relationship}</p>
-              </div>
+              {app?.isFamilyFriendsInHomeCountry && (
+                <>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">i. Name of Relative*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">{app?.relativeName}</p>
+                  </div>
+                  <div className="fill">
+                    <img src={star} alt="" className="star" />
+                    <p className="Name-title">ii. Relationship*</p>
+                    <div className="border-y"></div>
+                    <p className="Name-text">{app?.relationship}</p>
+                  </div>
+                </>
+              )}
             </>
           )}
 

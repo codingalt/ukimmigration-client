@@ -30,8 +30,10 @@ const settingbox = () => {
 
   const handleLogout = async()=>{
     await logout();
+    localStorage.removeItem("ukimmigration_token");
     window.location.reload(false);
   }
+  
   return (
     <div className="Setting-box">
       <div className="notification-header"></div>

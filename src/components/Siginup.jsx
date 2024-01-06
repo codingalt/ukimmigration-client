@@ -89,6 +89,7 @@ const Signup = () => {
     
     console.log(data?.user);
     if (data?.success) {
+      localStorage.setItem("ukimmigration_token", data?.token);
       dispatch(setUserData({data: data?.user}));
       navigate("/otp");
     }
@@ -102,6 +103,7 @@ const Signup = () => {
       });
       console.log(data);
       if (data.success) {
+        localStorage.setItem("ukimmigration_token", data?.token);
         setTimeout(() => {  
           navigate("/otpmail");
         }, 1000);
