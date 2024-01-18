@@ -37,7 +37,6 @@ const recaptchaRef = useRef();
 
 useMemo(() => {
   if (isSuccess) {
-    navigate("/companyscreen");
   }
 }, [isSuccess]);
 
@@ -82,6 +81,12 @@ const handleSend = async () => {
   console.log(error);
   dispatch(setUserData(data?.user));
   console.log("data signin",data);
+
+  if(data?.redirect === "/admin/dashboard"){
+    toastError("Action Forbidden!");
+    return;
+  }
+
   localStorage.setItem("ukimmigration_token", data?.token);
   navigate(data?.user?.isGroupClient ? "/companyscreen" : data.redirect);
 
@@ -94,6 +99,12 @@ const handleSigninWithGoogle = useGoogleLogin({
     });
     console.log(data);
     if (data.success) {
+
+      if (data?.redirect === "/admin/dashboard") {
+        toastError("Action Forbidden!");
+        return;
+      }
+
       localStorage.setItem("ukimmigration_token", data?.token);
         setTimeout(() => {
           navigate(

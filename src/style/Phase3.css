@@ -11,6 +11,40 @@
     bottom: 4rem;
 }
 
+.pay-tabs{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 16px;
+    background-color: #E2E2E4;
+    border-radius: 6px;
+    margin-top: 10px;
+    padding: 7px 15px;
+    max-width: 28rem;
+}
+
+.pay-tab{
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 0;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.pay-tab-active{
+    background-color: #5d982e;
+    color: #fff;
+    transition: all .2s;
+    font-weight: 600;
+}
+
+.pay-tab{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .Pay-credit-text{
     font-family: Poppins;
     font-size: 14px;

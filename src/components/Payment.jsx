@@ -26,7 +26,6 @@ const Payment = () => {
         setClientSecret(data?.clientSecret);
     }
 
-
     useEffect(()=>{
         getPaymentInent();
     },[]);
@@ -43,7 +42,6 @@ const Payment = () => {
          borderRadius: "4px",
          spacingGridColumn: "20px",
          spacingGridRow: "20px",
-         // See all possible variables below
        },
      };
 

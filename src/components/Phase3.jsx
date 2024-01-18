@@ -144,6 +144,8 @@ const Phase3 = () => {
       }
     }, [application]);
 
+  const [activeTab, setActiveTab] = useState(0);
+
 
     return (
       <>
@@ -159,9 +161,7 @@ const Phase3 = () => {
                   </button>
                 </NavLink>
                 <p className="Pay-credit-text">Pay with Credit Card</p>
-                {/* <NavLink to="/adddetails">
-                    <p className='Add-debit-text'>Add Debit / Credit Card <img src={addicon} alt="" /></p>
-                    </NavLink> */}
+
                 <img src={creditpic} alt="" className="credit-card" />
 
                 <p className="detail-text">Details</p>
@@ -200,44 +200,129 @@ const Phase3 = () => {
                     {paymentLoading ? <Loader /> : "Click to Pay"}
                   </button>
                 </StripeCheckout>
-                {/* <NavLink to={`/adddetails/${application?._id}`}> */}
-                {/* <button
-              onClick={() => paymentRef.current.click()}
-              type="submit"
-              className="click-to-pay"
-            >
-              Click to Pay
-            </button> */}
-                {/* </NavLink> */}
+    
               </div>
 
               <div className="Border-line-between"></div>
               <div className="right-side-phase3">
                 <p className="pay-to-bank-text">Pay with Bank Account</p>
-                <p className="phase-3-right-text">Bank Name</p>
-                <input
-                  disabled
-                  className="Input-right-phase3"
-                  type="text"
-                  name="bankName"
-                  placeholder="Bank Alfalah"
-                />
-                <p className="phase-3-right-text">IBAN</p>
-                <input
-                  disabled
-                  className="Input-right-phase3"
-                  type="text"
-                  name="iban"
-                  placeholder="B8HF85H5J58588580644"
-                />
-                <p className="phase-3-right-text">Company Recipient</p>
-                <input
-                  disabled
-                  className="Input-right-phase3"
-                  type="text"
-                  name="companyRecipient"
-                  placeholder="907437640921315"
-                />
+                <div className="pay-tabs">
+                  <div
+                    onClick={() => setActiveTab(0)}
+                    className={
+                      activeTab === 0 ? "pay-tab pay-tab-active" : "pay-tab"
+                    }
+                  >
+                    GBP
+                  </div>
+                  <div
+                    onClick={() => setActiveTab(1)}
+                    className={
+                      activeTab === 1 ? "pay-tab pay-tab-active" : "pay-tab"
+                    }
+                  >
+                    EURO
+                  </div>
+                  <div
+                    onClick={() => setActiveTab(2)}
+                    className={
+                      activeTab === 2 ? "pay-tab pay-tab-active" : "pay-tab"
+                    }
+                  >
+                    PKR
+                  </div>
+                </div>
+
+                {/* GBP Bank Details  */}
+                {activeTab === 0 && (
+                  <>
+                    <p className="phase-3-right-text">Bank Name</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="bankName"
+                      placeholder="Anglo-German Education Limited"
+                    />
+                    <p className="phase-3-right-text">IBAN</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="iban"
+                      placeholder="K4HG85H5J5k588580644"
+                    />
+                    <p className="phase-3-right-text">Company Recipient</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="companyRecipient"
+                      placeholder="807427640923315"
+                    />
+                  </>
+                )}
+
+                {/* Euro Bank Details  */}
+                {activeTab === 1 && (
+                  <>
+                    <p className="phase-3-right-text">Bank Name</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="bankName"
+                      placeholder="Euro"
+                    />
+                    <p className="phase-3-right-text">IBAN</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="iban"
+                      placeholder="H5HG85H5J5M588580654"
+                    />
+                    <p className="phase-3-right-text">Company Recipient</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="companyRecipient"
+                      placeholder="20744764623315"
+                    />
+                  </>
+                )}
+
+                {/* PKR Bank Details  */}
+                {activeTab === 2 && (
+                  <>
+                    <p className="phase-3-right-text">Bank Name</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="bankName"
+                      placeholder="Bank Alfalah"
+                    />
+                    <p className="phase-3-right-text">IBAN</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="iban"
+                      placeholder="D4HG85H5J5k58880644"
+                    />
+                    <p className="phase-3-right-text">Company Recipient</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="companyRecipient"
+                      placeholder="107427650923315"
+                    />
+                  </>
+                )}
+               
 
                 <p className="If-you-paid-text">
                   {fileName

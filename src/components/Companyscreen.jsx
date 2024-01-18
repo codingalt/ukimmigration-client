@@ -23,7 +23,7 @@ const CompanyScreen = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const [show, setShow] = useState(null);
+  const [show, setShow] = useState(true);
   const [applicationType, setApplicationType] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,7 +33,8 @@ const CompanyScreen = () => {
       if (user?.isGroupClient) {
         // Group client checks
         if (groupApp && !groupApp.application) {
-          setShow(true);
+          setShow(false);
+          !isLoadingGroup && navigate("/group/phase1");
         } else if (
           groupApp?.application?.phase === 4 &&
           groupApp?.application?.phaseStatus === "approved"

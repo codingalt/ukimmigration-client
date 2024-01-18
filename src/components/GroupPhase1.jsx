@@ -93,16 +93,16 @@ const GroupPhase1 = () => {
       });
     }
 
-    // useEffect(()=>{
-    //   if (data && !isSuccess) {
-    //     if (data?.application?.phaseSubmittedByClient >= 1) {
-    //       setShow(false);
-    //       navigate("/group/filldata");
-    //     } else {
-    //       setShow(true);
-    //     }
-    //   }
-    // },[data]);
+    useEffect(()=>{
+      if (data && !isSuccess) {
+        if (data?.application?.phaseSubmittedByClient >= 1) {
+          setShow(false);
+          navigate("/group/filldata");
+        } else {
+          setShow(true);
+        }
+      }
+    },[data]);
 
   return (
     <>

@@ -58,7 +58,6 @@ const CheckoutForm = ({ clientSecret }) => {
     //   // }, 1400);
     // }
 
-
     if (error) {
       toastError(error.message);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {

@@ -12,6 +12,7 @@ const EmailVerify = () => {
 
   useMemo(()=>{
     if(isSuccess){
+      localStorage.setItem("ukimmigration_token", data?.token);
       navigate("/companyscreen")
     }
   },[isSuccess,isLoading])

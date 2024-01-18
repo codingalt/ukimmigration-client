@@ -24,6 +24,13 @@
     border-radius: 5px;
 }
 
+@media screen and (min-width: 1920px) {
+    .button-company-screen{
+        bottom: 13rem;
+        right: 33.8rem;
+    }
+}
+
 
 .title-space-option{
     width: 12.5rem;

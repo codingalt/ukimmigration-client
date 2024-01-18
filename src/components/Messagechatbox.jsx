@@ -163,7 +163,7 @@ useEffect(() => {
 
         <div className="Main-message-container">
           <div className="Main-Message">
-            <div className="container-message-box-2">
+            <div className="container-message-box-2" style={{overflow:"hidden"}}>
               <div className="row">
                 <section className="chat-2">
                   <div className="header-chat-2">
@@ -207,7 +207,7 @@ useEffect(() => {
                   </div>
                   <div className="messages-chat-2" ref={chatContainerRef}>
                     {messages?.map((item) => {
-                      const isUserMessage = item?.sender === user?._id;
+                      const isUserMessage = item?.sender?._id === user?._id;
                       return (
                         !loading && (
                           <div
@@ -256,7 +256,7 @@ useEffect(() => {
                               )}
 
                               <p className="Second-profile-name">
-                                {isUserMessage ? user.name : "Admin"}
+                                {isUserMessage ? user?.name : "Admin"}
                               </p>
                               <p
                                 className="Message-date-time-second"

@@ -23,7 +23,7 @@ const Agreement = () => {
     const { data: applicationData } = useGetApplicationByUserIdQuery();
     const application = applicationData?.application;
     console.log(application?._id);
-    const [isAllowed, setIsAllowed] = useState(false);
+    const [isAllowed, setIsAllowed] = useState(true);
 
     const handleAcceptTermsChange = () => {
         setAcceptTerms(!acceptTerms);
@@ -36,10 +36,6 @@ const Agreement = () => {
     const handleSubmit = ()=>{
         if(!acceptTerms){
             toastError("Please Accept Terms.")
-            return;
-        }
-        if(!requestConsultation){
-            toastError("Check Request Consultation – Zoom/Telephone");
             return;
         }
 
@@ -65,7 +61,7 @@ const Agreement = () => {
     return (
       <>
         {isAllowed && (
-          <div className="Container-forgetpassword-phase1" >
+          <div className="Container-forgetpassword-phase1">
             <Navbar />
             <div className="Forgetpassword-sub-2">
               <p className="confirmation-text-2">Confirmation</p>
@@ -191,8 +187,6 @@ const Agreement = () => {
                       className="main-box"
                       type="checkbox"
                       required
-                      checked={requestConsultation}
-                      onChange={handleRequestConsultationChange}
                     />
                     Request Consultation – Zoom/Telephone
                   </p>
