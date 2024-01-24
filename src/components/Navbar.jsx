@@ -14,6 +14,7 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { MdOutlineSettings } from "react-icons/md";
 import { useGetClientNotificationQuery, useReadNotificationClientMutation } from "../services/api/userApi";
 import MainContext from "./Context/MainContext";
+import { v4 as uuidv4 } from "uuid";
 
 const Navbar = () => {
   const { socket } = useContext(MainContext);
@@ -33,7 +34,10 @@ const Navbar = () => {
 
     useEffect(() => {
       socket?.on("phase notification received", (phaseNoti) => {
-        setReceived(phaseNoti);
+        const uuid = uuidv4();
+        const tempObj = { ...phaseNoti, uuid };
+        console.log("uuid", uuid);
+        setReceived(tempObj);
         console.log("phase notification received---- Navbar", phaseNoti);
       });
     }, [received]);
@@ -41,8 +45,11 @@ const Navbar = () => {
     useEffect(() => {
       if (received) {
         refetch();
+      // window.location.reload(false);
       }
     }, [received]);
+
+      console.log("received", received);
 
     useEffect(()=>{
       if(isSuccess){

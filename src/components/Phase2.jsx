@@ -27,11 +27,12 @@ const Phase2 = () => {
     const settingsRef = useRef(null);
     const [isAllowed,setIsAllowed] = useState(false)
     const navigate = useNavigate();
+  const [received, setReceived] = useState(null);
     const { socket } = useContext(MainContext);
 
-    const {data,isLoading} = useGetApplicationByUserIdQuery();
+    const {data,isLoading,refetch} = useGetApplicationByUserIdQuery();
     const application = data?.application;
-    console.log(data);
+    console.log("app data phase 2 page",data);
 
     const [postPhase2, result] = usePostPhase2Mutation();
     const {isLoading: isLoadingPostPhase, isSuccess, error} = result;
@@ -221,6 +222,18 @@ const Phase2 = () => {
         }
       }
     },[application]);
+
+    useEffect(() => {
+      socket.on("phase notification received", (phaseNoti) => {
+        setReceived(phaseNoti);
+      });
+    }, [received]);
+
+    useEffect(() => {
+      if (received) {
+        refetch();
+      }
+    }, [received]);
 
     return (
       <>

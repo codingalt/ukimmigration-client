@@ -9,6 +9,7 @@ import MainContext from './Context/MainContext';
 import Loader from './Loader';
 import Rejectpopup from './Rejectpopup';
 import RejectpopupGroup from './RejectPopupGroup';
+import { v4 as uuidv4 } from "uuid";
 
 const NotificationBox = () => {
  
@@ -19,9 +20,14 @@ const NotificationBox = () => {
   const [isReject, setIsReject] = useState();
   const [companyId, setCompanyId] = useState();
 
+  console.log(data);
+
   useEffect(() => {
-    socket.on("phase notification received", (phaseNoti) => {
-      setReceived(phaseNoti);
+    socket?.on("phase notification received", (phaseNoti) => {
+      const uuid = uuidv4();
+      const tempObj = { ...phaseNoti, uuid };
+      console.log("uuid", uuid);
+      setReceived(tempObj);
     });
   }, [received]);
 
@@ -59,6 +65,7 @@ const NotificationBox = () => {
   }
   
   const handleNavigate = (item)=>{
+    console.log("navigate",item);
     if(data?.companyClient){
 
       if(item.phaseStatus === "rejected"){
