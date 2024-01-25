@@ -180,7 +180,10 @@ const GroupFilledData = () => {
             fileName={`${application?.phase1?.fullNameAsPassport}-${application?.caseId}`}
           >
             {show && (
-              <div className="hidden-logo" style={{ marginLeft:"31px",marginBottom:"-36px" }}>
+              <div
+                className="hidden-logo"
+                style={{ marginLeft: "31px", marginBottom: "-36px" }}
+              >
                 <img src={Logo2} alt="" />
               </div>
             )}
@@ -826,7 +829,7 @@ const GroupFilledData = () => {
                   "Case is been Prepared for Submission to Authorities."}
                 {application?.phase <= 4 &&
                   application?.applicationStatus != "rejected" &&
-                  "Case is under Final Review"}
+                  "Case is under review"}
                 {application?.applicationStatus === "rejected" &&
                   "Case Rejected by case worker"}
               </button>

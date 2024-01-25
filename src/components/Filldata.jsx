@@ -961,7 +961,7 @@ useEffect(()=>{
                   "Case is been Prepared for Submission to Authorities."}
                 {application?.phase <= 4 &&
                   application?.applicationStatus != "rejected" &&
-                  "Case is under Final Review"}
+                  "Case is under review"}
                 {application?.applicationStatus === "rejected" &&
                   "Case Rejected by case worker"}
               </button>
