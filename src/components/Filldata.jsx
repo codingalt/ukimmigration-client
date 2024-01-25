@@ -27,6 +27,7 @@ import { useChatNotificationsMutation,useGetUserChatsQuery, useGetUserMessagesQu
 import Rejectpopup from './Rejectpopup';
 import RejectpopupGroup from './RejectPopupGroup';
 import CongratsGroupPhase1 from './CongratsGroupPhase1';
+import Congratspopup from './Congratspopup';
 
 const Filldata = () => {
   const location = useLocation();
@@ -147,6 +148,8 @@ useEffect(()=>{
         ? isReject && <RejectpopupGroup show={isReject} setShow={setIsReject} />
         : isReject && <Rejectpopup show={isReject} setShow={setIsReject} />}
       <Navbar />
+
+      <Congratspopup />
       <div className="Forgetpassword-sub-2" ref={targetRef}>
         <div className="fill-data-border">
           <button onClick={handlePdfDownload} className="download-btn">
