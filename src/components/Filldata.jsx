@@ -149,7 +149,6 @@ useEffect(()=>{
         : isReject && <Rejectpopup show={isReject} setShow={setIsReject} />}
       <Navbar />
 
-      <Congratspopup />
       <div className="Forgetpassword-sub-2" ref={targetRef}>
         <div className="fill-data-border">
           <button onClick={handlePdfDownload} className="download-btn">
