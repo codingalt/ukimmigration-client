@@ -38,7 +38,7 @@ const Rejectpopup = ({ show, setShow }) => {
 
   return (
     <div>
-      <div className="overlay" style={{ overflow: "hidden",zIndex:999 }}>
+      <div className="overlay" style={{ overflow: "hidden", zIndex: 999 }}>
         <div className="Rejectpopoup" ref={buttonRef}>
           <img
             onClick={() => setShow(false)}
@@ -49,7 +49,12 @@ const Rejectpopup = ({ show, setShow }) => {
           />
           <p className="Confermation-text">Rejected</p>
           <p className="Reason-input" style={{ paddingLeft: "18px" }}>
-            {isLoading ? "Loading.." : data?.application?.rejectPhaseReason}
+            {isLoading
+              ? "Loading.."
+              : data?.application?.rejectPhaseReason
+              ? data?.application?.rejectPhaseReason
+              : data?.application?.phase3.reason
+              }
           </p>
 
           <button ref={buttonRef} className="Cncl-btn" onClick={handleCancel}>
