@@ -242,7 +242,7 @@ const Phase3 = () => {
                       className="Input-right-phase3"
                       type="text"
                       name="bankName"
-                      placeholder="Anglo-German Education Limited"
+                      placeholder="Barclays Bank Uk Plc United Kingdom"
                     />
                     <p className="phase-3-right-text">IBAN</p>
                     <input
@@ -250,7 +250,23 @@ const Phase3 = () => {
                       className="Input-right-phase3"
                       type="text"
                       name="iban"
-                      placeholder="K4HG85H5J5k588580644"
+                      placeholder="GB44 BUKB 2009 7233 2091 72"
+                    />
+                    <p className="phase-3-right-text">SWIFTBIC</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="iban"
+                      placeholder="BUKBGB22"
+                    />
+                    <p className="phase-3-right-text">Sort Code</p>
+                    <input
+                      disabled
+                      className="Input-right-phase3"
+                      type="text"
+                      name="iban"
+                      placeholder="20-09-72"
                     />
                     <p className="phase-3-right-text">Company Recipient</p>
                     <input
@@ -258,7 +274,7 @@ const Phase3 = () => {
                       className="Input-right-phase3"
                       type="text"
                       name="companyRecipient"
-                      placeholder="807427640923315"
+                      placeholder="UK IMMIGRATION SOLUTIONS LIMITED"
                     />
                   </>
                 )}

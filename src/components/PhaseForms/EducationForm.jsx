@@ -60,7 +60,7 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
             }}
           >
             <div className="left-side-phase">
-              <p className="genral-text-left-side">1.Qualification*</p>
+              <p className="genral-text-left-side">1.Qualification</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -75,7 +75,7 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">2.Awarding Institute*</p>
+              <p className="genral-text-left-side">2.Awarding Institute</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -90,7 +90,7 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">3.Grade*</p>
+              <p className="genral-text-left-side">3.Grade</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -105,7 +105,7 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">4.Course Subject*</p>
+              <p className="genral-text-left-side">4.Course Subject</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -120,7 +120,7 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">5.Course Length*</p>
+              <p className="genral-text-left-side">5.Course Length</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -135,7 +135,7 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">6.Year of Award*</p>
+              <p className="genral-text-left-side">6.Year of Award</p>
               <Field
                 type="number"
                 className="genral-input-left-side"
@@ -150,14 +150,15 @@ const EducationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">7.Country of Award*</p>
+              <p className="genral-text-left-side">7.Country of Award</p>
               <SelectCountry
+              notReq={true}
                 name="phase4.education.countryOfAward"
                 id="phase4.education.countryOfAward"
                 className="genral-input-left-side"
               ></SelectCountry>
 
-              <p className="genral-text-left-side">8.State*</p>
+              <p className="genral-text-left-side">8.State</p>
               <Field
                 type="text"
                 name="phase4.education.state"

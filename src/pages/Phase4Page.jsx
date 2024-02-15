@@ -29,6 +29,7 @@ const Phase4Page = () => {
     const [isAllowed, setIsAllowed] = useState(false);
     const [childDetailsArr, setChildDetailsArr] = useState([]);
     const [lastVisitsToUk, setLastVisitsToUk] = useState([]);
+    const [everBeenToUkOrAnyCountry, seteverBeenToUkOrAnyCountry] = useState([]);
     const navigate = useNavigate();
     const { socket } = useContext(MainContext);
     const [received, setReceived] = useState(null);
@@ -207,12 +208,13 @@ const Phase4Page = () => {
           returnDate: "",
           reasonForVisit: "",
           numberOfVisitsToUk: "",
+          numberOfVisitsToAnyOtherCountry: "",
           lastUkVisits: null,
           isVisitedUkIllegally: true,
           illegalVisitDetail: "",
           isStayedBeyondExpiryDateInUk: true,
           reasonForStayingExpiryDateInUk: "",
-          everBeenToUkOrAnyCountry: "",
+          everBeenToUkOrAnyCountry: null,
           isBreachedLeaveConditions: true,
           reasonForBreachedLeave: "",
           isWorkedWithoutPermission: true,
@@ -441,12 +443,12 @@ const Phase4Page = () => {
       returnDate,
       reasonForVisit,
       numberOfVisitsToUk,
+      numberOfVisitsToAnyOtherCountry,
       lastUkVisits,
       isVisitedUkIllegally,
       illegalVisitDetail,
       isStayedBeyondExpiryDateInUk,
       reasonForStayingExpiryDateInUk,
-      everBeenToUkOrAnyCountry,
       isBreachedLeaveConditions,
       reasonForBreachedLeave,
       isWorkedWithoutPermission,
@@ -508,6 +510,12 @@ const Phase4Page = () => {
       entryDate: format(new Date(child.entryDate), "yyyy-MM-dd"),
       departureDate: format(new Date(child.departureDate), "yyyy-MM-dd"),
       reasonForVisit: child.reasonForVisit
+    }));
+    const formattedTravelDetailsToOtherCountries = lastUkVisits?.map((child) => ({
+      entryDate: format(new Date(child.entryDate), "yyyy-MM-dd"),
+      departureDate: format(new Date(child.departureDate), "yyyy-MM-dd"),
+      reasonForVisit: child.reasonForVisit,
+      countryVisited: child.countryVisited
     }));
 
   
@@ -916,6 +924,8 @@ const Phase4Page = () => {
             reasonForVisit: reasonForVisit ? reasonForVisit : "",
             numberOfVisitsToUk:
               numberOfVisitsToUk > 0 ? numberOfVisitsToUk : "",
+            numberOfVisitsToAnyOtherCountry:
+            numberOfVisitsToAnyOtherCountry > 0 ? numberOfVisitsToAnyOtherCountry : "",
             lastUkVisits:
               lastUkVisits?.length > 0
                 ? formattedTravelDetails
@@ -936,9 +946,13 @@ const Phase4Page = () => {
             reasonForStayingExpiryDateInUk: reasonForStayingExpiryDateInUk
               ? reasonForStayingExpiryDateInUk
               : "",
-            everBeenToUkOrAnyCountry: everBeenToUkOrAnyCountry
-              ? everBeenToUkOrAnyCountry
-              : "",
+            // everBeenToUkOrAnyCountry: everBeenToUkOrAnyCountry
+            //   ? everBeenToUkOrAnyCountry
+            //   : "",
+              everBeenToUkOrAnyCountry:
+              everBeenToUkOrAnyCountry?.length > 0
+                ? formattedTravelDetailsToOtherCountries
+                : everBeenToUkOrAnyCountry,
             isBreachedLeaveConditions:
               isBreachedLeaveConditions === true
                 ? true
@@ -1147,7 +1161,9 @@ const Phase4Page = () => {
                 >
                   <span>Maintenance</span>
                 </span>
-                <span
+                <span onClick={()=>{
+                  setActiveTab('/travel');
+                }}
                   className={`link-hover-effect ${
                     activeTab === "/travel" ? "link-active" : ""
                   }`}
@@ -1239,6 +1255,8 @@ const Phase4Page = () => {
                     initialValues={initialValues}
                     setLastVisitsToUk={setLastVisitsToUk}
                     lastVisitsToUk={lastVisitsToUk}
+                    seteverBeenToUkOrAnyCountry={seteverBeenToUkOrAnyCountry}
+                    everBeenToUkOrAnyCountry={everBeenToUkOrAnyCountry}
                     refetch={refetch}
                   />
                 )}

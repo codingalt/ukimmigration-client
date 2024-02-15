@@ -16,6 +16,8 @@ const TravelForm = ({
   initialValues,
   setLastVisitsToUk,
   lastVisitsToUk,
+  seteverBeenToUkOrAnyCountry,
+  everBeenToUkOrAnyCountry,
   refetch,
 }) => {
   const application = data?.application;
@@ -31,6 +33,11 @@ const TravelForm = ({
   const [numOfVisits, setNumOfVisits] = useState(
     initialValues?.phase4?.travel?.numberOfVisitsToUk > 0
       ? initialValues?.phase4?.travel?.numberOfVisitsToUk
+      : 0
+  );
+  const [numOfVisitsToAnyCountry, setNumOfVisitsToAnyCountry] = useState(
+    initialValues?.phase4?.travel?.setNumOfVisitsToAnyCountry > 0
+      ? initialValues?.phase4?.travel?.setNumOfVisitsToAnyCountry
       : 0
   );
   const [isEnteredUkIllegally, setIsEnteredUkIllegally] = useState(
@@ -99,14 +106,14 @@ const TravelForm = ({
   }, [error]);
 
   const handleSubmitData = async (values) => {
-    if (values.phase4.travel.numberOfVisitsToUk == 0) {
-      toastError("Please Select number of visits to UK");
-      return;
-    }
-        await postTravel({
-          data: values.phase4.travel,
-          applicationId: application?._id,
-        });
+    // if (values.phase4.travel.numberOfVisitsToUk == 0) {
+    //   toastError("Please Select number of visits to UK");
+    //   return;
+    // }
+    await postTravel({
+      data: values.phase4.travel,
+      applicationId: application?._id,
+    });
 
     console.log("submitted travel", values);
   };
@@ -116,9 +123,9 @@ const TravelForm = ({
   };
 
   const handleNumOfVisits = () => {
-    if (numOfVisits == 0) {
-      return;
-    }
+    // if (numOfVisits == 0) {
+    //   return;
+    // }
 
     setLastVisitsToUk(
       Array(parseInt(numOfVisits)).fill({
@@ -128,10 +135,28 @@ const TravelForm = ({
       })
     );
   };
+  const handleSetNumOfVisitsToAnyCountry = () => {
+    // if (numOfVisits == 0) {
+    //   return;
+    // }
+
+    seteverBeenToUkOrAnyCountry(
+      Array(parseInt(numOfVisitsToAnyCountry)).fill({
+        entryDate: "",
+        countryVisited: "",
+        departureDate: "",
+        reasonForVisit: "",
+      })
+    );
+  };
 
   useEffect(() => {
     handleNumOfVisits();
   }, [numOfVisits]);
+
+  useEffect(() => {
+    handleSetNumOfVisitsToAnyCountry();
+  }, [numOfVisitsToAnyCountry]);
 
   return (
     <>
@@ -183,7 +208,7 @@ const TravelForm = ({
 
               {isCurrentlyInUk && (
                 <>
-                  <p className="genral-text-left-side">
+                  {/* <p className="genral-text-left-side">
                     i. What countries have you visited – please provide the date
                     you entered the country and the date you left and the reason
                     for your visit*
@@ -237,16 +262,16 @@ const TravelForm = ({
                         border: "1px solid red",
                       }
                     }
-                  />
+                  /> */}
 
                   <p className="genral-text-left-side">
-                    v. Reason for your visit*
+                    i. What permission do you have to stay in UK? *
                   </p>
                   <Field
                     required={isCurrentlyInUk}
                     type="text"
                     className="genral-input-left-side"
-                    placeholder="Type"
+                    placeholder="Type Permission"
                     name="phase4.travel.reasonForVisit"
                     id="phase4.travel.reasonForVisit"
                     style={
@@ -258,39 +283,41 @@ const TravelForm = ({
                   />
                 </>
               )}
-
-              <p className="genral-text-left-side">
-                2.Please list the last 5 visits to the UK – date entered/date
-                left and the reasons for your visit*
-              </p>
-              <Field
-                as="select"
-                className="genral-input-left-side"
-                placeholder="Type Number of Visits"
-                name="phase4.travel.numberOfVisitsToUk"
-                id="phase4.travel.numberOfVisitsToUk"
-                onChange={(e) => {
-                  setNumOfVisits(e.target.value);
-                  setFieldValue(
-                    "phase4.travel.numberOfVisitsToUk",
-                    e.target.value
-                  );
-                }}
-                style={
-                  errors?.phase4?.travel?.numberOfVisitsToUk &&
-                  touched?.phase4?.travel?.numberOfVisitsToUk && {
-                    border: "1px solid red",
-                  }
-                }
-              >
-                <option value={0}>Select Number of Visits to UK</option>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-              </Field>
-
+              {!isCurrentlyInUk && (
+                <>
+                  <p className="genral-text-left-side">
+                    i. Have you ever visted UK ? – (Select number of vists to UK
+                    if any)*
+                  </p>
+                  <Field
+                    as="select"
+                    className="genral-input-left-side"
+                    placeholder="Type Number of Visits"
+                    name="phase4.travel.numberOfVisitsToUk"
+                    id="phase4.travel.numberOfVisitsToUk"
+                    onChange={(e) => {
+                      setNumOfVisits(e.target.value);
+                      setFieldValue(
+                        "phase4.travel.numberOfVisitsToUk",
+                        e.target.value
+                      );
+                    }}
+                    style={
+                      errors?.phase4?.travel?.numberOfVisitsToUk &&
+                      touched?.phase4?.travel?.numberOfVisitsToUk && {
+                        border: "1px solid red",
+                      }
+                    }
+                  >
+                    <option value={0}>No</option>
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                  </Field>
+                </>
+              )}
               {lastVisitsToUk?.map((item, index) => (
                 <>
                   <p className="genral-text-left-side">
@@ -361,7 +388,7 @@ const TravelForm = ({
               ))}
 
               <p className="genral-text-left-side">
-                3.Have you ever entered the UK illegally?*
+                2.Have you ever entered the UK illegally?*
               </p>
 
               <div className="checkbox-phase1">
@@ -418,7 +445,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                4.Have you ever stayed beyond the expiry date of your visa in
+                3.Have you ever stayed beyond the expiry date of your visa in
                 the UK?*
               </p>
 
@@ -485,9 +512,116 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                5.Have you ever been to the UK or any other country?
+                4. Have you visited any other country apart from the UK (preferable recent visits)?
               </p>
               <Field
+                    as="select"
+                    className="genral-input-left-side"
+                    placeholder="Type Number of Visits"
+                    name="phase4.travel.numberOfVisitsToAnyOtherCountry"
+                    id="phase4.travel.numberOfVisitsToAnyOtherCountry"
+                    onChange={(e) => {
+                      setNumOfVisitsToAnyCountry(e.target.value);
+                      setFieldValue(
+                        "phase4.travel.numberOfVisitsToAnyOtherCountry",
+                        e.target.value
+                      );
+                    }}
+                    style={
+                      errors?.phase4?.travel?.numberOfVisitsToAnyOtherCountry &&
+                      touched?.phase4?.travel?.numberOfVisitsToAnyOtherCountry && {
+                        border: "1px solid red",
+                      }
+                    }
+                  >
+                    <option value={0}>0</option>
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                    <option value={6}>6</option>
+                    <option value={7}>7</option>
+                    <option value={8}>8</option>
+                    <option value={9}>9</option>
+                  </Field>
+              {everBeenToUkOrAnyCountry?.map((item, index) => (
+                <>
+                 <p className="genral-text-left-side">
+                    {index + 1} Country visit Details
+                  </p>
+                  <p className="genral-text-left-side">i. Select country*</p>
+                  <SelectCountry
+                         name={`phase4.travel.everBeenToUkOrAnyCountry[${index}].country`}
+                         id={`phase4.travel.everBeenToUkOrAnyCountry[${index}].country`}
+                        className="genral-input-left-side-selector"
+                      ></SelectCountry>
+                 
+                  <p className="genral-text-left-side">ii. Date of Entry*</p>
+                  <Field
+                    required
+                    type="date"
+                    className="genral-input-left-side"
+                    name={`phase4.travel.everBeenToUkOrAnyCountry[${index}].entryDate`}
+                    id={`phase4.travel.everBeenToUkOrAnyCountry[${index}].entryDate`}
+                    style={
+                      errors?.phase4?.travel?.everBeenToUkOrAnyCountry &&
+                      errors.phase4.travel.everBeenToUkOrAnyCountry[index] &&
+                      errors.phase4.travel.everBeenToUkOrAnyCountry[index].entryDate &&
+                      touched?.phase4?.travel?.everBeenToUkOrAnyCountry &&
+                      touched.phase4.travel.everBeenToUkOrAnyCountry[index] &&
+                      touched.phase4.travel.everBeenToUkOrAnyCountry[index].entryDate
+                        ? { border: "1px solid red" }
+                        : null
+                    }
+                  />
+
+                  <p className="genral-text-left-side">
+                    iii. Date of Departure*
+                  </p>
+                  <Field
+                    required
+                    type="date"
+                    className="genral-input-left-side"
+                    name={`phase4.travel.everBeenToUkOrAnyCountry[${index}].departureDate`}
+                    id={`phase4.travel.everBeenToUkOrAnyCountry[${index}].departureDate`}
+                    style={
+                      errors?.phase4?.travel?.everBeenToUkOrAnyCountry &&
+                      errors.phase4.travel.everBeenToUkOrAnyCountry[index] &&
+                      errors.phase4.travel.everBeenToUkOrAnyCountry[index].departureDate &&
+                      touched?.phase4?.travel?.everBeenToUkOrAnyCountry &&
+                      touched.phase4.travel.everBeenToUkOrAnyCountry[index] &&
+                      touched.phase4.travel.everBeenToUkOrAnyCountry[index].departureDate
+                        ? { border: "1px solid red" }
+                        : null
+                    }
+                  />
+
+                  <p className="genral-text-left-side">
+                    iv. Reason for Visit*
+                  </p>
+                  <Field
+                    required
+                    type="text"
+                    className="genral-input-left-side"
+                    placeholder="Type Reason"
+                    name={`phase4.travel.everBeenToUkOrAnyCountry[${index}].reasonForVisit`}
+                    id={`phase4.travel.everBeenToUkOrAnyCountry[${index}].reasonForVisit`}
+                    style={
+                      errors?.phase4?.travel?.everBeenToUkOrAnyCountry &&
+                      errors.phase4.travel.everBeenToUkOrAnyCountry[index] &&
+                      errors.phase4.travel.everBeenToUkOrAnyCountry[index].reasonForVisit &&
+                      touched?.phase4?.travel?.everBeenToUkOrAnyCountry &&
+                      touched.phase4.travel.everBeenToUkOrAnyCountry[index] &&
+                      touched.phase4.travel.everBeenToUkOrAnyCountry[index].reasonForVisit
+                        ? { border: "1px solid red" }
+                        : null
+                    }
+                  />
+                </>
+              ))}
+
+              {/* <Field
                 required
                 type="text"
                 className="genral-input-left-side"
@@ -500,10 +634,10 @@ const TravelForm = ({
                     border: "1px solid red",
                   }
                 }
-              />
+              /> */}
 
               <p className="genral-text-left-side">
-                7.Have you ever breached the conditions of your leave?*
+                5.Have you ever breached the conditions of your leave?*
               </p>
 
               <div className="checkbox-phase1">
@@ -568,7 +702,7 @@ const TravelForm = ({
             {/* Right Side  */}
             <div className="right-side-phase">
               <p className="genral-text-left-side">
-                9. Have you ever worked without permission?*
+                6. Have you ever worked without permission?*
               </p>
 
               <div className="checkbox-phase1">
@@ -635,7 +769,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                10. Have you ever received public funds?*
+                7. Have you ever received public funds?*
               </p>
 
               <div className="checkbox-phase1">
@@ -691,7 +825,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                11.Have you ever given false information when applying for a
+                8.Have you ever given false information when applying for a
                 visa?*
               </p>
 
@@ -757,7 +891,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                12.Have you ever used deception in a previous visa application?*
+                9.Have you ever used deception in a previous visa application?*
               </p>
 
               <div className="checkbox-phase1">
@@ -819,7 +953,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                13.Have you ever breached any other immigration laws?*
+                10.Have you ever breached any other immigration laws?*
               </p>
               <div className="checkbox-phase1">
                 <p className="yes-check-text">Yes</p>
@@ -885,7 +1019,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                14.Have you ever been refused a visa or refused entry at the
+                11.Have you ever been refused a visa or refused entry at the
                 border?*
               </p>
 
@@ -949,7 +1083,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                15.Have you been refused permission to stay or remain ?*
+                12.Have you been refused permission to stay or remain ?*
               </p>
 
               <div className="checkbox-phase1">
@@ -1016,7 +1150,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                16.Have you ever been refused asylum?*
+                13.Have you ever been refused asylum?*
               </p>
 
               <div className="checkbox-phase1">
@@ -1073,7 +1207,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                17.Have you ever been deported, removed or been required to
+                14.Have you ever been deported, removed or been required to
                 leave any country?*
               </p>
 
@@ -1130,7 +1264,7 @@ const TravelForm = ({
               )}
 
               <p className="genral-text-left-side">
-                18.Have you been excluded or banned from any country?*
+                15.Have you been excluded or banned from any country?*
               </p>
 
               <div className="checkbox-phase1">
@@ -1229,4 +1363,4 @@ const TravelForm = ({
   );
 };
 
-export default TravelForm
+export default TravelForm;
