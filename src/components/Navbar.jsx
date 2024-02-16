@@ -70,23 +70,23 @@ const Navbar = () => {
     }, [data]);
 
 
-        useEffect(() => {
-          const handleClickOutside = (event) => {
-            if (
-              notificationRef.current &&
-              !notificationRef.current.contains(event.target) &&
-              settingsRef.current &&
-              !settingsRef.current.contains(event.target)
-            ) {
-              setIsNotificationBoxVisible(false);
-              setIsSettingsBoxVisible(false);
-            }
-          };
-          document.addEventListener("mousedown", handleClickOutside);
-          return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-          };
-        }, []);
+        // useEffect(() => {
+        //   const handleClickOutside = (event) => {
+        //     if (
+        //       notificationRef.current &&
+        //       !notificationRef.current.contains(event.target) &&
+        //       settingsRef.current &&
+        //       !settingsRef.current.contains(event.target)
+        //     ) {
+        //       setIsNotificationBoxVisible(false);
+        //       setIsSettingsBoxVisible(false);
+        //     }
+        //   };
+        //   document.addEventListener("mousedown", handleClickOutside);
+        //   return () => {
+        //     document.removeEventListener("mousedown", handleClickOutside);
+        //   };
+        // }, []);
 
         const toggleNotificationBox = () => {
           setIsNotificationBoxVisible(!isNotificationBoxVisible);
