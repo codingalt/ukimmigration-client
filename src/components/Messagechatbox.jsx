@@ -207,7 +207,7 @@ useEffect(() => {
                   </div>
                   <div className="messages-chat-2" ref={chatContainerRef}>
                     {messages?.map((item) => {
-                      const isUserMessage = item?.sender?._id === user?._id;
+                      const isUserMessage = item?.sender === user?._id;
                       return (
                         !loading && (
                           <div

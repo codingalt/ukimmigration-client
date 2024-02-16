@@ -58,7 +58,7 @@ const MaintenanceForm = ({ data, setActiveTab, initialValues, refetch }) => {
             }}
           >
             <div className="left-side-phase">
-              <p className="genral-text-left-side">1.Name of Bank*</p>
+              <p className="genral-text-left-side">1.Name of Bank</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -74,7 +74,7 @@ const MaintenanceForm = ({ data, setActiveTab, initialValues, refetch }) => {
               />
 
               <p className="genral-text-left-side">
-                2.Is it a registered recognized financial institute ?*
+                2.Is it a registered recognized financial institute ?
               </p>
               <Field
                 type="text"
@@ -91,23 +91,25 @@ const MaintenanceForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">3.Country funds held in*</p>
+              <p className="genral-text-left-side">3.Country funds held in</p>
               <SelectCountry
+              notReq={true}
                 className="form-select genral-input-left-side-selector"
                 name="phase4.maintenance.countryFundsHeldIn"
                 id="phase4.maintenance.countryFundsHeldIn"
               ></SelectCountry>
 
               <p className="genral-text-left-side">
-                4.Currency funds held in?*
+                4.Currency funds held in?
               </p>
               <SelectCountry
+              notReq={true}
                 className="form-select genral-input-left-side-selector"
                 name="phase4.maintenance.currencyFundsHeldIn"
                 id="phase4.maintenance.currencyFundsHeldIn"
               ></SelectCountry>
 
-              <p className="genral-text-left-side">5.Amount held?*</p>
+              <p className="genral-text-left-side">5.Amount held?</p>
               <Field
                 type="text"
                 className="genral-input-left-side"
@@ -123,7 +125,7 @@ const MaintenanceForm = ({ data, setActiveTab, initialValues, refetch }) => {
               />
 
               <p className="genral-text-left-side">
-                6.Date the funds have been held from?*
+                6.Date the funds have been held from?
               </p>
               <Field
                 type="date"

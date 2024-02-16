@@ -125,19 +125,14 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">4.Location Code*</p>
+              <p className="genral-text-left-side">4.Location Code</p>
               <Field
+                required={false}
                 type="text"
                 name="phase4.accommodation.locationCode"
                 id="phase4.accommodation.locationCode"
                 className="genral-input-left-side"
                 placeholder="Type Location Code"
-                style={
-                  errors?.phase4?.accommodation?.locationCode &&
-                  touched?.phase4?.accommodation?.locationCode && {
-                    border: "1px solid red",
-                  }
-                }
               />
 
               <p className="genral-text-left-side">5.Town*</p>
@@ -234,7 +229,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 }
               />
 
-              <p className="genral-text-left-side">11.VAT Rate</p>
+              {/* <p className="genral-text-left-side">11.VAT Rate</p>
               <Field
                 type="text"
                 name="phase4.accommodation.vatRate"
@@ -247,10 +242,10 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     border: "1px solid red",
                   }
                 }
-              />
+              /> */}
 
               <p className="genral-text-left-side">
-                12.What date did you move in ? (mm/dd/yyyy)*
+                11.What date did you move in ? (mm/dd/yyyy)*
               </p>
               <Field
                 required
@@ -261,7 +256,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
               />
 
               <p className="genral-text-left-side">
-                13.Time lived at current address?*
+                12.Time lived at current address?*
               </p>
               <Field
                 type="text"
@@ -278,7 +273,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
               />
 
               <p className="genral-text-left-side">
-                14.Is your home owned/rented/other ?*
+                13.Is your home owned/rented/other ?*
               </p>
 
               <div className="genral-checkbox-acc-3">
@@ -471,7 +466,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                   />
 
                   <p className="genral-text-left-side">
-                    iv. Landlord's Address 2*
+                    v. Landlord's Address 2*
                   </p>
                   <Field
                     required={isRented}
@@ -488,7 +483,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">iv. Location Name*</p>
+                  <p className="genral-text-left-side">vi. Location Name*</p>
                   <Field
                     required={isRented}
                     type="text"
@@ -504,7 +499,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">vi. Location Code</p>
+                  <p className="genral-text-left-side">vii. Location Code</p>
                   <Field
                     required={isRented}
                     type="text"
@@ -520,7 +515,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">vii. Town*</p>
+                  <p className="genral-text-left-side">viii. Town*</p>
                   <Field
                     required={isRented}
                     type="text"
@@ -542,7 +537,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
             <div className="right-side-phase">
               {isRented && (
                 <>
-                  <p className="genral-text-left-side">viii. County*</p>
+                  <p className="genral-text-left-side">ix. County*</p>
                   <Field
                     required={isRented}
                     type="text"
@@ -558,7 +553,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">ix. Post Code*</p>
+                  <p className="genral-text-left-side">x. Post Code*</p>
                   <Field
                     required={isRented}
                     type="text"
@@ -574,7 +569,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">x. Country Prefix*</p>
+                  <p className="genral-text-left-side">xi. Country Prefix*</p>
                   <Field
                     required={isRented}
                     type="text"
@@ -590,14 +585,14 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">xi. Country*</p>
+                  <p className="genral-text-left-side">xii. Country*</p>
                   <SelectCountry
                     name="phase4.accommodation.landLordCountry"
                     id="phase4.accommodation.landLordCountry"
                     className="genral-input-right-side-selector"
                   ></SelectCountry>
 
-                  <p className="genral-text-left-side">xii. FAX</p>
+                  <p className="genral-text-left-side">xiii. FAX</p>
                   <Field
                     type="text"
                     name="phase4.accommodation.landLordFax"
@@ -612,7 +607,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                     }
                   />
 
-                  <p className="genral-text-left-side">xiii. VAT Rate</p>
+                  {/* <p className="genral-text-left-side">xiii. VAT Rate</p>
                   <Field
                     type="text"
                     name="phase4.accommodation.landLordVatRate"
@@ -625,7 +620,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                         border: "1px solid red",
                       }
                     }
-                  />
+                  /> */}
                 </>
               )}
 
@@ -724,7 +719,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 className="genral-input-left-side"
               />
 
-              <p className="genral-text-left-side">vii. Town*</p>
+              <p className="genral-text-left-side">v. Town*</p>
               <Field
                 type="text"
                 name="phase4.accommodation.previousHomeDetails.town"
@@ -760,7 +755,7 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 placeholder="Type Address"
               />
 
-              <p className="genral-text-left-side">9.Country*</p>
+              <p className="genral-text-left-side">ix.Country*</p>
               <SelectCountry
                 name="phase4.accommodation.previousHomeDetails.country"
                 id="phase4.accommodation.previousHomeDetails.country"
@@ -776,14 +771,14 @@ const AccomodationForm = ({ data, setActiveTab, initialValues, refetch }) => {
                 className="genral-input-left-side"
                 placeholder="FAX"
               />
-              <p className="genral-text-left-side">xi. VAT Rate</p>
+              {/* <p className="genral-text-left-side">xi. VAT Rate</p>
               <Field
                 type="text"
                 name="phase4.accommodation.previousHomeDetails.vatRate"
                 id="phase4.accommodation.previousHomeDetails.vatRate"
                 className="genral-input-left-side"
                 placeholder="FAX"
-              />
+              /> */}
 
               {/* Back and Next buttons */}
               <button

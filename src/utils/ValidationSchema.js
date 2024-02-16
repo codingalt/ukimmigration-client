@@ -99,11 +99,11 @@ export const accommodationSchema = Yup.object().shape({
       address1: Yup.string().min(3).required("Address 1 is Required"),
       address2: Yup.string().min(3).required("Address 2 is Required"),
       locationName: Yup.string().min(3).required("Location Name is Required"),
-      locationCode: Yup.string().min(3).required("Location Code is Required"),
+      locationCode: Yup.string(),
       town: Yup.string().min(3).required("Town is Required"),
       county: Yup.string().min(3).required("County is Required"),
       postCode: Yup.string().min(3).required("Post Code is Required"),
-      countryPrefix: Yup.string().required("Country Prefix is Required"),
+      countryPrefix: Yup.string(),
       fax: Yup.string(),
       vatRate: Yup.string(),
       moveInDate: Yup.date().required("Move In Date is Required"),
@@ -113,7 +113,7 @@ export const accommodationSchema = Yup.object().shape({
       homeType: Yup.string(),
       bedrooms: Yup.number().required("Number of Bedrooms is Required"),
       otherRooms: Yup.number().required("Number of Other Rooms is Required"),
-      otherWhoLives: Yup.string().required("Others Who Live is Required"),
+      otherWhoLives: Yup.string(),
     }),
   }),
 });
@@ -182,15 +182,13 @@ export const familySchema = Yup.object().shape({
 export const educationSchema = Yup.object().shape({
   phase4: Yup.object().shape({
     education: Yup.object().shape({
-      qualification: Yup.string().required("Qualification is Required"),
-      awardingInstitute: Yup.string().required(
-        "Awarding Institute is Required"
-      ),
-      grade: Yup.string().required("Grades is Required"),
-      courseSubject: Yup.string().required("Course Subject is Required"),
-      courseLength: Yup.string().required("Course Length is Required"),
-      yearOfAward: Yup.number().required("Year of Award is Required"),
-      state: Yup.string().required("State is Required"),
+      qualification: Yup.string(),
+      awardingInstitute: Yup.string(),
+      grade: Yup.string(),
+      courseSubject: Yup.string(),
+      courseLength: Yup.string(),
+      yearOfAward: Yup.number(),
+      state: Yup.string(),
     }),
   }),
 });
@@ -199,13 +197,13 @@ export const educationSchema = Yup.object().shape({
 export const maintenanceSchema = Yup.object().shape({
   phase4: Yup.object().shape({
     maintenance: Yup.object().shape({
-      bankName: Yup.string().required("Field is Required"),
+      bankName: Yup.string(),
       isRegisteredFinancialInstitute:
-        Yup.string().required("Field is Required"),
-      countryFundsHeldIn: Yup.string().required("Field is Required"),
-      currencyFundsHeldIn: Yup.string().required("Field is Required"),
-      amountHeld: Yup.string().required("Field is Required"),
-      fundsDateHeldFrom: Yup.string().required("Field is Required"),
+        Yup.string(),
+      countryFundsHeldIn: Yup.string(),
+      currencyFundsHeldIn: Yup.string(),
+      amountHeld: Yup.string(),
+      fundsDateHeldFrom: Yup.string(),
     }),
   }),
 });

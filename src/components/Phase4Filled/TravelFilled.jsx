@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import chatbox from "../../Assets/chat-icon.svg";
 import "../../style/Phase4.css";
@@ -7,26 +7,27 @@ import star from "../../Assets/Star-svg.svg";
 import moment from "moment";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import Logo2 from "../../Assets/Ukimmigration-logo.png";
+import { Field } from "formik";
+import SelectCountry from "../SelectCountry";
 
-
-const TravelFilled = ({data,application}) => {
-    const app = data?.travel;
+const TravelFilled = ({ data, application }) => {
+  const app = data?.travel;
   const [show, setShow] = useState(false);
-    console.log("Travel filled", app);
+  console.log("Travel filled", app);
 
-     const pdfRef = useRef(null);
-     const exportPDFWithComponent = () => {
-       if (pdfRef.current) {
-         pdfRef.current.save();
-       }
-     };
+  const pdfRef = useRef(null);
+  const exportPDFWithComponent = () => {
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
+  };
 
-     const handlePdfDownload = () => {
-       setShow(true);
-       if (pdfRef.current) {
-         pdfRef.current.save();
-       }
-     };
+  const handlePdfDownload = () => {
+    setShow(true);
+    if (pdfRef.current) {
+      pdfRef.current.save();
+    }
+  };
   return (
     <div className="fill-data-border-phase4">
       <button
@@ -158,8 +159,51 @@ const TravelFilled = ({data,application}) => {
               Have you ever been to the UK or any other country?
             </p>
             <div className="border-y"></div>
-            <p className="Name-text">{app?.everBeenToUkOrAnyCountry}</p>
           </div>
+
+          <div className="fill">
+            <img src={star} alt="" className="star" />
+            <p className="Name-title">
+              {" "}
+              4. Have you visited any other country apart from the UK
+              (preferable recent visits)?
+            </p>
+            <div className="border-y"></div>
+            <p className="Name-text">{app.numberOfVisitsToAnyOtherCountry > 0 ? 'Yes' : 'No'}</p>
+          </div>
+
+          {app?.everBeenToUkOrAnyCountry?.map((item, index) => (
+            <div key={index+'maindiv'} style={{ marginLeft: 20 }}>
+              <p className="genral-text-left-side">
+                {index + 1} Country visit Details
+              </p>
+
+              <div className="fill" style={{  marginLeft: 20 }}>
+                <p className="Name-title"> i. Visited Country*</p>
+                <div className="border-y"></div>
+                <p className="Name-text">{item?.country}</p>
+              </div>
+
+              <div className="fill" style={{  marginLeft: 20 }}>
+                <p className="Name-title"> ii. Date of entry*</p>
+                <div className="border-y"></div>
+                <p className="Name-text">{moment(item?.entryDate).format("DD MMMM YYYY")}</p>
+              </div>
+
+              <div className="fill" style={{  marginLeft: 20 }}>
+                <p className="Name-title"> iii. Date of Departure*</p>
+                <div className="border-y"></div>
+                <p className="Name-text">{moment(item?.departureDate).format("DD MMMM YYYY")}</p>
+
+              </div>
+
+              <div className="fill" style={{  marginLeft: 20 }}>
+                <p className="Name-title"> iv. Reason for Visit*</p>
+                <div className="border-y"></div>
+                <p className="Name-text">{item?.reasonForVisit}</p>
+              </div>
+            </div>
+          ))}
 
           <div className="fill">
             <img src={star} alt="" className="star" />
@@ -424,6 +468,6 @@ const TravelFilled = ({data,application}) => {
       </PDFExport>
     </div>
   );
-}
+};
 
-export default TravelFilled
+export default TravelFilled;
