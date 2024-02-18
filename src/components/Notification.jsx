@@ -11,6 +11,7 @@ import Rejectpopup from './Rejectpopup';
 import RejectpopupGroup from './RejectPopupGroup';
 import { v4 as uuidv4 } from "uuid";
 import FinalConfirmationModal from './FinalConfirmationModal';
+import FinalConfirmationGroupModal from './FinalConfirmationGroupModal';
 
 const NotificationBox = () => {
  
@@ -21,7 +22,7 @@ const NotificationBox = () => {
   const [isReject, setIsReject] = useState();
   const [companyId, setCompanyId] = useState();
   const [confirmationModal, setConfirmationModal] = useState(false);
-  console.log("confirmationModal", confirmationModal);
+  const [confirmationModal2, setConfirmationModal2] = useState(false);
 
   useEffect(() => {
     socket?.on("phase notification received", (phaseNoti) => {
@@ -66,11 +67,11 @@ const NotificationBox = () => {
   }
   
   const handleNavigate = (item)=>{
-    console.log("navigate",item);
+
     if(data?.companyClient){
 
       if (item.finalConfirmation) {
-        setConfirmationModal(true);
+        setConfirmationModal2(true);
         return;
       }
 
@@ -152,6 +153,13 @@ const NotificationBox = () => {
         confirmationModal={confirmationModal}
         setConfirmationModal={setConfirmationModal}
       />
+
+      {/* Final Confirmation Group Modal  */}
+      <FinalConfirmationGroupModal
+        confirmationModal2={confirmationModal2}
+        setConfirmationModal2={setConfirmationModal2}
+      />
+
       <div className="notification-box">
         {companyId
           ? isReject && (
