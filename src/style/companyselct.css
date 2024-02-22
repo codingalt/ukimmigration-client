@@ -108,6 +108,20 @@
    top: 0.5rem;
 }
 
+
+.company-titles-2{
+    font-family: 'Poppins';
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 12px;
+    letter-spacing: 0em;
+    text-align: center;
+    width: 5rem;
+   position: relative;
+   right: 0.5rem;
+   top: 0.5rem;
+}
+
 .comapny-boxes{
     display: flex;
     /* flex-wrap: wrap; */

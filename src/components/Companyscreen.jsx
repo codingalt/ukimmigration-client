@@ -146,12 +146,21 @@ const CompanyScreen = () => {
 
               <div className="profile-box-1">
                 <div
+                 style={
+                  applicationType === "Other"
+                    ? { border: "1.5px solid #5d982e" }
+                    : {}
+                }
+                  ref={selectRef}
                   className="sponser-li"
-                  onClick={() => toastError("Select other from dropdown below")}
+                  onClick={() => handleClick('Other')}
                 >
                   <img src={others} alt="" className="company-imgss-1" />
                 </div>
-
+                <div className="title-space">
+                  <p className="company-titles-2">Other</p>
+                </div>
+{/* 
                 <select
                   ref={selectRef}
                   className="title-space-option"
@@ -197,7 +206,7 @@ const CompanyScreen = () => {
                     SS – Settled Status{" "}
                   </option>
                   <option value="Others">Other</option>
-                </select>
+                </select> */}
               </div>
             </div>
 

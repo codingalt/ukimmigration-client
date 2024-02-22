@@ -1161,9 +1161,7 @@ const Phase4Page = () => {
                 >
                   <span>Maintenance</span>
                 </span>
-                <span onClick={()=>{
-                  setActiveTab('/travel');
-                }}
+                <span
                   className={`link-hover-effect ${
                     activeTab === "/travel" ? "link-active" : ""
                   }`}

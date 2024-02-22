@@ -830,7 +830,7 @@ useEffect(()=>{
                         }}
                       >
                         <img src={star} alt="" className="star" />
-                        <p className="Name-title">OTHERS*</p>
+                        <p className="Name-title">{application?.phase2?.otherDocumentNotes}*</p>
                         <div className="border-y"></div>
                         <p className="Name-text">
                           {application?.phase2?.other?.map((item) => (

@@ -127,6 +127,7 @@ const Phase2 = () => {
         formData.append("marriageCertificate", values.marriageCertificate);
         formData.append("bankStatements", values.bankStatements);
         formData.append("other", values.other);
+        formData.append("otherDocumentNotes", application?.phase2?.otherDocumentNotes);
 
         if (!application || !application._id) {
           console.error(
@@ -583,7 +584,7 @@ const Phase2 = () => {
                       {application?.phase2?.other.length > 0 &&
                         application?.phase2?.other[0] != "notreq" && (
                           <>
-                            <p className="password-text">OTHER</p>
+                            <p className="password-text">{application?.phase2?.otherDocumentNotes}*</p>
                             <input
                               ref={otherRef}
                               type="file"
