@@ -1,32 +1,32 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
-import Logo2 from '../Assets/Ukimmigration-logo.png';
-import bellicon2 from "../Assets/bell-icon-svg.svg"
-import profileimg from "../Assets/profile-img-svg.svg"
-import dropdownicon from "../Assets/dropdown-icon-svg.svg"
-import { NavLink } from 'react-router-dom';
-import NotificationBox from './Notification';
-import SettingBox from "./Settingbox"
-import "../style/Phase4.css"
-import "../style/Accomodation.css"
-import "../style/Messagesimple.css"
-import adminprofile from "../Assets/admin-profile-img.png"
-import profile from "../Assets/profile-img-svg.svg"
-import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome CSS
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import Logo2 from "../Assets/Ukimmigration-logo.png";
+import bellicon2 from "../Assets/bell-icon-svg.svg";
+import profileimg from "../Assets/profile-img-svg.svg";
+import dropdownicon from "../Assets/dropdown-icon-svg.svg";
+import { NavLink } from "react-router-dom";
+import NotificationBox from "./Notification";
+import SettingBox from "./Settingbox";
+import "../style/Phase4.css";
+import "../style/Accomodation.css";
+import "../style/Messagesimple.css";
+import adminprofile from "../Assets/admin-profile-img.png";
+import profile from "../Assets/profile-img-svg.svg";
+import "font-awesome/css/font-awesome.min.css"; // Import Font Awesome CSS
+import { useNavigate } from "react-router-dom";
 import {
   useGetUserChatsQuery,
   useGetUserMessagesQuery,
   useSendMessageMutation,
   useReadMessagesByChatMutation,
 } from "../services/api/chatApi";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import ScrollableFeed from "react-scrollable-feed";
 import moment from "moment";
-import userDefault from "../Assets/user-default.png"
-import pdfimg from "../Assets/pdf-img.png"
+import userDefault from "../Assets/user-default.png";
+import pdfimg from "../Assets/pdf-img.png";
 import downloadicon from "../Assets/downloadicon.svg";
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 import InputEmoji from "react-input-emoji";
 import { useLocation } from "react-router-dom";
 import Messageprofileimg from "../Assets/billing-table-img.png";
@@ -36,7 +36,8 @@ var socket;
 const Message = () => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const [isNotificationBoxVisible, setIsNotificationBoxVisible] = useState(false);
+  const [isNotificationBoxVisible, setIsNotificationBoxVisible] =
+    useState(false);
   const [isSettingsBoxVisible, setIsSettingsBoxVisible] = useState(false);
   const notificationRef = useRef(null);
   const settingsRef = useRef(null);
@@ -55,25 +56,24 @@ const Message = () => {
     socket.on("connected", () => setSocketConnected(true));
   }, []);
 
-
   const navigate = useNavigate();
-  const {data, isLoading} = useGetUserChatsQuery();
-  console.log("chat",data?.chats[0]);
+  const { data, isLoading } = useGetUserChatsQuery();
+  console.log("chat", data?.chats[0]);
   const chatId = data?.chats[0]?._id;
   const applicationId = data?.chats[0]?.applicationId;
 
   const [readMessagesByChat, res] = useReadMessagesByChatMutation();
   const { refetch: refetchReadMsgs, isSuccess: isSuccessMsgRead } = res;
 
-  // get messages 
+  // get messages
   const {
     data: messageData,
     isLoading: loading,
     refetch,
-  } =  useGetUserMessagesQuery(chatId,{refetchOnMountOrArgChange: true});
+  } = useGetUserMessagesQuery(chatId, { refetchOnMountOrArgChange: true });
 
   const [sendMessage, sendMsgRes] = useSendMessageMutation();
-  const {isLoading: isLoadingSend} = sendMsgRes;
+  const { isLoading: isLoadingSend } = sendMsgRes;
 
   useEffect(() => {
     setMessages(messageData?.result);
@@ -86,8 +86,8 @@ const Message = () => {
       formData.append("chatId", chatId);
       formData.append("content", newMessage);
       formData.append("applicationId", applicationId);
-      console.log("selected files",files);
-      for(let i=0; i<files.length; i++) {
+      console.log("selected files", files);
+      for (let i = 0; i < files.length; i++) {
         formData.append("chatFile", files[i]);
       }
       const { data } = await sendMessage(formData);
@@ -100,14 +100,14 @@ const Message = () => {
 
   const openFile = (e) => {
     const files = e.target.files;
-    console.log(files);
+    // console.log(files);
     const filePaths = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       filePaths.push(file);
     }
-    setFiles(filePaths)
-   
+    setFiles(filePaths);
+    // console.log(filePaths, 'filePaths');
   };
 
   const chatContainerRef = useRef(null);
@@ -129,25 +129,23 @@ const Message = () => {
     setNewMessage(newMessage);
   };
 
-useMemo(()=>{
-  if(chatId){
-    readMessagesByChat(chatId);
-  }
-},[]);
+  useMemo(() => {
+    if (chatId) {
+      readMessagesByChat(chatId);
+    }
+  }, []);
 
-useEffect(() => {
-  socket?.on("message received", async (newMessageReceived) => { 
-    setMessages([...messages, newMessageReceived.result]);
+  useEffect(() => {
+    socket?.on("message received", async (newMessageReceived) => {
+      setMessages([...messages, newMessageReceived.result]);
+    });
   });
-
-});
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleSendMessage();
     }
   };
-
 
   return (
     <div className="Container-forgetpassword-phase1">
@@ -163,7 +161,10 @@ useEffect(() => {
 
         <div className="Main-message-container">
           <div className="Main-Message">
-            <div className="container-message-box-2" style={{overflow:"hidden"}}>
+            <div
+              className="container-message-box-2"
+              style={{ overflow: "hidden" }}
+            >
               <div className="row">
                 <section className="chat-2">
                   <div className="header-chat-2">
@@ -479,6 +480,7 @@ useEffect(() => {
 
                     <p className="time"></p>
                   </div>
+
                   {/* Select file hidden input  */}
                   <input
                     ref={fileRef}
@@ -491,6 +493,7 @@ useEffect(() => {
                     style={{ display: "none" }}
                   />
                   <div className="footer-chat-2">
+                  
                     {/* <i
                       className="icon fa fa-smile-o clickable"
                       style={{ fontSize: "25pt" }}
@@ -502,6 +505,25 @@ useEffect(() => {
                       style={{ fontSize: "25pt" }}
                       aria-hidden="true"
                     />
+                      <div className="footer-chat-1">
+                      {files?.length > 0 && (
+                        <div className="pdf-file-send-1">
+                        <div className="one-pdf-file">
+                          <img
+                            src={pdfimg}
+                            alt=""
+                            className="file-attach-pdf-icon"
+                          />
+                          <div>
+                            <p className="Attach-file-text">
+                             {files?.length} Attached File(s)
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      )}
+                    </div>
+
                     <InputEmoji
                       className="write-message-2"
                       value={newMessage}
@@ -545,7 +567,6 @@ useEffect(() => {
       </div>
     </div>
   );
-}
+};
 
-
-export default Message
+export default Message;
