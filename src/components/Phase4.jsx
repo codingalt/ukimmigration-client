@@ -86,6 +86,15 @@ const Phase4 = () => {
     const handleLinkClick = (linkName) => {
         setActiveLink(linkName);
     };
+    const getCurrentDate = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      month = month < 10 ? '0' + month : month; // Ensure double digits for month
+      let day = today.getDate();
+      day = day < 10 ? '0' + day : day; // Ensure double digits for day
+      return `${year}-${month}-${day}`;
+    };
     return (
       <div className="Container-forgetpassword-phase1">
         <Navbar />
@@ -142,6 +151,7 @@ const Phase4 = () => {
                   <p className="genral-text-left-side">ii. From*</p>
                   <input
                     type="date"
+                    min={getCurrentDate}
                     className="genral-input-left-side"
                     name=""
                     id=""

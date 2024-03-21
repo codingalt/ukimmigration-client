@@ -6,7 +6,11 @@ const signupSchema = Yup.object({
     .email("Please Enter a valid email address")
     .required("Email is Required"),
   contact: Yup.string().required("Contact is Required"),
-  password: Yup.string().min(6).required("Password is Required"),
+  password: Yup.string().min(8, 'Password must be at least 8 characters')
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+    'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+  ).required("Password is Required"),
   confirmPassword: Yup.string().oneOf([Yup.ref("password")], "Password not matched"),
   referringAgent: Yup.string(), 
 });
@@ -36,7 +40,7 @@ export const phase1Schema = Yup.object().shape({
       .email("Please Enter a valid email address")
       .required("Email is Required"),
     contact: Yup.string().required("Contact is Required"),
-    birthDate: Yup.date().required("Date of Birth is Required"),
+    birthDate: Yup.date().max(new Date(), 'Date must be in the past').required("Date of Birth is Required"),
     country: Yup.string().required("Country is Required"),
     sameResidence: Yup.boolean().required(
       "Do you have residence in this country?"
@@ -47,8 +51,9 @@ export const phase1Schema = Yup.object().shape({
     ),
     isRefusedVisaEntry: Yup.boolean().required("Please check this option."),
     refusedVisaType: Yup.string(),
-    refusedVisaDate: Yup.date(),
+    refusedVisaDate: Yup.date().max(new Date(), 'Date must be in the past'),
     refusedVisaReason: Yup.string(),
+    temporaryVisaValidUntill: Yup.date().min(new Date(), 'Date must be upcoming'),
     message: Yup.string().required(
       "Please provide in your own words how we can help you?*"
     ),
@@ -241,7 +246,7 @@ export const groupPhase1Schema = Yup.object({
     .min(3)
     .required("Full Name as passport is Required"),
   postalAddress: Yup.string().required("Postal Address is Required"),
-  birthDate: Yup.string().required("Birth Date is Required"),
+  birthDate: Yup.string().max(new Date(), 'Date must be in the past'),
   nationality: Yup.string().required("Nationality is Required"),
   passportNumber: Yup.string().required("Passport Number is Required"),
 });

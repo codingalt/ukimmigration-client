@@ -232,6 +232,15 @@ const GroupPhase1 = () => {
                           }
                         }
                       />
+                        <ErrorMessage
+                            name="phase1.refusedVisaDate"
+                            component="div"
+                            style={{
+                              color: "red",
+                              fontSize: ".8rem",
+                              marginLeft: "7px",
+                            }}
+                          />
                     </div>
                     <div className="email-input">
                       <p className="phase-1-text-left-side">Nationality</p>

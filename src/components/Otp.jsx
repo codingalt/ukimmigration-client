@@ -42,8 +42,8 @@ const Otp = () => {
         if (result.user) {
             console.log(result);
             setLoading(false);
-            toastSuccess("OTP Verified.");
-            navigate("/companyscreen");
+            toastSuccess("OTP Verification completed. Complete your Email verification and then try login.");
+            navigate("/");
         }
         
     } catch (error) {
